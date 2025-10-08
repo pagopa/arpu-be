@@ -7,7 +7,6 @@ on:
       - 'uat'
       - 'main'
     paths-ignore:
-      - 'CODEOWNERS'
       - '**.md'
       - '.**'
 

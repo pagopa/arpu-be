@@ -1,51 +1,37 @@
 locals {
+  # Common Tags:
+  common_tags = {
+    CreatedBy   = "Terraform"
+    Environment = var.env
+    Owner       = upper(var.prefix)
+    Source      = "https://github.com/pagopa/arpu-be" # Repository URL
+    CostCenter  = "TS310 - PAGAMENTI & SERVIZI"
+  }
+
   # Repo
   github = {
     org        = "pagopa"
     repository = "arpu-be"
   }
 
+  env_secrets   = {}
+  env_variables = {}
+
   repo_secrets = var.env_short == "p" ? {
-    SONAR_TOKEN       = data.azurerm_key_vault_secret.sonar_token[0].value
+    SONAR_TOKEN = data.azurerm_key_vault_secret.sonar_token[0].value
+    ADMIN_GITHUB_TOKEN_RW = data.azurerm_key_vault_secret.github_token[0].value
     SLACK_WEBHOOK_URL = data.azurerm_key_vault_secret.slack_webhook[0].value
+  } : {}
+
+  repo_env = var.env_short == "p" ? {
+    SONARCLOUD_PROJECT_NAME = "arpu-be"
+    SONARCLOUD_PROJECT_KEY  = "pagopa_arpu-be"
+    SONARCLOUD_ORG          = "pagopa"
   } : {}
 
   map_repo = {
     "dev" : "*",
     "uat" : "uat"
     "prod" : "main"
-  }
-
-  branches                  = ["develop", "uat"]
-  bypass_branch_rules_teams = ["p4pa-admins", "payments-cloud-admin"]
-
-  # this is use to lookup the id for each team
-  team_name_to_id = {
-    for team in data.github_organization_teams.all.teams :
-    team.name => team.id
-  }
-
-  branch_rulesets = {
-    develop = {
-      ref_name                        = "refs/heads/develop"
-      bypass_actors                   = false
-      required_linear_history         = true
-      require_code_owner_review       = false
-      required_approving_review_count = 0
-    }
-    uat = {
-      ref_name                        = "refs/heads/uat"
-      bypass_actors                   = false
-      required_linear_history         = false
-      require_code_owner_review       = false
-      required_approving_review_count = 1
-    },
-    main = {
-      ref_name                        = "refs/heads/main"
-      bypass_actors                   = false
-      required_linear_history         = false
-      require_code_owner_review       = true
-      required_approving_review_count = 0
-    },
   }
 }

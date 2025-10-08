@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: pagopa-arc-be
+  title: pagopa-arpu-be
   description: Api and Models
   version: 0.0.1
 servers:
