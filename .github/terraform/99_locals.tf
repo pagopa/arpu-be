@@ -2,7 +2,7 @@ locals {
   # Repo
   github = {
     org        = "pagopa"
-    repository = "arc-be"
+    repository = "arpu-be"
   }
 
   repo_secrets = var.env_short == "p" ? {

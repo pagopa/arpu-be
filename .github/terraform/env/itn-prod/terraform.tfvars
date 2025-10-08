@@ -1,4 +1,4 @@
-prefix         = "arc"
+prefix         = "p4pa"
 env            = "prod"
 env_short      = "p"
 location_short = "itn"
@@ -6,7 +6,7 @@ location_short = "itn"
 tags = {
   CreatedBy   = "Terraform"
   Environment = "PROD"
-  Owner       = "ARC"
-  Source      = "https://github.com/pagopa/arc-be"
+  Owner       = "ARpu"
+  Source      = "https://github.com/pagopa/arpu-be"
   CostCenter  = "TS310 - PAGAMENTI & SERVIZI"
 }
