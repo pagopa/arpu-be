@@ -1,7 +1,7 @@
 name: 🚀 Flow Release
 
 permissions:
-  contents: read
+  contents: write
 
 on:
   push:
