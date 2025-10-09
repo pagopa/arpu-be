@@ -1,1 +1,1 @@
-rootProject.name = "pagopa-arc-be"
+rootProject.name = "arpu-be"

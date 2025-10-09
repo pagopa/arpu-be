@@ -28,6 +28,16 @@ variable "location_short" {
   description = "Location short like eg: neu, weu.."
 }
 
+variable "domain" {
+  type = string
+  validation {
+    condition = (
+      length(var.domain) <= 12
+    )
+    error_message = "Max length is 12 chars."
+  }
+}
+
 variable "github_repository_environment" {
   type = object({
     protected_branches     = bool
@@ -38,6 +48,6 @@ variable "github_repository_environment" {
   default = {
     protected_branches     = false
     custom_branch_policies = true
-    reviewers_teams        = ["p4pa-admins"]
+    reviewers_teams        = ["CHANGE_ME"]
   }
 }

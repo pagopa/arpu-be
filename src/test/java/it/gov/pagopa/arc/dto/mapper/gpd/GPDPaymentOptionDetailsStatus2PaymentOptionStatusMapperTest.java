@@ -25,10 +25,10 @@ class GPDPaymentOptionDetailsStatus2PaymentOptionStatusMapperTest {
 
     private static Stream<Arguments> provideEnumMappings() {
         return Stream.of(
-                Arguments.of(GPDPaymentOptionDetailsStatus.PO_UNPAID, PaymentOptionStatus.UNPAID),
-                Arguments.of(GPDPaymentOptionDetailsStatus.PO_PAID, PaymentOptionStatus.PAID),
-                Arguments.of(GPDPaymentOptionDetailsStatus.PO_PARTIALLY_REPORTED, PaymentOptionStatus.PARTIALLY_REPORTED),
-                Arguments.of(GPDPaymentOptionDetailsStatus.PO_REPORTED, PaymentOptionStatus.REPORTED)
+                Arguments.of(GPDPaymentOptionDetailsStatus.PO_UNPAID, PaymentOptionStatus.PO_UNPAID),
+                Arguments.of(GPDPaymentOptionDetailsStatus.PO_PAID, PaymentOptionStatus.PO_PAID),
+                Arguments.of(GPDPaymentOptionDetailsStatus.PO_PARTIALLY_REPORTED, PaymentOptionStatus.PO_PARTIALLY_REPORTED),
+                Arguments.of(GPDPaymentOptionDetailsStatus.PO_REPORTED, PaymentOptionStatus.PO_REPORTED)
         );
     }
 }

@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice;
 
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsInfoPaidNoticeDTO;
+import it.gov.pagopa.arc.connector.bizevents.enums.Origin;
 import it.gov.pagopa.arc.dto.mapper.BizEventsUserDetail2UserDetailDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsWalletInfo2WalletInfoDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.MapperUtilities;
@@ -17,7 +18,14 @@ public interface BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapper {
     @Mapping(source = "walletInfo", target = "walletInfo", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     @Mapping(source = "payer", target = "payer", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     @Mapping(target = "totalAmount", source = "bizEventsInfoPaidNoticeDTO")
+    @Mapping(target = "origin", source = "origin", qualifiedByName = "mapBizOrigin")
     InfoNoticeDTO toInfoNoticeDTO(BizEventsInfoPaidNoticeDTO bizEventsInfoPaidNoticeDTO);
+
+    @Named("mapBizOrigin")
+    @ValueMapping(target = "NDP001_PROD", source = "NDP001PROD")
+    @ValueMapping(target = "NDP002_PROD", source = "NDP002PROD")
+    @ValueMapping(target = "NDP003_PROD", source = "NDP003PROD")
+    InfoNoticeDTO.OriginEnum toOrigin(Origin origin);
 
     default Long calculateTotalAmount(BizEventsInfoPaidNoticeDTO bizEventsInfoPaidNoticeDTO){
         String bizEventsAmount = bizEventsInfoPaidNoticeDTO.getAmount();

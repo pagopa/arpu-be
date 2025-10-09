@@ -32,7 +32,7 @@ class PullPaymentInstallmentDTO2InstallmentDTOMapperTest {
     void givenPullPaymentInstallmentDTOWhenCallMapperThenReturnInstallmentDTO() {
         //given
         PullPaymentOptionStatus poUnpaid = PullPaymentOptionStatus.PO_UNPAID;
-        PaymentOptionStatus unpaid = PaymentOptionStatus.UNPAID;
+        PaymentOptionStatus unpaid = PaymentOptionStatus.PO_UNPAID;
 
         Mockito.when(pullPaymentOptionStatus2PaymentOptionStatusMapperMock.toPaymentOptionStatus(poUnpaid)).thenReturn(unpaid);
 
