@@ -1,4 +1,8 @@
-name: 🚀 Payments release
+name: 🚀 Flow Release
+
+permissions:
+  contents: write
+  packages: write
 
 on:
   push:
@@ -7,32 +11,50 @@ on:
       - uat
       - main
     paths-ignore:
-      - 'CODEOWNERS'
       - '**.md'
       - '.**'
   workflow_dispatch:
 
 jobs:
-  payments-flow-release:
+
+  checkout:
+    name: 🔖 Checkout Repository
     runs-on: ubuntu-22.04
     steps:
-      - name: 🔖 Checkout code
-        # https://github.com/actions/checkout/releases/tag/v4.2.1
+      - name: Checkout code
         uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
         with:
           ref: ${{ github.ref_name }}
 
-      - name: 🚀 release + docker + azdo
-        # https://github.com/pagopa/github-actions-template/releases/tag/v1.19.2
-        uses: pagopa/github-actions-template/payments-flow-release@922ed4e43b0e45a5e47eb0296d550996d8c87c64
+  payments-flow-release:
+    name: 🚀 Release
+    runs-on: ubuntu-22.04
+    needs: checkout
+    steps:
+      - name: 🚀 release + docker
+        # https://github.com/pagopa/github-actions-template/releases/tag/v2.2.0
+        uses: pagopa/github-actions-template/payments-flow-release@525266fb788f4da438e5919fcf660fe8637271ed
         with:
           current_branch: ${{ github.ref_name }}
+
+  azure-devops-trigger:
+    name: 🅰️ Azure DevOps Pipeline Trigger
+    needs: payments-flow-release
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Trigger Azure DevOps Pipeline
+                # https://github.com/pagopa/github-actions-template/releases/tag/v2.2.0
+        uses: pagopa/github-actions-template/azure-devops-trigger-pipeline@525266fb788f4da438e5919fcf660fe8637271ed
+        with:
           enable_azure_devops_step: 'true'
-          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/arc-projects'
-          azure_devops_pipeline_name: 'arc-cittadini-deploy-aks.deploy'
-          azure_devops_pat: ${{ secrets.AZUREDEVOPS_PAT }}
+          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/p4pa-projects'
+          azure_devops_pipeline_name: 'p4pa-arpu-deploy-aks.deploy'
+          azure_devops_pat: ${{ secrets.AZURE_DEVOPS_TOKEN }}
           azure_template_parameters: |
             {
-              "APPS": "[arb-be]",
-              "POSTMAN_BRANCH": "${{ github.ref_name }}"
+              "APPS_TOP": "[arpu-be]",
+              "APPS_MID": "[]",
+              "APPS_EXT": "[]",
+              "POSTMAN_BRANCH": "${{ github.ref_name }}",
+              "TRIGGER_MESSAGE": "arpu-be"
             }

@@ -1,4 +1,7 @@
-name: 📦 Payments Snapshot docker
+name: 📦 Flow Snapshot Docker
+permissions:
+  contents: read
+  packages: write
 
 on:
   push:
@@ -7,36 +10,82 @@ on:
       - 'uat'
       - 'main'
     paths-ignore:
-      - 'CODEOWNERS'
       - '**.md'
       - '.**'
+
   workflow_dispatch:
+    inputs:
+      docker_build_enabled:
+        description: 'Enable Docker build'
+        required: false
+        default: 'true'
+      azdo_trigger_enabled:
+        description: 'Enable Azure DevOps trigger'
+        required: false
+        default: 'true'
+      argocd_target_branch:
+          description: 'argocd target branch name'
+          required: false
+          default: 'main'
+      postman_branch:
+        description: postman branch name'
+        required: false
+        default: 'develop'
 
 env:
+  # branch choosed by workflow_dispatch or by push event
   CURRENT_BRANCH: ${{ github.event.inputs.branch || github.ref_name }}
 
 jobs:
-  payments-flow-docker-snapshot:
+  checkout:
+    name: 🔖 Checkout Repository
     runs-on: ubuntu-22.04
-    environment: dev
     steps:
-      - name: 🔖 Checkout code
-        # https://github.com/actions/checkout/releases/tag/v4.2.1
+      - name: Checkout code
         uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
         with:
           ref: ${{ env.CURRENT_BRANCH }}
 
-      - name: 📦 Run Snapshot Docker Build/Push & Trigger
-        # https://github.com/pagopa/github-actions-template/releases/tag/v1.19.2
-        uses: pagopa/github-actions-template/payments-flow-docker-snapshot@922ed4e43b0e45a5e47eb0296d550996d8c87c64
+  docker-build:
+    name: 📦 Docker Build and Push
+    needs: checkout
+    runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'push' || github.event.inputs.docker_build_enabled == 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+        with:
+          ref: ${{ env.CURRENT_BRANCH }}
+
+      - name: Run Snapshot Docker Build/Push
+        # https://github.com/pagopa/github-actions-template/releases/tag/v2.2.0
+        uses: pagopa/github-actions-template/payments-flow-docker-snapshot@525266fb788f4da438e5919fcf660fe8637271ed
         with:
           current_branch: ${{ github.ref_name }}
+
+  azure-devops-trigger:
+    name: 🅰️ Azure DevOps Pipeline Trigger
+    needs: docker-build
+    runs-on: ubuntu-22.04
+    if: |
+      always() &&
+      needs.docker-build.result != 'failure' &&
+      github.event.inputs.azdo_trigger_enabled == 'true'
+    steps:
+      - name: Trigger Azure DevOps Pipeline
+        # https://github.com/pagopa/github-actions-template/releases/tag/v2.2.0
+        uses: pagopa/github-actions-template/azure-devops-trigger-pipeline@525266fb788f4da438e5919fcf660fe8637271ed
+        with:
           enable_azure_devops_step: 'true'
-          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/arc-projects'
-          azure_devops_pipeline_name: 'arc-cittadini-deploy-aks.deploy'
-          azure_devops_pat: ${{ secrets.AZUREDEVOPS_PAT }}
+          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/p4pa-projects'
+          azure_devops_pipeline_name: 'p4pa-arpu-deploy-aks.deploy'
+          azure_devops_pat: ${{ secrets.AZURE_DEVOPS_TOKEN }}
           azure_template_parameters: |
             {
-              "APPS": "[arb-be]",
-              "POSTMAN_BRANCH": "${{ github.ref_name }}"
+              "APPS_TOP": "[arpu-be]",
+              "APPS_MID": "[]",
+              "APPS_EXT": "[]",
+              "ARGOCD_TARGET_BRANCH": "${{ github.event.inputs.argocd_target_branch }}",
+              "POSTMAN_BRANCH": "${{ github.event.inputs.postman_branch }}",
+              "TRIGGER_MESSAGE": "arpu-be"
             }

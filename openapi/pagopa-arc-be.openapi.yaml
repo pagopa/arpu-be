@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: pagopa-arc-be
+  title: pagopa-arpu-be
   description: Api and Models
   version: 0.0.1
 servers:
@@ -553,7 +553,6 @@ components:
         tokenType:
           type: string
           default: Bearer
-          x-field-extra-annotation: "@lombok.Builder.Default"
         expiresIn:
           type: integer
         refreshToken:
@@ -598,7 +597,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NoticeDTO'
-          x-field-extra-annotation: "@lombok.Builder.Default"
     NoticeDTO:
       type: object
       required:
@@ -689,7 +687,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/CartItemDTO"
-          x-field-extra-annotation: "@lombok.Builder.Default"
     InfoNoticeDTO:
       required:
         - eventId
@@ -780,7 +777,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentNoticeDTO'
-          x-field-extra-annotation: "@lombok.Builder.Default"
     PaymentNoticeDTO:
       required:
         - iupd
@@ -806,7 +802,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentOptionDTO'
-          x-field-extra-annotation: "@lombok.Builder.Default"
     ZonedDateTime:
       type: string
       format: zoned-date-time
@@ -843,7 +838,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InstallmentDTO'
-          x-field-extra-annotation: "@lombok.Builder.Default"
     InstallmentDTO:
       required:
         - nav
@@ -905,7 +899,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PaymentOptionDetailsDTO'
-          x-field-extra-annotation: "@lombok.Builder.Default"
     PaymentNoticeDetailsStatus:
       enum:
         - DRAFT
@@ -952,7 +945,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OrganizationDTO'
-          x-field-extra-annotation: "@lombok.Builder.Default"
     OrganizationDTO:
       type: object
       required:

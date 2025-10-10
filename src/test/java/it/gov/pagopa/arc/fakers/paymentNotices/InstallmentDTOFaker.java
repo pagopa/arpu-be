@@ -19,6 +19,6 @@ public class InstallmentDTOFaker {
                 .amount(120L)
                 .description("Test Pull - unica opzione")
                 .dueDate(ZonedDateTime.parse("2024-10-30T23:59:59Z"))
-                .status(PaymentOptionStatus.UNPAID);
+                .status(PaymentOptionStatus.PO_UNPAID);
     }
 }

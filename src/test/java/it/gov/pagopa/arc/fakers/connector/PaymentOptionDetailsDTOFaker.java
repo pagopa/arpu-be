@@ -40,6 +40,6 @@ public class PaymentOptionDetailsDTOFaker {
                 .isPartialPayment(false)
                 .dueDate(ZonedDateTime.parse("2024-10-30T23:59:59Z"))
                 .notificationFee(2L)
-                .status(PaymentOptionStatus.UNPAID);
+                .status(PaymentOptionStatus.PO_UNPAID);
     }
 }

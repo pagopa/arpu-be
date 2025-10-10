@@ -29,7 +29,7 @@ class GPDPaymentOptionDetailsDTO2PaymentOptionDetailsDTOMapperTest {
     void givenToPaymentOptionDetailsDTOWhenThen() {
         //given
         List<GPDPaymentOptionDetailsDTO> gpdPaymentOptionDetailsDTO = GPDPaymentOptionDetailsDTOFaker.mockInstance(1, false);
-        Mockito.when(gpdPaymentOptionDetailsStatus2PaymentOptionStatusMapperMock.toPaymentOptionStatus(GPDPaymentOptionDetailsStatus.PO_UNPAID)).thenReturn(PaymentOptionStatus.UNPAID);
+        Mockito.when(gpdPaymentOptionDetailsStatus2PaymentOptionStatusMapperMock.toPaymentOptionStatus(GPDPaymentOptionDetailsStatus.PO_UNPAID)).thenReturn(PaymentOptionStatus.PO_UNPAID);
 
         //when
         PaymentOptionDetailsDTO result = mapper.toPaymentOptionDetailsDTO(gpdPaymentOptionDetailsDTO.getFirst());
@@ -42,7 +42,7 @@ class GPDPaymentOptionDetailsDTO2PaymentOptionDetailsDTOMapperTest {
         Assertions.assertEquals(gpdPaymentOptionDetailsDTO.getFirst().getIsPartialPayment(), result.getIsPartialPayment());
         Assertions.assertEquals(ZonedDateTime.parse("2024-10-30T23:59:59Z"), result.getDueDate());
         Assertions.assertEquals(gpdPaymentOptionDetailsDTO.getFirst().getNotificationFee(), result.getNotificationFee());
-        Assertions.assertEquals(PaymentOptionStatus.UNPAID, result.getStatus());
+        Assertions.assertEquals(PaymentOptionStatus.PO_UNPAID, result.getStatus());
 
         TestUtils.assertNotNullFields(result);
 

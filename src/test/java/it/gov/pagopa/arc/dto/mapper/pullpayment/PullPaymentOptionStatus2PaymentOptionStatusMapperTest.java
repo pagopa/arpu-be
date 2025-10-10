@@ -16,6 +16,6 @@ class PullPaymentOptionStatus2PaymentOptionStatusMapperTest {
         PaymentOptionStatus result = paymentOptionStatusMapper.toPaymentOptionStatus(pullPaymentOptionStatus);
         //then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(PaymentOptionStatus.PAID, result);
+        Assertions.assertEquals(PaymentOptionStatus.PO_PAID, result);
     }
 }
