@@ -3,6 +3,8 @@ package it.gov.pagopa.arc.utils;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.net.URI;
+
 public final class SecurityUtils {
 
   private SecurityUtils(){}
@@ -38,5 +40,10 @@ public final class SecurityUtils {
     return principal.getUserId();
   }
 
+  public static String removePiiFromURI(URI uri){
+    return uri != null
+            ? uri.toString().replaceAll("=[^&]*", "=***")
+            : null;
+  }
 
 }
