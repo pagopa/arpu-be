@@ -1,22 +1,35 @@
 package it.gov.pagopa.arc.security;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import it.gov.pagopa.arc.config.WireMockConfig;
+import it.gov.pagopa.arc.connector.auth.client.AuthnClient;
+import it.gov.pagopa.arc.connector.auth.config.AuthApisHolder;
+import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.model.generated.UserInfo;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import it.gov.pagopa.arc.utils.CertUtils;
 import it.gov.pagopa.arc.utils.TestUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -29,20 +42,12 @@ import java.security.spec.InvalidKeySpecException;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.UUID;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ContextConfiguration( initializers = WireMockConfig.WireMockInitializer.class )
@@ -54,29 +59,28 @@ import org.springframework.web.util.UriComponentsBuilder;
         "spring.security.oauth2.client.registration.oneidentity.authorization-grant-type=authorization_code",
         "spring.security.oauth2.client.registration.oneidentity.redirect-uri=http://idp/callback",
         "spring.security.oauth2.client.registration.oneidentity.scope=openid",
-        //"spring.security.oauth2.client.provider.oneidentity.issuer-uri=http://idp",
         "spring.security.oauth2.client.provider.oneidentity.authorization-uri=http://idp/login",
-        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX+"spring.security.oauth2.client.provider.oneidentity.token-uri=idp/oidc/token",
         "spring.security.oauth2.client.provider.oneidentity.user-name-attribute=sub",
-        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX+"spring.security.oauth2.client.provider.oneidentity.jwk-set-uri=idp/oidc/keys",
+
         "jwt.audience=application",
         "jwt.tokenType=Bearer",
         "jwt.access-token.expire-in=3600",
         "jwt.access-token.private-key=-----BEGIN PRIVATE KEY----- MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCYGJCFUvgUr20I /H2MLqtFjKX8IZ6VbxiNZD/I/U2zWhYnGffi6QAeecB8RIZf3rt0fdwZ2l6UZ914 mTnsGfE6yk1ee4wmRovUYpDq2O/lApU1TFPaLx0OOSH3kxFJhFnYaQtmBBUDsBrs PSjj9qzq4R0WcUAs0lYE3CJ8BhDA5U0x2EWSeXM9BySL79xZ0g/XhpDs4ngjXfTT o9RTUf3tfuhECTYa8LCddXUqGiBwDACK9vISWm12JKeV03Mp4/WQxX0iB52KSQBV UTHul3msZx1z6s1FcbgtiQnQgDGXMNwWcfJpZFaedTRL3ZDnSghgko1BI0guTmVj wJlYPF4bAgMBAAECggEAA91/8rtwjYoFwdg00pavCJXx8+3gy1hm7dTx4Ag77MZp 0LWSvKQCOkQK1b2iEpak+elm6gtIIwpesP1n4O2p2T4h6DhIkAJz9EJK/4Ti19WQ eCnH6cAPw3hFOjb1FgK0i9DjlsScyhq0HHPTcbOnolJ1PEhFgr4XrIjxoWhADb7b /pdTJBHwNcBAFtz3LPJNR1d5sE0lGz+P7OwP/jqoDK8LtQqS0Yl1eIOiK/d7zD8H ZV928xt3/K4xapif1FWU7mAkpI0USjoeXJF4ZHP8BhhuBnOwswl6QEZ+S+l3daDd Avcr5Cv97qh9Rolz3ncqH8KMjuFfGBIBAwOYFo9wDQKBgQDWTNRuHcKXSlK7Rar/ aVDs1kvExT3BNf2oaqEI+RQUlhDkbDuWoo093J/xaJHNSCRjLFWVLSIftXVnbCDi HD2XmCHRExpWGw4gZDVNBcLgZh8UWgKlLWYz3Q2etLgG1jNgor/A+86d4WPh+aQX zqtozHXlSecaXywyavB1bTlfbQKBgQC1sRbxS4Ir2M+kW4yPyrIihYhqRwZ8nJOv 3IYmiHwex4t3fpwS4z/dH4B8XNSF68E+KbMRB5YNBNOCwCvGx82s6Bq3P8WR74NV k4bhdn2uPku0u+Gteij8A4ONyL1GBbmFn3l/OmsNQTD+2prcexBuGKh7K7yus66F gph7gfLWpwKBgF1xuPufLHfN589TLKIcqTXsp7NQkoIKaeYjQL7p5XCokwsXitA/ Zzk/V9rrTxBlUcCQ12yp9oQ/GseTJa+SwuS0aKKDIuvC9mD3cSp5xaUVwp2cNiUS a8tXq5W1lb0db9/Gd7jN1CWR33zs3zmmW6Xh6dKmbAha0anWaa26h9btAoGAX/N/ vDo2KlW7gn7egml3HYgLfKS5pkFCNVNufRcDBXY4DwkL/2WHqo0iW4riqT7RtLRs 3od1FLcBxEEcXUPTOIby5OeGvQUSBLV+O79JrCU18eJu0iB7WGu6o7vpSPto+Eo5 7Zi6RCuzZkOoGNvc12eqQjHc2R4HAnbvc/oydm0CgYEAwCoHnT4wa/I1I1Few/C0 v/T8EIikZv/ahjAtBDyCS/ECPWHT/rNoVACli8qRODc5QsYnbfusKruGdjYFYZrK DoQdpTUjoj8IA7SrwiifgPvTo+DAv89Weg6GirhhjvG+9s5rtDsrDMNWpthfs0g5 erTxidoSCP2fjk5BpdnE+Ww= -----END PRIVATE KEY-----",
         "jwt.access-token.public-key=-----BEGIN PUBLIC KEY----- MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmBiQhVL4FK9tCPx9jC6r RYyl/CGelW8YjWQ/yP1Ns1oWJxn34ukAHnnAfESGX967dH3cGdpelGfdeJk57Bnx OspNXnuMJkaL1GKQ6tjv5QKVNUxT2i8dDjkh95MRSYRZ2GkLZgQVA7Aa7D0o4/as 6uEdFnFALNJWBNwifAYQwOVNMdhFknlzPQcki+/cWdIP14aQ7OJ4I13006PUU1H9 7X7oRAk2GvCwnXV1KhogcAwAivbyElptdiSnldNzKeP1kMV9IgedikkAVVEx7pd5 rGcdc+rNRXG4LYkJ0IAxlzDcFnHyaWRWnnU0S92Q50oIYJKNQSNILk5lY8CZWDxe GwIDAQAB -----END PUBLIC KEY-----",
+
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX+"spring.security.oauth2.client.provider.oneidentity.token-uri=idp/oidc/token",
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX+"spring.security.oauth2.client.provider.oneidentity.jwk-set-uri=idp/oidc/keys",
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "spring.security.oauth2.client.provider.oneidentity.issuer-uri=idp",
-        "rest-client.pull-payment.api-key=x_api_key0",
-        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.pull-payment.baseUrl=pullPaymentMock",
+
         "spring.application.name=app",
         "spring.application.version=1",
-        "white-list-cf-users=PLOMRC01P30L736Y",
-
+        "rest-client.pull-payment.baseUrl=pullPaymentMock",
+        "rest-client.pull-payment.api-key=x_api_key0",
+        "rest-client.biz-events.paid-notice.baseUrl= bizEventsMock",
         "rest-client.biz-events.paid-notice.api-key=x_api_key0",
-        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paid-notice.baseUrl= bizEventsMock",
-
-        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.gpd.baseUrl=gpdMock",
+        "rest-client.gpd.baseUrl=gpdMock",
         "rest-client.gpd.api-key=x_api_key0",
-
+        "white-list-cf-users=PLOMRC01P30L736Y",
         "spring.cache.type=simple",
         "spontaneous-mock-paths.organizationList=mock/organizationsMock.json"
     })
@@ -88,6 +92,7 @@ class IdpIntegrationTest {
     private static final String IDP_TOKEN_URL = "/idp/oidc/token";
 
     private static final String USER_INFO_URL = "/auth/user";
+
     @Autowired
     private WireMockServer wireMockServer;
     @Autowired
@@ -98,9 +103,18 @@ class IdpIntegrationTest {
     ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    AuthnClient authnClient;
+    @MockitoBean
+    AuthnService authnService;
+    @MockitoBean
+    AuthApisHolder authApisHolder;
+
     private static RSAPublicKey rsaPublicKey = null;
     private static RSAPrivateKey rsaPrivateKey = null;
     private static String modulusBase64 = null;
+
     @BeforeAll
     static void setup() throws NoSuchAlgorithmException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
