@@ -1,0 +1,29 @@
+spring:
+  security:
+    enabled: false
+  main:
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+      - org.springframework.cloud.openfeign.FeignAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+  cache:
+    type: none
+
+management:
+  endpoint:
+    health:
+      group:
+        liveness:
+          include: livenessState,diskSpace
+        readiness:
+          include: readinessState
+  health:
+    redis:
+      enabled: false
+
+springdoc:
+  writer-with-default-pretty-printer: true

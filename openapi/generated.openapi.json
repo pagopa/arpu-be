@@ -1,0 +1,1514 @@
+{
+  "openapi" : "3.1.0",
+  "info" : {
+    "title" : "arpu-be",
+    "description" : "Api and Models",
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "http://localhost",
+    "description" : "Generated server url"
+  } ],
+  "security" : [ {
+    "BearerAuth" : [ ]
+  } ],
+  "tags" : [ {
+    "name" : "arc notices",
+    "description" : "the arc notices API"
+  }, {
+    "name" : "arc zendesk assistance",
+    "description" : "the arc zendesk assistance API"
+  }, {
+    "name" : "arc auth",
+    "description" : "the arc auth API"
+  }, {
+    "name" : "arc payment notices",
+    "description" : "the arc payment notices API"
+  }, {
+    "name" : "Organization",
+    "description" : "the Organization API"
+  }, {
+    "name" : "arc payment notice spontaneous",
+    "description" : "the arc payment notice spontaneous API"
+  } ],
+  "paths" : {
+    "/payment-notices" : {
+      "get" : {
+        "tags" : [ "arc payment notices" ],
+        "summary" : "Retrieve payment notices from arc",
+        "operationId" : "getPaymentNotices",
+        "parameters" : [ {
+          "name" : "dueDate",
+          "in" : "query",
+          "description" : "Optional date to filter paymentNotices (if provided use the format yyyy-MM-dd)",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "Number of elements on one page. Default = 50",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 50,
+            "maximum" : 100,
+            "minimum" : 1
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number. Page value starts from 0",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0,
+            "minimum" : 0
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentNoticesListDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong or missing function key",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentNoticesListDTO"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too many Requests",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentNoticesListDTO"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "arc payment notices" ],
+        "summary" : "Generate payment notice from arc",
+        "operationId" : "postGeneratePaymentNotice",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PaymentNoticePayloadDTO"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong or missing function key",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too many Requests",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/token/oneidentity" : {
+      "get" : {
+        "tags" : [ "arc auth" ],
+        "summary" : "Provide authorization endpoint for exchanging code for token",
+        "operationId" : "getAuthenticationToken",
+        "parameters" : [ {
+          "name" : "code",
+          "in" : "query",
+          "description" : "The value used for exchanging code for token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "state",
+          "in" : "query",
+          "description" : "The value of the state this value is handled by the security component",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Token Response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong or missing function key",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too many Requests",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/token/assistance" : {
+      "get" : {
+        "tags" : [ "arc zendesk assistance" ],
+        "summary" : "Retrieve jwt token for the zendesk assistance",
+        "operationId" : "getZendeskAssistanceToken",
+        "parameters" : [ {
+          "name" : "userEmail",
+          "in" : "query",
+          "description" : "Required user mail for the assistance",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "email"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Obtained token for zendesk assistance",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ZendeskAssistanceTokenResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong or missing function key",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ZendeskAssistanceTokenResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/payment-notices/{iupd}" : {
+      "get" : {
+        "tags" : [ "arc payment notices" ],
+        "summary" : "Retrieve payment notices details from arc",
+        "operationId" : "getPaymentNoticesDetails",
+        "parameters" : [ {
+          "name" : "iupd",
+          "in" : "path",
+          "description" : "A unique iupd that identifies a payment notice",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "paTaxCode",
+          "in" : "query",
+          "description" : "Fiscal code of EC",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong or missing function key",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Payment notice not found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too many Requests",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/organizations" : {
+      "get" : {
+        "tags" : [ "arc payment notice spontaneous" ],
+        "summary" : "Retrieve organizations list",
+        "operationId" : "getOrganizations",
+        "responses" : {
+          "200" : {
+            "description" : "Obtained organizations list",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrganizationsListDTO"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong or missing function key",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrganizationsListDTO"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/notices" : {
+      "get" : {
+        "tags" : [ "arc notices" ],
+        "summary" : "Retrieve the paged notices list from arc",
+        "operationId" : "getNoticesList",
+        "parameters" : [ {
+          "name" : "x-continuation-token",
+          "in" : "header",
+          "description" : "Continuation token",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "Number of items for page",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "paidByMe",
+          "in" : "query",
+          "description" : "The field to filter notices by if is payer",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "name" : "registeredToMe",
+          "in" : "query",
+          "description" : "The field to filter notices by if is debtor",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "name" : "orderBy",
+          "in" : "query",
+          "description" : "A value passed to sort by field (Default: TRANSACTION_DATE)",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "default" : "TRANSACTION_DATE"
+          }
+        }, {
+          "name" : "ordering",
+          "in" : "query",
+          "description" : "Direction of ordering (Default: DESC)",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "default" : "DESC"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Obtained notices list",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoticesListDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong or missing function key",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoticesListDTO"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too many Requests",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoticesListDTO"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/notices/{eventId}" : {
+      "get" : {
+        "tags" : [ "arc notices" ],
+        "summary" : "Retrieve notice details from arc",
+        "operationId" : "getNoticeDetails",
+        "parameters" : [ {
+          "name" : "eventId",
+          "in" : "path",
+          "description" : "A unique id that identifies a paid notice",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Obtained notice details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoticeDetailsDTO"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong or missing function key",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoticeDetailsDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Notice details not found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too many Requests",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoticeDetailsDTO"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/notices/{eventId}/receipt" : {
+      "get" : {
+        "tags" : [ "arc notices" ],
+        "summary" : "Retrieve notice receipt from arc",
+        "operationId" : "getNoticeReceipt",
+        "parameters" : [ {
+          "name" : "eventId",
+          "in" : "path",
+          "description" : "A unique id that identifies a notice",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Obtained PDF notice receipt",
+            "content" : {
+              "application/pdf" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong or missing function key",
+            "content" : {
+              "application/pdf" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Notice receipt not found",
+            "content" : {
+              "application/pdf" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too many Requests",
+            "content" : {
+              "application/pdf" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/pdf" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/logout" : {
+      "get" : {
+        "tags" : [ "arc auth" ],
+        "summary" : "Provide the logout endpoint",
+        "operationId" : "getLogoutEndpoint",
+        "responses" : {
+          "200" : {
+            "description" : "User successfully logged out"
+          },
+          "401" : {
+            "description" : "Wrong or missing function key"
+          },
+          "429" : {
+            "description" : "Too many Requests"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/login/oneidentity" : {
+      "get" : {
+        "tags" : [ "arc auth" ],
+        "summary" : "Provide the authentication endpoint",
+        "operationId" : "getAuthenticationEndpoint",
+        "responses" : {
+          "302" : {
+            "description" : "Redirect to the authentication endpoint"
+          },
+          "401" : {
+            "description" : "Wrong or missing function key"
+          },
+          "429" : {
+            "description" : "Too many Requests"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/brokers/{brokerId}/organizations/spontaneous" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "summary" : "Retrieves the list of organizations with at least one dpto with flagSpontaneous and flagActive set to true",
+        "operationId" : "getOrganizationsWithSpontaneous",
+        "parameters" : [ {
+          "name" : "brokerId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/OrganizationsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized - Missing or invalid token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/OrganizationsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden - Access denied",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/OrganizationsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/OrganizationsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/auth/user" : {
+      "get" : {
+        "tags" : [ "arc auth" ],
+        "summary" : "Provide information regarding authenticated user",
+        "operationId" : "getUserInfo",
+        "responses" : {
+          "200" : {
+            "description" : "Token Response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request cannot be processed, required parameters are not present",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too many Requests",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ]
+      }
+    },
+    "/auth/testuser" : {
+      "get" : {
+        "tags" : [ "arc auth" ],
+        "summary" : "Provide access token for the sample user",
+        "operationId" : "getAuthTokenTestUser",
+        "responses" : {
+          "200" : {
+            "description" : "Token Response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too many Requests",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "PaymentNoticeDetailsDTO" : {
+        "type" : "object",
+        "properties" : {
+          "iupd" : {
+            "type" : "string",
+            "description" : "Unique ID of the Debt Position (for positions originating from ACA the IUPD starts with ACA_)"
+          },
+          "paTaxCode" : {
+            "type" : "string",
+            "description" : "Tax code of the Creditor Body"
+          },
+          "paFullName" : {
+            "type" : "string",
+            "description" : "Company name of the Creditor Body"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/PaymentNoticeDetailsStatus"
+          },
+          "paymentOptions" : {
+            "type" : "array",
+            "description" : "Array structure containing any payment options (there always exists at least 1)",
+            "items" : {
+              "$ref" : "#/components/schemas/PaymentOptionDetailsDTO"
+            }
+          }
+        }
+      },
+      "PaymentNoticeDetailsStatus" : {
+        "type" : "string",
+        "enum" : [ "DRAFT", "PUBLISHED", "VALID", "INVALID", "EXPIRED", "PARTIALLY_PAID", "PAID", "REPORTED" ]
+      },
+      "PaymentOptionDetailsDTO" : {
+        "type" : "object",
+        "properties" : {
+          "nav" : {
+            "type" : "string",
+            "description" : "Notice Code"
+          },
+          "iuv" : {
+            "type" : "string",
+            "description" : "Unique identifier"
+          },
+          "amount" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Payment Option Amount"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Description of the OP (e.g. \"SISA - 741T, 942T - Checks without authorization or funding\")"
+          },
+          "isPartialPayment" : {
+            "type" : "boolean",
+            "description" : "Indicates, if set to true, the current PO is a installment"
+          },
+          "dueDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2024-05-31T13:07:25Z"
+          },
+          "notificationFee" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "corresponds to the SEND notification costs"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/PaymentOptionStatus"
+          }
+        }
+      },
+      "PaymentOptionStatus" : {
+        "type" : "string",
+        "enum" : [ "PO_UNPAID", "PO_PAID", "PO_PARTIALLY_REPORTED", "PO_REPORTED" ]
+      },
+      "ErrorDTO" : {
+        "type" : "object",
+        "properties" : {
+          "error" : {
+            "$ref" : "#/components/schemas/ErrorEnum"
+          },
+          "error_description" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "error" ]
+      },
+      "ErrorEnum" : {
+        "type" : "string",
+        "enum" : [ "generic_error", "receipt_not_found_error", "notice_not_found_error", "payment_notice_not_found_error", "invalid_amount", "invalid_date", "invalid_email", "invalid_request", "auth_user_unauthorized", "too_many_request" ]
+      },
+      "PaymentNoticePayloadDTO" : {
+        "type" : "object",
+        "properties" : {
+          "paTaxCode" : {
+            "type" : "string",
+            "description" : "The fiscal code of EC",
+            "minLength" : 1
+          },
+          "paFullName" : {
+            "type" : "string",
+            "description" : "The name of EC",
+            "minLength" : 1
+          },
+          "amount" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "description" : {
+            "type" : "string",
+            "maxLength" : 140,
+            "minLength" : 0
+          }
+        },
+        "required" : [ "amount", "description", "paFullName", "paTaxCode" ]
+      },
+      "TokenResponse" : {
+        "type" : "object",
+        "properties" : {
+          "accessToken" : {
+            "type" : "string"
+          },
+          "tokenType" : {
+            "type" : "string"
+          },
+          "expiresIn" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "refreshToken" : {
+            "type" : "string"
+          },
+          "idToken" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "accessToken", "expiresIn", "tokenType" ]
+      },
+      "ZendeskAssistanceTokenResponse" : {
+        "type" : "object",
+        "properties" : {
+          "assistanceToken" : {
+            "type" : "string"
+          },
+          "returnTo" : {
+            "type" : "string",
+            "description" : "URL of the Help Center to return"
+          },
+          "actionUrl" : {
+            "type" : "string",
+            "description" : "URL of Zendesk endpoint"
+          }
+        },
+        "required" : [ "actionUrl", "assistanceToken", "returnTo" ]
+      },
+      "InstallmentDTO" : {
+        "type" : "object",
+        "properties" : {
+          "nav" : {
+            "type" : "string",
+            "description" : "Notice Code"
+          },
+          "iuv" : {
+            "type" : "string",
+            "description" : "Unique identifier"
+          },
+          "paTaxCode" : {
+            "type" : "string",
+            "description" : "Tax code of the Creditor Body"
+          },
+          "paFullName" : {
+            "type" : "string",
+            "description" : "Company name of the Creditor Body"
+          },
+          "amount" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Payment Option Amount"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Description of the OP (e.g. \"SISA - 741T, 942T - Checks without authorization or funding\")"
+          },
+          "dueDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2024-05-31T13:07:25Z"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/PaymentOptionStatus"
+          }
+        },
+        "required" : [ "amount", "description", "dueDate", "iuv", "nav", "paFullName", "paTaxCode", "status" ]
+      },
+      "PaymentNoticeDTO" : {
+        "type" : "object",
+        "properties" : {
+          "iupd" : {
+            "type" : "string",
+            "description" : "Unique ID of the Debt Position (for positions originating from ACA the IUPD starts with ACA_)"
+          },
+          "paTaxCode" : {
+            "type" : "string",
+            "description" : "Tax code of the Creditor Body"
+          },
+          "paFullName" : {
+            "type" : "string",
+            "description" : "Company name of the Creditor Body"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/PaymentNoticeStatus"
+          },
+          "paymentOptions" : {
+            "type" : "array",
+            "description" : "Array structure containing any payment options (there always exists at least 1)",
+            "items" : {
+              "$ref" : "#/components/schemas/PaymentOptionDTO"
+            }
+          }
+        },
+        "required" : [ "iupd", "paFullName", "paTaxCode", "paymentOptions", "status" ]
+      },
+      "PaymentNoticeStatus" : {
+        "type" : "string",
+        "enum" : [ "VALID", "PARTIALLY_PAID" ]
+      },
+      "PaymentNoticesListDTO" : {
+        "type" : "object",
+        "properties" : {
+          "paymentNotices" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/PaymentNoticeDTO"
+            }
+          }
+        }
+      },
+      "PaymentOptionDTO" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string",
+            "description" : "Description of the payment option"
+          },
+          "numberOfInstallments" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Number of installments that make up the payment option, if equal to 1 it is a single payment"
+          },
+          "amount" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "total amount for the payment option"
+          },
+          "dueDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2024-05-31T13:07:25Z"
+          },
+          "isPartialPayment" : {
+            "type" : "boolean",
+            "description" : "Indicates whether the OP is part of an installment plan"
+          },
+          "installments" : {
+            "type" : "array",
+            "description" : "Array structure containing the installments that make up the payment option (there always exists at least 1)",
+            "items" : {
+              "$ref" : "#/components/schemas/InstallmentDTO"
+            }
+          }
+        },
+        "required" : [ "installments", "numberOfInstallments" ]
+      },
+      "OrganizationDTO" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "paFullName" : {
+            "type" : "string"
+          },
+          "paTaxCode" : {
+            "type" : "string"
+          },
+          "ipaCode" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "id", "ipaCode", "paFullName", "paTaxCode" ]
+      },
+      "OrganizationsListDTO" : {
+        "type" : "object",
+        "properties" : {
+          "organizations" : {
+            "type" : "array",
+            "description" : "Array structure containing the organizations",
+            "items" : {
+              "$ref" : "#/components/schemas/OrganizationDTO"
+            }
+          }
+        }
+      },
+      "NoticeDTO" : {
+        "type" : "object",
+        "properties" : {
+          "eventId" : {
+            "type" : "string"
+          },
+          "payeeName" : {
+            "type" : "string"
+          },
+          "payeeTaxCode" : {
+            "type" : "string"
+          },
+          "amount" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "noticeDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2024-05-31T13:07:25Z"
+          },
+          "isCart" : {
+            "type" : "boolean"
+          },
+          "paidByMe" : {
+            "type" : "boolean"
+          },
+          "registeredToMe" : {
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "amount", "eventId", "isCart", "noticeDate", "paidByMe", "payeeTaxCode", "registeredToMe" ]
+      },
+      "NoticesListDTO" : {
+        "type" : "object",
+        "properties" : {
+          "notices" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/NoticeDTO"
+            }
+          }
+        }
+      },
+      "BrandEnum" : {
+        "type" : "string",
+        "enum" : [ "MASTERCARD", "VISA", "AMEX", "MAESTRO", "JCB", "OTHER", "DINERS", "DISCOVER", "UNIONPAY" ]
+      },
+      "CartItemDTO" : {
+        "type" : "object",
+        "properties" : {
+          "subject" : {
+            "type" : "string"
+          },
+          "amount" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "payee" : {
+            "$ref" : "#/components/schemas/UserDetailDTO"
+          },
+          "debtor" : {
+            "$ref" : "#/components/schemas/UserDetailDTO"
+          },
+          "refNumberValue" : {
+            "type" : "string"
+          },
+          "refNumberType" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "amount", "refNumberType", "refNumberValue", "subject" ]
+      },
+      "InfoNoticeDTO" : {
+        "type" : "object",
+        "properties" : {
+          "eventId" : {
+            "type" : "string"
+          },
+          "authCode" : {
+            "type" : "string"
+          },
+          "rrn" : {
+            "type" : "string"
+          },
+          "noticeDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2024-05-31T13:07:25Z"
+          },
+          "pspName" : {
+            "type" : "string"
+          },
+          "walletInfo" : {
+            "$ref" : "#/components/schemas/WalletInfoDTO"
+          },
+          "paymentMethod" : {
+            "$ref" : "#/components/schemas/PaymentMethodEnum"
+          },
+          "payer" : {
+            "$ref" : "#/components/schemas/UserDetailDTO"
+          },
+          "amount" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "fee" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalAmount" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "origin" : {
+            "$ref" : "#/components/schemas/OriginEnum"
+          }
+        },
+        "required" : [ "amount", "eventId", "noticeDate", "origin", "pspName", "rrn", "totalAmount" ]
+      },
+      "NoticeDetailsDTO" : {
+        "type" : "object",
+        "properties" : {
+          "infoNotice" : {
+            "$ref" : "#/components/schemas/InfoNoticeDTO"
+          },
+          "carts" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CartItemDTO"
+            }
+          }
+        }
+      },
+      "OriginEnum" : {
+        "type" : "string",
+        "enum" : [ "INTERNAL", "PM", "NDP001PROD", "NDP002PROD", "NDP003PROD", "UNKNOWN" ]
+      },
+      "PaymentMethodEnum" : {
+        "type" : "string",
+        "enum" : [ "BBT", "BP", "AD", "CP", "PO", "OBEP", "JIF", "MYBK", "PPAL", "UNKNOWN" ]
+      },
+      "UserDetailDTO" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "taxCode" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "taxCode" ]
+      },
+      "WalletInfoDTO" : {
+        "type" : "object",
+        "properties" : {
+          "accountHolder" : {
+            "type" : "string"
+          },
+          "brand" : {
+            "$ref" : "#/components/schemas/BrandEnum"
+          },
+          "blurredNumber" : {
+            "type" : "string"
+          },
+          "maskedEmail" : {
+            "type" : "string"
+          }
+        }
+      },
+      "OrganizationsWithSpontaneousDTO" : {
+        "type" : "object",
+        "properties" : {
+          "organizationId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "orgName" : {
+            "type" : "string"
+          },
+          "orgFiscalCode" : {
+            "type" : "string"
+          },
+          "ipaCode" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "ipaCode", "orgFiscalCode", "orgName", "organizationId" ]
+      },
+      "UserInfo" : {
+        "type" : "object",
+        "properties" : {
+          "userId" : {
+            "type" : "string"
+          },
+          "fiscalCode" : {
+            "type" : "string"
+          },
+          "familyName" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "fiscalCode", "userId" ]
+      }
+    },
+    "securitySchemes" : {
+      "BearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    }
+  }
+}

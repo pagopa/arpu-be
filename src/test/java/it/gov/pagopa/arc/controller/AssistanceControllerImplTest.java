@@ -10,8 +10,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -21,8 +26,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = {
-        ArcZendeskAssistanceApi.class
-})
+        ArcZendeskAssistanceApi.class},
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+        classes = JwtAuthenticationFilter.class),
+excludeAutoConfiguration = {
+        SecurityAutoConfiguration .class,
+        OAuth2ClientAutoConfiguration .class,
+        OAuth2ResourceServerAutoConfiguration .class
+        })
 @AutoConfigureMockMvc(addFilters = false)
 class AssistanceControllerImplTest {
 
@@ -33,8 +44,6 @@ class AssistanceControllerImplTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
-    JwtAuthenticationFilter jwtAuthenticationFilterMock;
     @MockitoBean
     ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
 
