@@ -80,6 +80,14 @@ rest-client:
     print-body-when-error: "\${AUTH_PRINT_BODY_WHEN_ERROR:true}"
     post-token:
       client_secret: "\${P4PA_AUTH_CLIENT_SECRET:clientsecret}"
+  citizen:
+    base-url: "\${CITIZEN_SERVER_BASE_URL:}"
+    max-attempts: "\${CITIZEN_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${CITIZEN_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${CITIZEN_PRINT_BODY_WHEN_ERROR:true}"
+
+springdoc:
+  writer-with-default-pretty-printer: true
 
 spontaneous-mock-paths:
   organizationList: "mock/organizationsMock.json"
