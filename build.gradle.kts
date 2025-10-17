@@ -79,11 +79,13 @@ dependencies {
     implementation("com.auth0:jwks-rsa:${jwksRsaVersion}")
 
 	compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 	annotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
-
+	testAnnotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
 
 	//	Testing
+	testCompileOnly("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
@@ -174,7 +176,8 @@ openApiGenerate {
 	typeMappings.set(mapOf(
         "DateTime" to "java.time.LocalDateTime",
         "zoned-date-time" to "java.time.ZonedDateTime",
-		"OrganizationsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO"
+		"OrganizationsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO",
+		"DebtPositionTypeOrgsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO"
 	))
 }
 
