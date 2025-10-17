@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.connector.citizen.config;
 
 import it.gov.pagopa.arc.connector.BaseApiHolderTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,15 @@ class CitizenApisHolderTest extends BaseApiHolderTest {
                 .build();
         citizenApisHolder = new CitizenApisHolder(clientConfig, restTemplateBuilderMock);
     }
+
+    @AfterEach
+    void verifyNoMoreInteractions() {
+        Mockito.verifyNoMoreInteractions(
+                restTemplateBuilderMock,
+                restTemplateMock
+        );
+    }
+
 
     @Test
     void whenGetOrganizationApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
