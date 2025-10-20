@@ -74,17 +74,17 @@ rest-client:
     baseUrl: \${GPD_SERVICE_BASE_URL:}
     api-key: \${GPD_SERVICE_API_KEY:}
   auth:
-    base-url: "\${AUTH_SERVER_BASE_URL:}/payhub"
-    max-attempts: "\${AUTH_MAX_ATTEMPTS:3}" # It's counting also the first attempt
-    wait-time-millis: "\${AUTH_WAIT_TIME_MILLIS:500}"
-    print-body-when-error: "\${AUTH_PRINT_BODY_WHEN_ERROR:true}"
+    base-url: "\${P4PA_AUTH_SERVER_BASE_URL:}/payhub"
+    max-attempts: "\${P4PA_AUTH_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${P4PA_AUTH_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${P4PA_AUTH_PRINT_BODY_WHEN_ERROR:true}"
     post-token:
       client_secret: "\${P4PA_AUTH_CLIENT_SECRET:clientsecret}"
   citizen:
-    base-url: "\${CITIZEN_SERVER_BASE_URL:}"
-    max-attempts: "\${CITIZEN_MAX_ATTEMPTS:3}" # It's counting also the first attempt
-    wait-time-millis: "\${CITIZEN_WAIT_TIME_MILLIS:500}"
-    print-body-when-error: "\${CITIZEN_PRINT_BODY_WHEN_ERROR:true}"
+    base-url: "\${P4PA_CITIZEN_SERVER_BASE_URL:}"
+    max-attempts: "\${P4PA_CITIZEN_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${P4PA_CITIZEN_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${P4PA_CITIZEN_PRINT_BODY_WHEN_ERROR:true}"
 
 springdoc:
   writer-with-default-pretty-printer: true
