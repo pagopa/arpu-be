@@ -176,7 +176,8 @@ openApiGenerate {
 	typeMappings.set(mapOf(
         "DateTime" to "java.time.LocalDateTime",
         "zoned-date-time" to "java.time.ZonedDateTime",
-		"OrganizationsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO"
+		"OrganizationsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO",
+		"DebtPositionTypeOrgsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO"
 	))
 }
 
