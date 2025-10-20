@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CitizenServiceImpl implements CitizenService{
+public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationClient organizationClient;
 
-    public CitizenServiceImpl(OrganizationClient organizationClient) {
+    public OrganizationServiceImpl(OrganizationClient organizationClient) {
         this.organizationClient = organizationClient;
     }
 

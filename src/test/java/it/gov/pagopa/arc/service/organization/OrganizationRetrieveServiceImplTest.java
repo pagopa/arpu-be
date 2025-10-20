@@ -1,7 +1,7 @@
 package it.gov.pagopa.arc.service.organization;
 
 import it.gov.pagopa.arc.connector.auth.service.AuthnService;
-import it.gov.pagopa.arc.connector.citizen.CitizenService;
+import it.gov.pagopa.arc.connector.citizen.OrganizationService;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO;
 import org.junit.jupiter.api.AfterEach;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class OrganizationRetrieveServiceImplTest {
 
     @Mock
-    private CitizenService citizenServiceMock;
+    private OrganizationService organizationServiceMock;
     @Mock
     private AuthnService authnServiceMock;
 
@@ -32,13 +32,13 @@ class OrganizationRetrieveServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        organizationRetrieveService = new OrganizationRetrieveServiceImpl(citizenServiceMock, authnServiceMock);
+        organizationRetrieveService = new OrganizationRetrieveServiceImpl(organizationServiceMock, authnServiceMock);
     }
 
     @AfterEach
     void verifyNoMoreInteractions() {
         Mockito.verifyNoMoreInteractions(
-            citizenServiceMock, authnServiceMock
+                organizationServiceMock, authnServiceMock
         );
     }
 
@@ -49,7 +49,7 @@ class OrganizationRetrieveServiceImplTest {
         String accessToken = "accessToken";
         List<OrganizationsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, OrganizationsWithSpontaneousDTO.class);
 
-        Mockito.when(citizenServiceMock.getOrganizationsWithSpontaneousDTO(accessToken, brokerId)).thenReturn(expectedResult);
+        Mockito.when(organizationServiceMock.getOrganizationsWithSpontaneousDTO(accessToken, brokerId)).thenReturn(expectedResult);
         Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
         //when
         List<OrganizationsWithSpontaneousDTO> result = organizationRetrieveService.getOrganizationsWithSpontaneousDTO(brokerId);

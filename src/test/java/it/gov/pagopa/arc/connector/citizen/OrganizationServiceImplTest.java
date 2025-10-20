@@ -17,18 +17,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class CitizenServiceImplTest {
+class OrganizationServiceImplTest {
 
     @Mock
     private OrganizationClient organizationClientMock;
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
-    CitizenService citizenService;
+    OrganizationService organizationService;
 
     @BeforeEach
     void setUp() {
-        citizenService = new CitizenServiceImpl(organizationClientMock);
+        organizationService = new OrganizationServiceImpl(organizationClientMock);
     }
 
     @AfterEach
@@ -47,7 +47,7 @@ class CitizenServiceImplTest {
 
         Mockito.when(organizationClientMock.getOrganizationsWithSpontaneousDTO(accessToken, brokerId)).thenReturn(expectedResult);
         //when
-        List<OrganizationsWithSpontaneousDTO> result = citizenService.getOrganizationsWithSpontaneousDTO(accessToken, brokerId);
+        List<OrganizationsWithSpontaneousDTO> result = organizationService.getOrganizationsWithSpontaneousDTO(accessToken, brokerId);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
