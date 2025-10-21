@@ -47,4 +47,13 @@ class CitizenApisHolderTest extends BaseApiHolderTest {
                 new ParameterizedTypeReference<>() {},
                 citizenApisHolder::unload);
     }
+
+    @Test
+    void whenGetDebtPositionTypeOrgApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
+        assertAuthenticationShouldBeSetInThreadSafeMode(
+                accessToken -> citizenApisHolder.getDebtPositionTypeOrgApi(accessToken)
+                        .getDebtPositionTypeOrgsWithSpontaneous(1L),
+                new ParameterizedTypeReference<>() {},
+                citizenApisHolder::unload);
+    }
 }
