@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.connector.citizen;
 
+import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.DebtPositionTypeOrgClient;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
@@ -22,6 +23,8 @@ class DebtPositionTypeOrgServiceImplTest {
 
     @Mock
     private DebtPositionTypeOrgClient debtPositionTypeOrgClientMock;
+    @Mock
+    private AuthnService authnServiceMock;
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
@@ -29,13 +32,14 @@ class DebtPositionTypeOrgServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        debtPositionTypeOrgService = new DebtPositionTypeOrgServiceImpl(debtPositionTypeOrgClientMock);
+        debtPositionTypeOrgService = new DebtPositionTypeOrgServiceImpl(debtPositionTypeOrgClientMock, authnServiceMock);
     }
 
     @AfterEach
     void verifyNoMoreInteractions() {
         Mockito.verifyNoMoreInteractions(
-                debtPositionTypeOrgClientMock
+                debtPositionTypeOrgClientMock,
+                authnServiceMock
         );
     }
 
@@ -46,9 +50,10 @@ class DebtPositionTypeOrgServiceImplTest {
         Long organizationId = 1L;
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
 
+        Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
         Mockito.when(debtPositionTypeOrgClientMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId, accessToken)).thenReturn(expectedResult);
         //when
-        List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgService.getDebtPositionTypeOrgsWithSpontaneous(organizationId, accessToken);
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgService.getDebtPositionTypeOrgsWithSpontaneous(organizationId);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);

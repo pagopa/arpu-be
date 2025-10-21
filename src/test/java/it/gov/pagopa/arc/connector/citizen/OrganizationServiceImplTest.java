@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.connector.citizen;
 
+import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.OrganizationClient;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO;
@@ -21,6 +22,8 @@ class OrganizationServiceImplTest {
 
     @Mock
     private OrganizationClient organizationClientMock;
+    @Mock
+    private AuthnService authnServiceMock;
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
@@ -28,13 +31,14 @@ class OrganizationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        organizationService = new OrganizationServiceImpl(organizationClientMock);
+        organizationService = new OrganizationServiceImpl(organizationClientMock, authnServiceMock);
     }
 
     @AfterEach
     void verifyNoMoreInteractions() {
         Mockito.verifyNoMoreInteractions(
-                organizationClientMock
+                organizationClientMock,
+                authnServiceMock
         );
     }
 
@@ -45,9 +49,10 @@ class OrganizationServiceImplTest {
         Long brokerId = 1L;
         List<OrganizationsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, OrganizationsWithSpontaneousDTO.class);
 
+        Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
         Mockito.when(organizationClientMock.getOrganizationsWithSpontaneousDTO(accessToken, brokerId)).thenReturn(expectedResult);
         //when
-        List<OrganizationsWithSpontaneousDTO> result = organizationService.getOrganizationsWithSpontaneousDTO(accessToken, brokerId);
+        List<OrganizationsWithSpontaneousDTO> result = organizationService.getOrganizationsWithSpontaneousDTO(brokerId);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);

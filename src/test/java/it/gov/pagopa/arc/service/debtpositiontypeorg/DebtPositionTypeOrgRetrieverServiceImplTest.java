@@ -1,6 +1,5 @@
 package it.gov.pagopa.arc.service.debtpositiontypeorg;
 
-import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.DebtPositionTypeOrgService;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
@@ -23,8 +22,6 @@ class DebtPositionTypeOrgRetrieverServiceImplTest {
 
     @Mock
     private DebtPositionTypeOrgService debtPositionTypeOrgServiceMock;
-    @Mock
-    private AuthnService authnServiceMock;
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
@@ -32,25 +29,22 @@ class DebtPositionTypeOrgRetrieverServiceImplTest {
 
     @BeforeEach
     void setUp() {
-       debtPositionTypeOrgRetrieverService = new DebtPositionTypeOrgRetrieverServiceImpl(debtPositionTypeOrgServiceMock, authnServiceMock);
+       debtPositionTypeOrgRetrieverService = new DebtPositionTypeOrgRetrieverServiceImpl(debtPositionTypeOrgServiceMock);
     }
 
     @AfterEach
     void verifyNoMoreInteractions() {
         Mockito.verifyNoMoreInteractions(
-               debtPositionTypeOrgServiceMock,
-                authnServiceMock
+               debtPositionTypeOrgServiceMock
         );
     }
 
     @Test
     void givenOrganizationIdWhenGetDebtPositionTypeOrgsWithSpontaneousThenReturnDebtPositionTypeOrgsWithSpontaneous() {
         Long organizationId = 1L;
-        String accessToken = "accessToken";
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
 
-        Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
-        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId, accessToken)).thenReturn(expectedResult);
+        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId)).thenReturn(expectedResult);
         //when
         List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneous(organizationId);
         //then
