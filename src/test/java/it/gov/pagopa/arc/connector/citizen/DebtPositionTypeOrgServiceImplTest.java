@@ -21,21 +21,21 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class DebtPositionTypeOrgServiceImplTest {
 
     @Mock
-    private DebtPositionTypeOrgClient debtPositionTypeOrgClient;
+    private DebtPositionTypeOrgClient debtPositionTypeOrgClientMock;
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
-    DebtPositionTypeOrgService debtPositionTypeOrgService;
+    private DebtPositionTypeOrgService debtPositionTypeOrgService;
 
     @BeforeEach
     void setUp() {
-        debtPositionTypeOrgService = new DebtPositionTypeOrgServiceImpl(debtPositionTypeOrgClient);
+        debtPositionTypeOrgService = new DebtPositionTypeOrgServiceImpl(debtPositionTypeOrgClientMock);
     }
 
     @AfterEach
     void verifyNoMoreInteractions() {
         Mockito.verifyNoMoreInteractions(
-                debtPositionTypeOrgClient
+                debtPositionTypeOrgClientMock
         );
     }
 
@@ -46,7 +46,7 @@ class DebtPositionTypeOrgServiceImplTest {
         Long organizationId = 1L;
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
 
-        Mockito.when(debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneous(organizationId, accessToken)).thenReturn(expectedResult);
+        Mockito.when(debtPositionTypeOrgClientMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId, accessToken)).thenReturn(expectedResult);
         //when
         List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgService.getDebtPositionTypeOrgsWithSpontaneous(organizationId, accessToken);
         //then

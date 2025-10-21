@@ -28,7 +28,7 @@ class DebtPositionTypeOrgRetrieverServiceImplTest {
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
-    DebtPositionTypeOrgRetrieverService debtPositionTypeOrgRetrieverService;
+    private DebtPositionTypeOrgRetrieverService debtPositionTypeOrgRetrieverService;
 
     @BeforeEach
     void setUp() {
@@ -49,8 +49,8 @@ class DebtPositionTypeOrgRetrieverServiceImplTest {
         String accessToken = "accessToken";
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
 
-        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId, accessToken)).thenReturn(expectedResult);
         Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
+        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId, accessToken)).thenReturn(expectedResult);
         //when
         List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneous(organizationId);
         //then
