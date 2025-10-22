@@ -8,15 +8,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.net.URI;
 
-class SecurityUtilsTest {
+public class SecurityUtilsTest {
 
   @AfterEach
   public void clearContext() {
     SecurityContextHolder.clearContext();
+  }
+
+  public static void clearSecurityContext() {
+    SecurityContextHolder.clearContext();
+  }
+
+  public static void configureSecurityContext(IamUserInfoDTO userInfo) {
+    configureSecurityContext("TOKENHEADER.TOKENPAYLOAD.TOKENDIGEST", userInfo);
+  }
+
+  public static void configureSecurityContext(String token, IamUserInfoDTO userInfo) {
+    SecurityContextHolder.setContext(new SecurityContextImpl(new UsernamePasswordAuthenticationToken(userInfo, token)));
   }
 
   @Test

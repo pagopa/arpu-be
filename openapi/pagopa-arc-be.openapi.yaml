@@ -594,6 +594,48 @@ paths:
           description: Forbidden - Access denied
         '500':
           description: Internal Server Error
+  /brokers/{brokerId}/debt-positions/{debtPositionId}/notice/zip:
+    get:
+      tags:
+        - DebtPosition
+      summary: "Retrieve and generate a ZIP file containing the payment notices of a specific DebtPosition"
+      operationId: getUnpaidPaymentNoticeZip
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: debtPositionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ZIP file containing the payment notices
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: No Content - No installments found
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
 components:
   securitySchemes:
     BearerAuth:
@@ -1039,6 +1081,7 @@ components:
             - invalid_request
             - auth_user_unauthorized
             - too_many_request
+            - bad_request
         error_description:
           type: string
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"

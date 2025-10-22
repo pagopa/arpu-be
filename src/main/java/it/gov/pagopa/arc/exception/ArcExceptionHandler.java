@@ -4,6 +4,7 @@ import it.gov.pagopa.arc.exception.custom.*;
 import it.gov.pagopa.arc.model.generated.ErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -15,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.stream.Collectors;
@@ -103,6 +105,17 @@ public class ArcExceptionHandler {
     @ExceptionHandler(GPDTooManyRequestException.class)
     public ResponseEntity<ErrorDTO> handleGPDTooManyRequestException(RuntimeException ex, HttpServletRequest request){
         return handleArcErrorException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.ErrorEnum.TOO_MANY_REQUEST);
+    }
+
+    @ExceptionHandler({HttpClientErrorException.class})
+    public ResponseEntity<ErrorDTO> handleHttpClientErrorException(HttpClientErrorException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.resolve(ex.getStatusCode().value());
+        return handleArcErrorException(ex, request, status!=null?status:HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorDTO> handleViolationException(ValidationException ex, HttpServletRequest request) {
+        return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

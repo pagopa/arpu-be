@@ -33,6 +33,9 @@
   }, {
     "name" : "arc payment notice spontaneous",
     "description" : "the arc payment notice spontaneous API"
+  }, {
+    "name" : "DebtPosition",
+    "description" : "the DebtPosition API"
   } ],
   "paths" : {
     "/payment-notices" : {
@@ -961,6 +964,105 @@
         } ]
       }
     },
+    "/brokers/{brokerId}/debt-positions/{debtPositionId}/notice/zip" : {
+      "get" : {
+        "tags" : [ "DebtPosition" ],
+        "summary" : "Retrieve and generate a ZIP file containing the payment notices of a specific DebtPosition",
+        "operationId" : "getUnpaidPaymentNoticeZip",
+        "parameters" : [ {
+          "name" : "brokerId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "debtPositionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "X-fiscal-code",
+          "in" : "header",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "ZIP file containing the payment notices",
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content - No installments found",
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized - Missing or invalid token",
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/user" : {
       "get" : {
         "tags" : [ "arc auth" ],
@@ -1153,7 +1255,7 @@
       },
       "ErrorEnum" : {
         "type" : "string",
-        "enum" : [ "generic_error", "receipt_not_found_error", "notice_not_found_error", "payment_notice_not_found_error", "invalid_amount", "invalid_date", "invalid_email", "invalid_request", "auth_user_unauthorized", "too_many_request" ]
+        "enum" : [ "generic_error", "receipt_not_found_error", "notice_not_found_error", "payment_notice_not_found_error", "invalid_amount", "invalid_date", "invalid_email", "invalid_request", "auth_user_unauthorized", "too_many_request", "bad_request" ]
       },
       "PaymentNoticePayloadDTO" : {
         "type" : "object",

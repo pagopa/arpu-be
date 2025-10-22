@@ -82,10 +82,10 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	annotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
 	testAnnotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
+	testAnnotationProcessor("org.projectlombok:lombok")
 
 	//	Testing
 	testCompileOnly("org.projectlombok:lombok")
-	testAnnotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
@@ -241,5 +241,11 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
 		"enumPropertyNaming" to "original",
 		"additionalModelTypeAnnotations" to "@lombok.experimental.SuperBuilder(toBuilder = true)"
 	))
+    typeMappings.set(mapOf(
+        "string+binary" to "Resource"
+    ))
+    importMappings.set(mapOf(
+        "Resource" to "org.springframework.core.io.Resource"
+    ))
 	library.set("resttemplate")
 }

@@ -1,9 +1,9 @@
 package it.gov.pagopa.arc.connector.citizen.config;
 
 import it.gov.pagopa.arc.config.rest.RestTemplateConfig;
-
 import it.gov.pagopa.pu.citizen.controller.ApiClient;
 import it.gov.pagopa.pu.citizen.controller.BaseApi;
+import it.gov.pagopa.pu.citizen.controller.generated.DebtPositionApi;
 import it.gov.pagopa.pu.citizen.controller.generated.DebtPositionTypeOrgApi;
 import it.gov.pagopa.pu.citizen.controller.generated.OrganizationApi;
 import jakarta.annotation.PreDestroy;
@@ -16,6 +16,7 @@ public class CitizenApisHolder {
 
     private final OrganizationApi organizationApi;
     private final DebtPositionTypeOrgApi debtPositionTypeOrgApi;
+    private final DebtPositionApi debtPositionApi;
 
     private final ThreadLocal<String> bearerTokenHolder = new ThreadLocal<>();
 
@@ -32,6 +33,7 @@ public class CitizenApisHolder {
 
         this.organizationApi = new OrganizationApi(apiClient);
         this.debtPositionTypeOrgApi = new DebtPositionTypeOrgApi(apiClient);
+        this.debtPositionApi = new DebtPositionApi(apiClient);
     }
 
     @PreDestroy
@@ -47,6 +49,11 @@ public class CitizenApisHolder {
     /** It will return a {@link DebtPositionTypeOrgApi} instrumented with the provided accessToken. Use null if auth is not required */
     public DebtPositionTypeOrgApi getDebtPositionTypeOrgApi(String accessToken){
         return getApi(accessToken, debtPositionTypeOrgApi);
+    }
+
+    /** It will return a {@link DebtPositionApi} instrumented with the provided accessToken. Use null if auth is not required */
+    public DebtPositionApi getDebtPositionApi(String accessToken){
+        return getApi(accessToken, debtPositionApi);
     }
 
     private <T extends BaseApi> T getApi(String accessToken, T api) {
