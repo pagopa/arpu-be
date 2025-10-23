@@ -1339,7 +1339,7 @@
       },
       "ErrorEnum" : {
         "type" : "string",
-        "enum" : [ "generic_error", "receipt_not_found_error", "notice_not_found_error", "payment_notice_not_found_error", "invalid_amount", "invalid_date", "invalid_email", "invalid_request", "auth_user_unauthorized", "too_many_request", "bad_request" ]
+        "enum" : [ "generic_error", "receipt_not_found_error", "notice_not_found_error", "payment_notice_not_found_error", "invalid_amount", "invalid_date", "invalid_email", "invalid_request", "auth_user_unauthorized", "too_many_request", "bad_request", "not_found" ]
       },
       "PaymentNoticePayloadDTO" : {
         "type" : "object",
