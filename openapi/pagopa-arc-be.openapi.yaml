@@ -80,7 +80,7 @@ paths:
       summary: "Provide the logout endpoint"
       operationId: getLogoutEndpoint
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       responses:
         '200':
           description: "User successfully logged out"
@@ -101,7 +101,7 @@ paths:
       summary: "Provide information regarding authenticated user"
       operationId: getUserInfo
       security:
-        - bearerAuth: []
+        - BearerAuth: []
       responses:
         '200':
           description: "Token Response"
@@ -149,7 +149,7 @@ paths:
       summary: "Retrieve the paged notices list from arc"
       operationId: getNoticesList
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       parameters:
         - name: x-continuation-token
           in: header
@@ -164,7 +164,7 @@ paths:
           schema:
             type: integer
             format: int32
-            default: 10
+            default: '10'
         - name: paidByMe
           in: query
           description: "The field to filter notices by if is payer"
@@ -231,7 +231,7 @@ paths:
       summary: "Retrieve notice details from arc"
       operationId: getNoticeDetails
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       parameters:
         - name: eventId
           in: path
@@ -278,7 +278,7 @@ paths:
       summary: "Retrieve notice receipt from arc"
       operationId: getNoticeReceipt
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       parameters:
         - name: eventId
           in: path
@@ -327,7 +327,7 @@ paths:
       summary: "Generate payment notice from arc"
       operationId: postGeneratePaymentNotice
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -366,7 +366,7 @@ paths:
       summary: "Retrieve payment notices from arc"
       operationId: getPaymentNotices
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       parameters:
         - name: dueDate
           in: query
@@ -425,7 +425,7 @@ paths:
       summary: "Retrieve payment notices details from arc"
       operationId: getPaymentNoticesDetails
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       parameters:
         - name: iupd
           in: path
@@ -480,7 +480,7 @@ paths:
       summary: "Retrieve organizations list"
       operationId: getOrganizations
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       responses:
         '200':
           description: "Obtained organizations list"
@@ -503,7 +503,7 @@ paths:
       summary: "Retrieve jwt token for the zendesk assistance"
       operationId: getZendeskAssistanceToken
       security:
-        - bearerAuth: [ ]
+        - BearerAuth: [ ]
       parameters:
         - name: userEmail
           in: query
@@ -534,9 +534,151 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /brokers/{brokerId}/organizations/spontaneous:
+    get:
+      tags:
+        - Organization
+      summary: "Retrieves the list of organizations with at least one dpto with flagSpontaneous and flagActive set to true"
+      operationId: getOrganizationsWithSpontaneous
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: "OrganizationsWithSpontaneousDTO"
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /spontaneous/organizations/{organizationId}/debt-position-type-orgs:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the list of debtPositionTypeOrg with flagSpontaneous and flagActive set to true"
+      operationId: getDebtPositionTypeOrgsWithSpontaneous
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: "DebtPositionTypeOrgsWithSpontaneousDTO"
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/debt-positions/{debtPositionId}/notice/zip:
+    get:
+      tags:
+        - DebtPosition
+      summary: "Retrieve and generate a ZIP file containing the payment notices of a specific DebtPosition"
+      operationId: getUnpaidPaymentNoticeZip
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: debtPositionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ZIP file containing the payment notices
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: No Content - No installments found
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs/{debtPositionTypeOrgId}:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the detail of debtPositionTypeOrg with flagSpontaneous and flagActive set to true"
+      operationId: getDebtPositionTypeOrgsWithSpontaneousDetail
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: debtPositionTypeOrgId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "DebtPositionTypeOrgsWithSpontaneousDetailsDTO"
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
 components:
   securitySchemes:
-    bearerAuth:
+    BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
@@ -979,6 +1121,8 @@ components:
             - invalid_request
             - auth_user_unauthorized
             - too_many_request
+            - bad_request
+            - not_found
         error_description:
           type: string
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"

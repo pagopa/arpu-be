@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -23,7 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest({ArcAuthApi.class, ArcZendeskAssistanceApi.class})
+@ActiveProfiles("oauth")
+@WebMvcTest(value = {ArcAuthApi.class, ArcZendeskAssistanceApi.class})
 @Import(OAuth2LoginConfig.class)
 class OAuth2LoginConfigTest {
 
@@ -31,28 +33,25 @@ class OAuth2LoginConfigTest {
     private ClientRegistrationRepository clientRegistrationRepositoryMock;
     @MockitoBean
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandlerMock;
-
     @MockitoBean
     private CustomLogoutHandler customLogoutHandler;
-    @MockitoBean
-    JWTConfiguration jwtConfiguration;
     @MockitoBean
     private CustomLogoutSuccessHandler customLogoutSuccessHandler;
     @MockitoBean
     private ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
     @MockitoBean
     private AuthService authService;
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private WebApplicationContext context;
     @MockitoBean
     private TokenStoreService tokenStoreService;
     @MockitoBean
     AccessTokenValidationService accessTokenValidationService;
-
     @MockitoBean
     AuthorizationRequestRepository authorizationRequestRepository;
+
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private WebApplicationContext context;
 
     @Test
     void givenURLWithoutCodeAndStateWhenWithoutAccessTokenThenRedirectToLogin() throws Exception {

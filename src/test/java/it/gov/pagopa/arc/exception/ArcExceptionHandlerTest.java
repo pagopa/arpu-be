@@ -4,6 +4,7 @@ import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.exception.custom.*;
 import it.gov.pagopa.arc.utils.MemoryAppender;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -22,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDate;
@@ -29,7 +36,12 @@ import java.time.LocalDate;
 import static org.mockito.Mockito.doThrow;
 
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
-@WebMvcTest(value = {ArcExceptionHandlerTest.TestController.class})
+@WebMvcTest(value = {ArcExceptionHandlerTest.TestController.class},
+        excludeAutoConfiguration = {
+                SecurityAutoConfiguration.class,
+                OAuth2ClientAutoConfiguration.class,
+                OAuth2ResourceServerAutoConfiguration.class
+        })
 @ContextConfiguration(classes = {
     ArcExceptionHandlerTest.TestController.class,
     ArcExceptionHandler.class})
@@ -347,4 +359,68 @@ class ArcExceptionHandlerTest {
         Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A MethodArgumentTypeMismatchException occurred handling request GET: HttpStatus 400 - /test"));
     }
 
+    @Test
+    void givenHttpClientErrorExceptionWithValidHttpStatusWhenRequestThenHandleHttpClientErrorException() throws Exception {
+        doThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN, "Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isForbidden())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("generic_error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("403 Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class org.springframework.web.client.HttpClientErrorException occurred handling request GET /test: HttpStatus 403 - 403 Error"));
+    }
+
+    @Test
+    void givenHttpClientErrorExceptionWithInvalidHttpStatusWhenRequestThenHandleHttpClientErrorException() throws Exception {
+        HttpStatusCode httpStatusCode = HttpStatusCode.valueOf(999);
+        doThrow(new HttpClientErrorException(httpStatusCode, "Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("generic_error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value(httpStatusCode+" Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class org.springframework.web.client.HttpClientErrorException occurred handling request GET /test: HttpStatus 500 - 999 Error"));
+    }
+
+    @Test
+    void givenValidationErrorWhenRequestThenHandleValidationException() throws Exception {
+        doThrow(new ValidationException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("bad_request"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class jakarta.validation.ValidationException occurred handling request GET /test: HttpStatus 400 - Error"));
+    }
+
+    @Test
+    void givenResourceNotFoundErrorWhenRequestThenHandleResourceNotFoundException() throws Exception {
+        doThrow(new ResourceNotFoundException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("not_found"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.ResourceNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
+    }
 }

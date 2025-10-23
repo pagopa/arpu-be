@@ -1,0 +1,85 @@
+package it.gov.pagopa.arc.controller;
+
+import it.gov.pagopa.arc.controller.generated.DebtPositionApi;
+import it.gov.pagopa.arc.dto.FileResourceDTO;
+import it.gov.pagopa.arc.dto.IamUserInfoDTO;
+import it.gov.pagopa.arc.service.debtpositions.DebtPositionRetrieverService;
+import it.gov.pagopa.arc.utils.SecurityUtilsTest;
+import it.gov.pagopa.arc.utils.TestUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import uk.co.jemos.podam.api.PodamFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
+class DebtPositionControllerImplTest {
+    private final PodamFactory podamFactory = TestUtils.getPodamFactory();
+
+    @Mock
+    private DebtPositionRetrieverService debtPositionRetrieverServiceMock;
+    private DebtPositionApi debtPositionController;
+    private final IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
+
+    @BeforeEach
+    void setUp() {
+        SecurityUtilsTest.configureSecurityContext(loggedUser);
+        debtPositionController = new DebtPositionControllerImpl(debtPositionRetrieverServiceMock);
+    }
+
+    @AfterEach
+    void verifyNoMoreInteractions() {
+        Mockito.verifyNoMoreInteractions(
+                debtPositionRetrieverServiceMock
+        );
+    }
+
+    @AfterEach
+    void clearContext() {
+        SecurityUtilsTest.clearSecurityContext();
+    }
+
+    @Test
+    void whenGetUnpaidPaymentNoticeZipThenOk() {
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+        String fiscalCode = "fiscalCode";
+
+        FileResourceDTO resource = podamFactory.manufacturePojo(FileResourceDTO.class);
+        resource.setResource(new ByteArrayResource("PDF-DATA".getBytes()));
+
+        Mockito.when(debtPositionRetrieverServiceMock.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode, loggedUser))
+                .thenReturn(resource);
+
+        ResponseEntity<Resource> response = debtPositionController.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(resource.getResource(), response.getBody());
+        assertEquals(resource.getFileName(), response.getHeaders().getContentDisposition().getFilename());
+    }
+
+    @Test
+    void givenNullResourceWhenGetUnpaidPaymentNoticeZipThenNoContent() {
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+        String fiscalCode = "fiscalCode";
+
+        Mockito.when(debtPositionRetrieverServiceMock.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode, loggedUser))
+                .thenReturn(null);
+
+        ResponseEntity<Resource> response = debtPositionController.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+}
