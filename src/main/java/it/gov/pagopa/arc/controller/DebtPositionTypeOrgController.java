@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.controller;
 import it.gov.pagopa.arc.controller.generated.DebtPositionTypeOrgApi;
 import it.gov.pagopa.arc.service.debtpositiontypeorg.DebtPositionTypeOrgRetrieverService;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,5 +24,11 @@ public class DebtPositionTypeOrgController implements DebtPositionTypeOrgApi {
     public ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> getDebtPositionTypeOrgsWithSpontaneous(Long organizationId) {
         log.info("getDebtPositionTypeOrgsWithSpontaneous was requested with organizationId {}", organizationId);
         return ResponseEntity.ok(debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneous(organizationId));
+    }
+
+    @Override
+    public ResponseEntity<DebtPositionTypeOrgsWithSpontaneousDetailsDTO> getDebtPositionTypeOrgsWithSpontaneousDetail(Long brokerId, Long organizationId, Long debtPositionTypeOrgId) {
+        log.info("getDebtPositionTypeOrgsWithSpontaneousDetail was requested with brokerId {} and organizationId {} and debtPositionTypeOrgId {}", brokerId, organizationId, debtPositionTypeOrgId);
+        return ResponseEntity.ok(debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId));
     }
 }
