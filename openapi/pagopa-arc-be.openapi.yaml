@@ -1122,6 +1122,7 @@ components:
             - auth_user_unauthorized
             - too_many_request
             - bad_request
+            - not_found
         error_description:
           type: string
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"

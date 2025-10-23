@@ -1,10 +1,12 @@
 package it.gov.pagopa.arc.service.debtpositiontypeorg;
 
 import it.gov.pagopa.arc.connector.citizen.DebtPositionTypeOrgService;
+import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +17,7 @@ import uk.co.jemos.podam.api.PodamFactory;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class DebtPositionTypeOrgRetrieverServiceImplTest {
@@ -68,5 +69,17 @@ class DebtPositionTypeOrgRetrieverServiceImplTest {
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void givenNullOrganizationIdAndDebtPositionTypeOrgIdWhenGetDebtPositionTypeOrgsWithSpontaneousDetailThenThrowException() {
+        Long organizationId = 1L;
+        Long debtPositionTypeOrgId = 1L;
+        Long brokerId = 1L;
+
+        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(null);
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId));
+        Assertions.assertEquals("DebtPositionTypeOrgsWithSpontaneousDetails with deptPositionTypeOrgId 1 brokerId 1 and organizationId 1 not found", ex.getMessage());
     }
 }

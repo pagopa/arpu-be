@@ -12,12 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import uk.co.jemos.podam.api.PodamFactory;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class DebtPositionTypeOrgClientTest {
@@ -77,5 +78,22 @@ class DebtPositionTypeOrgClientTest {
         //then
         assertNotNull(result);
         assertSame(expectedResult, result);
+    }
+
+    @Test
+    void givenExceptionWhenGetDebtPositionTypeOrgsWithSpontaneousDetailThenReturnNull() {
+        String accessToken = "accessToken";
+        Long organizationId = 1L;
+        Long debtPositionTypeOrgId = 1L;
+        Long brokerId = 1L;
+
+        Mockito.when(citizenApisHolderMock.getDebtPositionTypeOrgApi(accessToken)).thenReturn(debtPositionTypeOrgApiMock);
+
+        Mockito.when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId))
+                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+
+        DebtPositionTypeOrgsWithSpontaneousDetailsDTO result = debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId, accessToken);
+
+        assertNull(result);
     }
 }

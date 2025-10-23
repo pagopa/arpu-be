@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.service.debtpositiontypeorg;
 
 import it.gov.pagopa.arc.connector.citizen.DebtPositionTypeOrgService;
+import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,11 @@ public class DebtPositionTypeOrgRetrieverServiceImpl implements DebtPositionType
 
     @Override
     public DebtPositionTypeOrgsWithSpontaneousDetailsDTO getDebtPositionTypeOrgsWithSpontaneousDetail(Long brokerId, Long organizationId, Long debtPositionTypeOrgId) {
-        return debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
+        DebtPositionTypeOrgsWithSpontaneousDetailsDTO debtPositionTypeOrgsWithSpontaneousDetail = debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
+        if (debtPositionTypeOrgsWithSpontaneousDetail == null){
+            throw new ResourceNotFoundException("DebtPositionTypeOrgsWithSpontaneousDetails with deptPositionTypeOrgId %d brokerId %d and organizationId %d not found".formatted(debtPositionTypeOrgId, brokerId, organizationId));
+        }
+
+        return debtPositionTypeOrgsWithSpontaneousDetail;
     }
 }
