@@ -3,6 +3,8 @@ package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -25,5 +27,9 @@ public class DebtPositionClient {
         .resource(resourceResponseEntity.getBody())
         .fileName(resourceResponseEntity.getHeaders().getContentDisposition().getFilename())
         .build();
+  }
+
+  public DebtPositionResponseDTO createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body, String accessToken){
+        return apisHolder.getDebtPositionApi(accessToken).createSpontaneousDebtPosition(brokerId, body);
   }
 }

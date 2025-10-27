@@ -4,6 +4,8 @@ import it.gov.pagopa.arc.controller.generated.DebtPositionApi;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.service.debtpositions.DebtPositionRetrieverService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
@@ -37,5 +39,11 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
     } else {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+  }
+
+  @Override
+  public ResponseEntity<DebtPositionResponseDTO> createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body) {
+    log.info("createSpontaneousDebtPosition was requested with brokerId {}", brokerId);
+    return ResponseEntity.ok(debtPositionRetrieverService.createSpontaneousDebtPosition(brokerId, body));
   }
 }

@@ -676,6 +676,40 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
+  /brokers/{brokerId}/spontaneous/debt-positions:
+    post:
+      tags:
+        - DebtPosition
+      summary: "Create spontaneous debt positions"
+      operationId: createSpontaneousDebtPosition
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type:  "DebtPositionRequestDTO"
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: "DebtPositionResponseDTO"
+        '400':
+          description: Invalid request
+        '403':
+          description: Forbidden
+        '409':
+          description: Conflict
+        '500':
+          description: Internal server error
 components:
   securitySchemes:
     BearerAuth:
@@ -1123,6 +1157,7 @@ components:
             - too_many_request
             - bad_request
             - not_found
+            - conflict
         error_description:
           type: string
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"
