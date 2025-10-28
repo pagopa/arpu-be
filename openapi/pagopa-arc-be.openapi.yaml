@@ -702,8 +702,14 @@ paths:
             application/json:
               schema:
                 type: "DebtPositionResponseDTO"
+        '400':
+          description: Invalid request
         '403':
           description: Forbidden
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
         '500':
           description: Internal server error
 components:
