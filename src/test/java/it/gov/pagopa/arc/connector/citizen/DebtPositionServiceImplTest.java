@@ -4,6 +4,8 @@ import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.DebtPositionClient;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,6 +54,23 @@ class DebtPositionServiceImplTest {
 
         FileResourceDTO result = debtPositionService.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode);
 
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void givenBrokerIdAndDebtPositionRequestDTOWhenCreateSpontaneousDebtPositionThenReturnDebtPositionResponseDTO() {
+        //given
+        String accessToken = "accessToken";
+        Long brokerId = 1L;
+        DebtPositionRequestDTO requestDTO = podamFactory.manufacturePojo(DebtPositionRequestDTO.class);
+        DebtPositionResponseDTO expectedResult = podamFactory.manufacturePojo(DebtPositionResponseDTO.class);
+
+        Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
+        Mockito.when(debtPositionClientMock.createSpontaneousDebtPosition(brokerId, requestDTO, accessToken)).thenReturn(expectedResult);
+        //when
+        DebtPositionResponseDTO result = debtPositionService.createSpontaneousDebtPosition(brokerId, requestDTO);
+        //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
     }

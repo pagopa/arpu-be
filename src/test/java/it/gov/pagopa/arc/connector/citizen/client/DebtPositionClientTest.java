@@ -3,6 +3,8 @@ package it.gov.pagopa.arc.connector.citizen.client;
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.pu.citizen.controller.generated.DebtPositionApi;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,9 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 @ExtendWith(MockitoExtension.class)
 class DebtPositionClientTest {
@@ -60,5 +65,23 @@ class DebtPositionClientTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(expectedResource,response.getResource());
         Assertions.assertEquals(expectedFileName,response.getFileName());
+    }
+
+    @Test
+    void whenCreateSpontaneousDebtPositionThenOk() {
+        //given
+        String accessToken = "accessToken";
+        Long brokerId = 1L;
+
+        DebtPositionRequestDTO requestDTO = new DebtPositionRequestDTO();
+        DebtPositionResponseDTO expectedResult = new DebtPositionResponseDTO();
+
+        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        Mockito.when(debtPositionApiMock.createSpontaneousDebtPosition(brokerId, requestDTO)).thenReturn(expectedResult);
+        //when
+        DebtPositionResponseDTO result = debtPositionClient.createSpontaneousDebtPosition(brokerId, requestDTO, accessToken);
+        //then
+        assertNotNull(result);
+        assertSame(expectedResult, result);
     }
 }
