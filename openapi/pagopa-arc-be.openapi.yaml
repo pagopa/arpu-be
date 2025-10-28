@@ -702,12 +702,8 @@ paths:
             application/json:
               schema:
                 type: "DebtPositionResponseDTO"
-        '400':
-          description: Invalid request
         '403':
           description: Forbidden
-        '409':
-          description: Conflict
         '500':
           description: Internal server error
 components:
@@ -1157,7 +1153,6 @@ components:
             - too_many_request
             - bad_request
             - not_found
-            - conflict
         error_description:
           type: string
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"

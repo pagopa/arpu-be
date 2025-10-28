@@ -238,28 +238,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "Invalid request",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DebtPositionResponseDTO"
-                }
-              }
-            }
-          },
           "403" : {
             "description" : "Forbidden",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DebtPositionResponseDTO"
-                }
-              }
-            }
-          },
-          "409" : {
-            "description" : "Conflict",
             "content" : {
               "application/json" : {
                 "schema" : {
