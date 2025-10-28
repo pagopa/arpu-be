@@ -20,18 +20,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class DebtPositionTypeOrgRetrieverServiceImplTest {
+class DebtPositionTypeOrgFacadeServiceImplTest {
 
     @Mock
     private DebtPositionTypeOrgService debtPositionTypeOrgServiceMock;
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
-    private DebtPositionTypeOrgRetrieverService debtPositionTypeOrgRetrieverService;
+    private DebtPositionTypeOrgFacadeService debtPositionTypeOrgFacadeService;
 
     @BeforeEach
     void setUp() {
-       debtPositionTypeOrgRetrieverService = new DebtPositionTypeOrgRetrieverServiceImpl(debtPositionTypeOrgServiceMock);
+       debtPositionTypeOrgFacadeService = new DebtPositionTypeOrgFacadeServiceImpl(debtPositionTypeOrgServiceMock);
     }
 
     @AfterEach
@@ -48,7 +48,7 @@ class DebtPositionTypeOrgRetrieverServiceImplTest {
 
         Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId)).thenReturn(expectedResult);
         //when
-        List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneous(organizationId);
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneous(organizationId);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
@@ -65,7 +65,7 @@ class DebtPositionTypeOrgRetrieverServiceImplTest {
 
         Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(expectedResult);
         //when
-        DebtPositionTypeOrgsWithSpontaneousDetailsDTO result = debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
+        DebtPositionTypeOrgsWithSpontaneousDetailsDTO result = debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
@@ -79,7 +79,7 @@ class DebtPositionTypeOrgRetrieverServiceImplTest {
 
         Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(null);
 
-        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId));
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId));
         Assertions.assertEquals("DebtPositionTypeOrgsWithSpontaneousDetails with deptPositionTypeOrgId 1 brokerId 1 and organizationId 1 not found", ex.getMessage());
     }
 }

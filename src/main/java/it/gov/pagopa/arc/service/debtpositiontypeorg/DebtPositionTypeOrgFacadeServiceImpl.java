@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class DebtPositionTypeOrgRetrieverServiceImpl implements DebtPositionTypeOrgRetrieverService{
+public class DebtPositionTypeOrgFacadeServiceImpl implements DebtPositionTypeOrgFacadeService {
 
     private final DebtPositionTypeOrgService debtPositionTypeOrgRetrieverService;
 
-    public DebtPositionTypeOrgRetrieverServiceImpl(DebtPositionTypeOrgService debtPositionTypeOrgRetrieverService) {
+    public DebtPositionTypeOrgFacadeServiceImpl(DebtPositionTypeOrgService debtPositionTypeOrgRetrieverService) {
         this.debtPositionTypeOrgRetrieverService = debtPositionTypeOrgRetrieverService;
     }
 

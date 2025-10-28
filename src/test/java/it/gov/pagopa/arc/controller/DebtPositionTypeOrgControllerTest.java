@@ -1,6 +1,6 @@
 package it.gov.pagopa.arc.controller;
 
-import it.gov.pagopa.arc.service.debtpositiontypeorg.DebtPositionTypeOrgRetrieverService;
+import it.gov.pagopa.arc.service.debtpositiontypeorg.DebtPositionTypeOrgFacadeService;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class DebtPositionTypeOrgControllerTest {
 
     @Mock
-    private DebtPositionTypeOrgRetrieverService debtPositionTypeOrgRetrieverServiceMock;
+    private DebtPositionTypeOrgFacadeService debtPositionTypeOrgFacadeServiceMock;
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
@@ -32,13 +32,13 @@ class DebtPositionTypeOrgControllerTest {
 
     @BeforeEach
     void setUp() {
-        debtPositionTypeOrgController = new DebtPositionTypeOrgController(debtPositionTypeOrgRetrieverServiceMock);
+        debtPositionTypeOrgController = new DebtPositionTypeOrgController(debtPositionTypeOrgFacadeServiceMock);
     }
 
     @AfterEach
     void verifyNoMoreInteractions() {
         Mockito.verifyNoMoreInteractions(
-                debtPositionTypeOrgRetrieverServiceMock
+                debtPositionTypeOrgFacadeServiceMock
         );
     }
 
@@ -47,7 +47,7 @@ class DebtPositionTypeOrgControllerTest {
         //given
         Long organizationId = 1L;
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
-        Mockito.when(debtPositionTypeOrgRetrieverServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId)).thenReturn(expectedResult);
+        Mockito.when(debtPositionTypeOrgFacadeServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId)).thenReturn(expectedResult);
         //when
         ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> result = debtPositionTypeOrgController.getDebtPositionTypeOrgsWithSpontaneous(organizationId);
         //then
@@ -64,7 +64,7 @@ class DebtPositionTypeOrgControllerTest {
         Long brokerId = 1L;
 
         DebtPositionTypeOrgsWithSpontaneousDetailsDTO expectedResult = podamFactory.manufacturePojo(DebtPositionTypeOrgsWithSpontaneousDetailsDTO.class);
-        Mockito.when(debtPositionTypeOrgRetrieverServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(expectedResult);
+        Mockito.when(debtPositionTypeOrgFacadeServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(expectedResult);
         //when
         ResponseEntity<DebtPositionTypeOrgsWithSpontaneousDetailsDTO> result = debtPositionTypeOrgController.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
         //then

@@ -1,7 +1,7 @@
 package it.gov.pagopa.arc.controller;
 
 import it.gov.pagopa.arc.controller.generated.OrganizationApi;
-import it.gov.pagopa.arc.service.organization.OrganizationRetrieveService;
+import it.gov.pagopa.arc.service.organization.OrganizationFacadeService;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO;
 import org.junit.jupiter.api.AfterEach;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class OrganizationControllerImplTest {
 
     @Mock
-    private OrganizationRetrieveService organizationRetrieveServiceMock;
+    private OrganizationFacadeService organizationFacadeServiceMock;
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
@@ -31,13 +31,13 @@ class OrganizationControllerImplTest {
 
     @BeforeEach
     void setUp() {
-        organizationApi = new OrganizationControllerImpl(organizationRetrieveServiceMock);
+        organizationApi = new OrganizationControllerImpl(organizationFacadeServiceMock);
     }
 
     @AfterEach
     void verifyNoMoreInteractions() {
         Mockito.verifyNoMoreInteractions(
-                organizationRetrieveServiceMock
+                organizationFacadeServiceMock
         );
     }
 
@@ -46,7 +46,7 @@ class OrganizationControllerImplTest {
         //given
         Long brokerId = 1L;
         List<OrganizationsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, OrganizationsWithSpontaneousDTO.class);
-        Mockito.when(organizationRetrieveServiceMock.getOrganizationsWithSpontaneousDTO(brokerId)).thenReturn(expectedResult);
+        Mockito.when(organizationFacadeServiceMock.getOrganizationsWithSpontaneousDTO(brokerId)).thenReturn(expectedResult);
         //when
         ResponseEntity<List<OrganizationsWithSpontaneousDTO>> result = organizationApi.getOrganizationsWithSpontaneous(brokerId);
         //then
