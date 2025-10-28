@@ -18,16 +18,16 @@ import uk.co.jemos.podam.api.PodamFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class DebtPositionRetrieverServiceImplTest {
+class DebtPositionFacadeServiceImplTest {
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
     @Mock
     private DebtPositionService debtPositionServiceMock;
-    private DebtPositionRetrieverService debtPositionRetrieverService;
+    private DebtPositionFacadeService debtPositionFacadeService;
 
     @BeforeEach
     void setUp() {
-        debtPositionRetrieverService = new DebtPositionRetrieverServiceImpl(debtPositionServiceMock);
+        debtPositionFacadeService = new DebtPositionFacadeServiceImpl(debtPositionServiceMock);
     }
 
     @AfterEach
@@ -46,7 +46,7 @@ class DebtPositionRetrieverServiceImplTest {
 
         Mockito.when(debtPositionServiceMock.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode)).thenReturn(expectedResult);
 
-        FileResourceDTO result = debtPositionRetrieverService.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode, loggedUser);
+        FileResourceDTO result = debtPositionFacadeService.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode, loggedUser);
 
         assertNotNull(result);
         assertEquals(expectedResult, result);
@@ -62,7 +62,7 @@ class DebtPositionRetrieverServiceImplTest {
         Mockito.when(debtPositionServiceMock.createSpontaneousDebtPosition(brokerId, requestDTO)).thenReturn(expectedResult);
         //when
 
-        DebtPositionResponseDTO result = debtPositionRetrieverService.createSpontaneousDebtPosition(brokerId, requestDTO);
+        DebtPositionResponseDTO result = debtPositionFacadeService.createSpontaneousDebtPosition(brokerId, requestDTO);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);

@@ -9,11 +9,11 @@ import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DebtPositionRetrieverServiceImpl implements DebtPositionRetrieverService {
+public class DebtPositionFacadeServiceImpl implements DebtPositionFacadeService {
 
     private final DebtPositionService debtPositionService;
 
-    public DebtPositionRetrieverServiceImpl(DebtPositionService debtPositionService) {
+    public DebtPositionFacadeServiceImpl(DebtPositionService debtPositionService) {
         this.debtPositionService = debtPositionService;
     }
 

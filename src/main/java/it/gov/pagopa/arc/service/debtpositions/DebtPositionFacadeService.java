@@ -5,7 +5,7 @@ import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
 
-public interface DebtPositionRetrieverService {
+public interface DebtPositionFacadeService {
   FileResourceDTO getUnpaidPaymentNoticeZip(Long brokerId, Long debtPositionId, String fiscalCode, IamUserInfoDTO loggedUser);
   DebtPositionResponseDTO createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body);
 }
