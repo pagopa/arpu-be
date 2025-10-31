@@ -3,7 +3,9 @@ package it.gov.pagopa.arc.service.debtpositions;
 import it.gov.pagopa.arc.connector.citizen.DebtPositionService;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
+import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
 import it.gov.pagopa.arc.service.AuthorizationService;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
 import org.springframework.stereotype.Service;
@@ -25,5 +27,15 @@ public class DebtPositionFacadeServiceImpl implements DebtPositionFacadeService 
     @Override
     public DebtPositionResponseDTO createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body) {
         return debtPositionService.createSpontaneousDebtPosition(brokerId,body);
+    }
+
+    @Override
+    public DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode) {
+        DebtPositionDTO debtPositionDetail = debtPositionService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode);
+        if (debtPositionDetail == null) {
+            throw new ResourceNotFoundException("DebtPosition with debtPositionId %s not found".formatted(debtPositionId));
+        }
+
+        return debtPositionDetail;
     }
 }

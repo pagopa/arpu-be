@@ -3,12 +3,14 @@ package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 @Slf4j
@@ -31,5 +33,15 @@ public class DebtPositionClient {
 
   public DebtPositionResponseDTO createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body, String accessToken){
         return apisHolder.getDebtPositionApi(accessToken).createSpontaneousDebtPosition(brokerId, body);
+  }
+
+  public DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode, String accessToken){
+        try{
+            return apisHolder.getDebtPositionApi(accessToken).getDebtPositionDetail(brokerId, debtPositionId, fiscalCode);
+        }catch (HttpClientErrorException.NotFound e){
+            log.warn("DebtPosition with debtPositionId {} not found", debtPositionId);
+            return null;
+        }
+
   }
 }
