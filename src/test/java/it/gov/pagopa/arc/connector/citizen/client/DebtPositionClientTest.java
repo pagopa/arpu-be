@@ -20,6 +20,7 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -105,7 +106,7 @@ class DebtPositionClientTest {
     }
 
     @Test
-    void givenNullDebtPositionWhenGetDebtPositionDetailThenReturnNull() {
+    void givenNotFoundExceptionWhenGetDebtPositionDetailThenReturnNull() {
         //given
         String accessToken = "accessToken";
         String fiscalCode = "fiscalCode";
@@ -113,7 +114,8 @@ class DebtPositionClientTest {
         Long debtPositionId = 2L;
 
         Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-        Mockito.when(debtPositionApiMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(null);
+        Mockito.when(debtPositionApiMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode))
+                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
         //when
         DebtPositionDTO result = debtPositionClient.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, accessToken);
         //then
