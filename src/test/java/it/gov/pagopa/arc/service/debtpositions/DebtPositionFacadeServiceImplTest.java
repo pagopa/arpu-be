@@ -3,7 +3,9 @@ package it.gov.pagopa.arc.service.debtpositions;
 import it.gov.pagopa.arc.connector.citizen.DebtPositionService;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
+import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
 import it.gov.pagopa.arc.utils.TestUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
 import org.junit.jupiter.api.AfterEach;
@@ -68,4 +70,31 @@ class DebtPositionFacadeServiceImplTest {
         assertEquals(expectedResult, result);
     }
 
+    @Test
+    void whenGetDebtPositionDetailThenOk() {
+        //given
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+        DebtPositionDTO expectedResult = podamFactory.manufacturePojo(DebtPositionDTO.class);
+
+        Mockito.when(debtPositionServiceMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(expectedResult);
+        //when
+        DebtPositionDTO result = debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode);
+        //then
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void givenNullDebtPositionWhenGetDebtPositionDetailThenThrowException() {
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+
+        Mockito.when(debtPositionServiceMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(null);
+
+        assertThrows(ResourceNotFoundException.class, () -> debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode));
+
+    }
 }
