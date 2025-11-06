@@ -808,6 +808,42 @@ paths:
           description: Not Found - DebtPosition not found
         '500':
           description: Internal Server Error
+  /brokers/{brokerId}/receipts:
+    get:
+      tags:
+        - receipt
+      operationId: getPagedDebtorReceipts
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: orgName
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: 'PagedDebtorReceiptsDTO'
+        "400":
+          description: Invalid request
+        "409":
+          description: Debt position already exists
+        "500":
+          description: Internal server error
+      x-spring-paginated: true
 components:
   securitySchemes:
     BearerAuth:

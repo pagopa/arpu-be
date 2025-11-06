@@ -181,7 +181,8 @@ openApiGenerate {
 		"DebtPositionTypeOrgsWithSpontaneousDetailsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO",
 		"DebtPositionRequestDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO",
 		"DebtPositionResponseDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO",
-		"DebtPositionDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO"
+		"DebtPositionDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO",
+		"PagedDebtorReceiptsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO"
 
 	))
 }
