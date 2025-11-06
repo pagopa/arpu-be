@@ -178,7 +178,12 @@ openApiGenerate {
         "zoned-date-time" to "java.time.ZonedDateTime",
 		"OrganizationsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO",
 		"DebtPositionTypeOrgsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO",
-		"DebtPositionTypeOrgsWithSpontaneousDetailsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO"
+		"DebtPositionTypeOrgsWithSpontaneousDetailsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO",
+		"DebtPositionRequestDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO",
+		"DebtPositionResponseDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO",
+		"DebtPositionDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO",
+		"PagedDebtorReceiptsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO"
+
 	))
 }
 

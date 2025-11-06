@@ -18,18 +18,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
-class OrganizationRetrieveServiceImplTest {
+class OrganizationFacadeServiceImplTest {
 
     @Mock
     private OrganizationService organizationServiceMock;
 
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
 
-    OrganizationRetrieveService organizationRetrieveService;
+    OrganizationFacadeService organizationFacadeService;
 
     @BeforeEach
     void setUp() {
-        organizationRetrieveService = new OrganizationRetrieveServiceImpl(organizationServiceMock);
+        organizationFacadeService = new OrganizationFacadeServiceImpl(organizationServiceMock);
     }
 
     @AfterEach
@@ -48,7 +48,7 @@ class OrganizationRetrieveServiceImplTest {
 
         Mockito.when(organizationServiceMock.getOrganizationsWithSpontaneousDTO(brokerId)).thenReturn(expectedResult);
         //when
-        List<OrganizationsWithSpontaneousDTO> result = organizationRetrieveService.getOrganizationsWithSpontaneousDTO(brokerId);
+        List<OrganizationsWithSpontaneousDTO> result = organizationFacadeService.getOrganizationsWithSpontaneousDTO(brokerId);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);

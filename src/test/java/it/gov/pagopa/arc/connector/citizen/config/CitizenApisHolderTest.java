@@ -12,6 +12,8 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import java.util.ArrayList;
+
 @ExtendWith(MockitoExtension.class)
 class CitizenApisHolderTest extends BaseApiHolderTest {
 
@@ -62,6 +64,15 @@ class CitizenApisHolderTest extends BaseApiHolderTest {
         assertAuthenticationShouldBeSetInThreadSafeMode(
                 accessToken -> citizenApisHolder.getDebtPositionApi(accessToken)
                         .getUnpaidPaymentNoticeZip(1L,"fiscalCode",1L),
+                new ParameterizedTypeReference<>() {},
+                citizenApisHolder::unload);
+    }
+
+    @Test
+    void whenGetReceiptApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
+        assertAuthenticationShouldBeSetInThreadSafeMode(
+                accessToken -> citizenApisHolder.getReceiptApi(accessToken)
+                        .getPagedDebtorReceipts(1L,"fiscalCode","orgName", 0, 1, new ArrayList<>()),
                 new ParameterizedTypeReference<>() {},
                 citizenApisHolder::unload);
     }

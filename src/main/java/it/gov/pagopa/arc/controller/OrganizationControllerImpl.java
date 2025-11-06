@@ -1,7 +1,7 @@
 package it.gov.pagopa.arc.controller;
 
 import it.gov.pagopa.arc.controller.generated.OrganizationApi;
-import it.gov.pagopa.arc.service.organization.OrganizationRetrieveService;
+import it.gov.pagopa.arc.service.organization.OrganizationFacadeService;
 import it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +13,15 @@ import java.util.List;
 @RestController
 public class OrganizationControllerImpl implements OrganizationApi {
 
-    private final OrganizationRetrieveService organizationRetrieveService;
+    private final OrganizationFacadeService organizationFacadeService;
 
-    public OrganizationControllerImpl(OrganizationRetrieveService organizationRetrieveService) {
-        this.organizationRetrieveService = organizationRetrieveService;
+    public OrganizationControllerImpl(OrganizationFacadeService organizationFacadeService) {
+        this.organizationFacadeService = organizationFacadeService;
     }
 
     @Override
     public ResponseEntity<List<OrganizationsWithSpontaneousDTO>> getOrganizationsWithSpontaneous(Long brokerId) {
         log.info("getOrganizationsWithSpontaneous was requested with brokerId {}", brokerId);
-        return ResponseEntity.ok(organizationRetrieveService.getOrganizationsWithSpontaneousDTO(brokerId));
+        return ResponseEntity.ok(organizationFacadeService.getOrganizationsWithSpontaneousDTO(brokerId));
     }
 }

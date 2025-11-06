@@ -4,6 +4,6 @@ import it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO;
 
 import java.util.List;
 
-public interface OrganizationRetrieveService {
+public interface OrganizationFacadeService {
     List<OrganizationsWithSpontaneousDTO> getOrganizationsWithSpontaneousDTO(Long brokerId);
 }

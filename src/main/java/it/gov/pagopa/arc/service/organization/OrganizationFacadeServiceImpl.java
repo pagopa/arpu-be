@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class OrganizationRetrieveServiceImpl implements OrganizationRetrieveService {
+public class OrganizationFacadeServiceImpl implements OrganizationFacadeService {
 
     private final OrganizationService organizationService;
 
-    public OrganizationRetrieveServiceImpl(OrganizationService organizationService) {
+    public OrganizationFacadeServiceImpl(OrganizationService organizationService) {
         this.organizationService = organizationService;
     }
 
