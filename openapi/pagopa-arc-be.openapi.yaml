@@ -790,7 +790,7 @@ paths:
             format: int64
         - name: X-fiscal-code
           in: header
-          required: true
+          required: false
           schema:
             type: string
       responses:
@@ -822,7 +822,7 @@ paths:
             format: int64
         - name: X-fiscal-code
           in: header
-          required: true
+          required: false
           schema:
             type: string
         - name: orgName

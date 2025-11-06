@@ -44,6 +44,7 @@ class DebtPositionControllerImplTest {
         Mockito.verifyNoMoreInteractions(
                 debtPositionFacadeServiceMock
         );
+        SecurityUtilsTest.clearSecurityContext();
     }
 
     @AfterEach
@@ -111,7 +112,7 @@ class DebtPositionControllerImplTest {
 
         DebtPositionDTO expectedResult = podamFactory.manufacturePojo(DebtPositionDTO.class);
 
-        Mockito.when(debtPositionFacadeServiceMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(expectedResult);
+        Mockito.when(debtPositionFacadeServiceMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, loggedUser)).thenReturn(expectedResult);
         //when
         ResponseEntity<DebtPositionDTO> response = debtPositionController.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode);
         //then

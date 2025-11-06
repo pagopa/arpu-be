@@ -1081,7 +1081,7 @@
         }, {
           "name" : "X-fiscal-code",
           "in" : "header",
-          "required" : true,
+          "required" : false,
           "schema" : {
             "type" : "string"
           }
@@ -1385,7 +1385,7 @@
         }, {
           "name" : "X-fiscal-code",
           "in" : "header",
-          "required" : true,
+          "required" : false,
           "schema" : {
             "type" : "string"
           }

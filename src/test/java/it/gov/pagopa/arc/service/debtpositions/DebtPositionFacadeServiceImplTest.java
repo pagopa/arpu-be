@@ -78,9 +78,10 @@ class DebtPositionFacadeServiceImplTest {
         Long debtPositionId = 2L;
         DebtPositionDTO expectedResult = podamFactory.manufacturePojo(DebtPositionDTO.class);
 
+        IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
         Mockito.when(debtPositionServiceMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(expectedResult);
         //when
-        DebtPositionDTO result = debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode);
+        DebtPositionDTO result = debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, loggedUser);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
@@ -92,9 +93,10 @@ class DebtPositionFacadeServiceImplTest {
         Long brokerId = 1L;
         Long debtPositionId = 2L;
 
+        IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
         Mockito.when(debtPositionServiceMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(null);
 
-        assertThrows(ResourceNotFoundException.class, () -> debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode));
+        assertThrows(ResourceNotFoundException.class, () -> debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, loggedUser));
 
     }
 

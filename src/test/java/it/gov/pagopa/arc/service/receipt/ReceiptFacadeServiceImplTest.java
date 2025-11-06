@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.service.receipt;
 
 import it.gov.pagopa.arc.connector.citizen.ReceiptService;
+import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
 import org.junit.jupiter.api.AfterEach;
@@ -42,11 +43,12 @@ class ReceiptFacadeServiceImplTest {
         String fiscalCode = "fiscalCode";
         String orgName = "orgName";
         PageRequest pageRequest = PageRequest.of(1, 10);
+        IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
         PagedDebtorReceiptsDTO expectedResult = podamFactory.manufacturePojo(PagedDebtorReceiptsDTO.class);
 
         Mockito.when(receiptServiceMock.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest)).thenReturn(expectedResult);
         //when
-        PagedDebtorReceiptsDTO result = receiptFacadeService.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest);
+        PagedDebtorReceiptsDTO result = receiptFacadeService.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest, loggedUser);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);

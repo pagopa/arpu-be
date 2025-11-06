@@ -30,8 +30,8 @@ public class DebtPositionFacadeServiceImpl implements DebtPositionFacadeService 
     }
 
     @Override
-    public DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode) {
-        DebtPositionDTO debtPositionDetail = debtPositionService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode);
+    public DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode, IamUserInfoDTO loggedUser) {
+        DebtPositionDTO debtPositionDetail = debtPositionService.getDebtPositionDetail(brokerId, debtPositionId, AuthorizationService.getDebtorFiscalCode(fiscalCode,loggedUser));
         if (debtPositionDetail == null) {
             throw new ResourceNotFoundException("DebtPosition with debtPositionId %s not found".formatted(debtPositionId));
         }
