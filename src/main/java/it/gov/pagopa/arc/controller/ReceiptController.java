@@ -4,6 +4,7 @@ import it.gov.pagopa.arc.controller.generated.ReceiptApi;
 import it.gov.pagopa.arc.service.receipt.ReceiptFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +24,11 @@ public class ReceiptController implements ReceiptApi {
     public ResponseEntity<PagedDebtorReceiptsDTO> getPagedDebtorReceipts(Long brokerId, String xFiscalCode, String orgName, Pageable pageable) {
         log.info("Requested getPagedDebtorReceipts on brokerId {} and orgName {}", brokerId, orgName);
         return ResponseEntity.ok(receiptFacadeService.getPagedDebtorReceipts(brokerId, xFiscalCode, orgName, pageable, SecurityUtils.getPrincipal()));
+    }
+
+    @Override
+    public ResponseEntity<ReceiptDetailDTO> getReceiptDetail(Long brokerId, Long organizationId, Long receiptId, String xFiscalCode) {
+        log.info("User requested getReceiptDetail having brokerId {} organizationId {} and receiptId {} ", brokerId, organizationId, receiptId);
+        return ResponseEntity.ofNullable(receiptFacadeService.getReceiptDetail(brokerId, organizationId, receiptId, xFiscalCode, SecurityUtils.getPrincipal()));
     }
 }

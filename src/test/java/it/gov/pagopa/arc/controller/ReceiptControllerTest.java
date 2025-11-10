@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.service.receipt.ReceiptFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtilsTest;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.co.jemos.podam.api.PodamFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReceiptControllerTest {
@@ -60,5 +60,38 @@ class ReceiptControllerTest {
         assertNotNull(result);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void whenGetReceiptDetailThenOk() {
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+        String fiscalCode = "fiscalCode";
+        ReceiptDetailDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailDTO.class);
+
+        Mockito.when(receiptFacadeServiceMock.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,loggedUser)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<ReceiptDetailDTO> result = receiptController.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void givenNoReceiptWhenGetReceiptDetailThenNotFound() {
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+        String fiscalCode = "fiscalCode";
+
+        Mockito.when(receiptFacadeServiceMock.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,loggedUser)).thenReturn(null);
+
+        ResponseEntity<ReceiptDetailDTO> result = receiptController.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode);
+
+        assertNotNull(result);
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+        assertNull(result.getBody());
     }
 }

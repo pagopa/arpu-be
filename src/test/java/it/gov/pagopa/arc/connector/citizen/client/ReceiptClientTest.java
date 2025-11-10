@@ -5,7 +5,9 @@ import it.gov.pagopa.arc.utils.PageUtils;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.controller.generated.ReceiptApi;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,10 +15,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import uk.co.jemos.podam.api.PodamFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ReceiptClientTest {
@@ -58,5 +62,43 @@ class ReceiptClientTest {
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
+    }
+
+
+    @Test
+    void whenGetReceiptDetailThenInvokeWithAccessToken() {
+        String accessToken = "ACCESSTOKEN";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+        String fiscalCode = "fiscalCode";
+        ReceiptDetailDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailDTO.class);
+
+        when(citizenApisHolderMock.getReceiptApi(accessToken))
+                .thenReturn(receiptApiMock);
+        when(receiptApiMock.getReceiptDetail(fiscalCode,brokerId,organizationId,receiptId))
+                .thenReturn(expectedResult);
+
+        ReceiptDetailDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
+
+        assertSame(expectedResult, result);
+    }
+
+    @Test
+    void givenNotFoundWhenGetReceiptDetailThenReturnNull() {
+        String accessToken = "ACCESSTOKEN";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+        String fiscalCode = "fiscalCode";
+
+        when(citizenApisHolderMock.getReceiptApi(accessToken))
+                .thenReturn(receiptApiMock);
+        when(receiptApiMock.getReceiptDetail(fiscalCode,brokerId,organizationId,receiptId))
+                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+
+        ReceiptDetailDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
+
+        Assertions.assertNull(result);
     }
 }
