@@ -161,4 +161,20 @@ class DebtPositionControllerImplTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
+
+    @Test
+    void givenBrokerIdAndDebtPositionRequestDTOWhenPublicCreateSpontaneousDebtPositionThenReturnDebtPositionResponseDTO() {
+        //given
+        Long brokerId = 1L;
+        DebtPositionRequestDTO requestDTO = podamFactory.manufacturePojo(DebtPositionRequestDTO.class);
+        DebtPositionResponseDTO expectedResult = podamFactory.manufacturePojo(DebtPositionResponseDTO.class);
+
+        Mockito.when(debtPositionFacadeServiceMock.createSpontaneousDebtPosition(brokerId,requestDTO)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<DebtPositionResponseDTO> response = debtPositionController.createPublicSpontaneousDebtPosition(brokerId, requestDTO);
+        //then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(expectedResult, response.getBody());
+    }
 }

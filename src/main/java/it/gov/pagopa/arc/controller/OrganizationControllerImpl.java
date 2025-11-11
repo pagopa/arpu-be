@@ -24,4 +24,10 @@ public class OrganizationControllerImpl implements OrganizationApi {
         log.info("getOrganizationsWithSpontaneous was requested with brokerId {}", brokerId);
         return ResponseEntity.ok(organizationFacadeService.getOrganizationsWithSpontaneousDTO(brokerId));
     }
+
+    @Override
+    public ResponseEntity<List<OrganizationsWithSpontaneousDTO>> getPublicOrganizationsWithSpontaneous(Long brokerId) {
+        log.info("getPublicOrganizationsWithSpontaneous was requested with brokerId {}", brokerId);
+        return ResponseEntity.ok(organizationFacadeService.getOrganizationsWithSpontaneousDTO(brokerId));
+    }
 }

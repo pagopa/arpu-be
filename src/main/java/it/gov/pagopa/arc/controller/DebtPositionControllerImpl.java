@@ -73,4 +73,10 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
           return new ResponseEntity<>(HttpStatus.NO_CONTENT);
       }
   }
+
+    @Override
+    public ResponseEntity<DebtPositionResponseDTO> createPublicSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body) {
+        log.info("createPublicSpontaneousDebtPosition was requested with brokerId {} and organizationId {}", brokerId, body.getOrganizationId());
+        return ResponseEntity.ok(debtPositionFacadeService.createSpontaneousDebtPosition(brokerId, body));
+    }
 }

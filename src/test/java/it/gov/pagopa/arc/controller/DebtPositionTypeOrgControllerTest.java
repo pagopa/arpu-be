@@ -72,4 +72,35 @@ class DebtPositionTypeOrgControllerTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(expectedResult, result.getBody());
     }
+
+    @Test
+    void givenOrganizationIdWhenGetPublicDebtPositionTypeOrgsWithSpontaneousThenOk() {
+        //given
+        Long organizationId = 1L;
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
+        Mockito.when(debtPositionTypeOrgFacadeServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> result = debtPositionTypeOrgController.getPublicDebtPositionTypeOrgsWithSpontaneous(organizationId);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void givenOrganizationIdAndDebtPositionTypeOrgIdWhenGetPublicDebtPositionTypeOrgsWithSpontaneousDetailThenReturnDebtPositionTypeOrgsWithSpontaneousDetailsDTO() {
+        //given
+        Long organizationId = 1L;
+        Long debtPositionTypeOrgId = 1L;
+        Long brokerId = 1L;
+
+        DebtPositionTypeOrgsWithSpontaneousDetailsDTO expectedResult = podamFactory.manufacturePojo(DebtPositionTypeOrgsWithSpontaneousDetailsDTO.class);
+        Mockito.when(debtPositionTypeOrgFacadeServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<DebtPositionTypeOrgsWithSpontaneousDetailsDTO> result = debtPositionTypeOrgController.getPublicDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
 }
