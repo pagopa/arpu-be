@@ -2632,9 +2632,6 @@
           },
           "amountFieldName" : {
             "type" : "string"
-          },
-          "hasAmountInForm" : {
-            "type" : "boolean"
           }
         }
       },
@@ -3152,6 +3149,9 @@
             "format" : "int64"
           },
           "iuv" : {
+            "type" : "string"
+          },
+          "nav" : {
             "type" : "string"
           },
           "paymentAmountCents" : {
