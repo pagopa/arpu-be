@@ -177,4 +177,24 @@ class DebtPositionControllerImplTest {
         assertNotNull(response.getBody());
         assertEquals(expectedResult, response.getBody());
     }
+
+    @Test
+    void whenGetPublicUnpaidPaymentNoticeZipThenOk() {
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+        String fiscalCode = "fiscalCode";
+
+        FileResourceDTO resource = podamFactory.manufacturePojo(FileResourceDTO.class);
+        resource.setResource(new ByteArrayResource("PDF-DATA".getBytes()));
+
+        Mockito.when(debtPositionFacadeServiceMock.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode, loggedUser))
+                .thenReturn(resource);
+
+        ResponseEntity<Resource> response = debtPositionController.getPublicUnpaidPaymentNoticeZip(brokerId, fiscalCode, debtPositionId);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(resource.getResource(), response.getBody());
+        assertEquals(resource.getFileName(), response.getHeaders().getContentDisposition().getFilename());
+    }
 }

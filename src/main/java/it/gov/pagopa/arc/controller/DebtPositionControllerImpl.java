@@ -22,25 +22,28 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
     this.debtPositionFacadeService = debtPositionFacadeService;
   }
 
-  @Override
-  public ResponseEntity<Resource> getUnpaidPaymentNoticeZip(Long brokerId, Long debtPositionId, String fiscalCode) {
-    log.info("getUnpaidPaymentNoticeZip was requested with brokerId {} and debtPositionId {}", brokerId, debtPositionId);
-
-    FileResourceDTO debtPositionPaymentNoticesZipped = debtPositionFacadeService.getUnpaidPaymentNoticeZip(brokerId, debtPositionId,fiscalCode,SecurityUtils.getPrincipal());
-    if (debtPositionPaymentNoticesZipped != null && debtPositionPaymentNoticesZipped.getResource()!=null){
-      HttpHeaders headers = new HttpHeaders();
-      headers.setContentDisposition(ContentDisposition.attachment()
-          .filename(debtPositionPaymentNoticesZipped.getFileName())
-          .build());
-
-      return ResponseEntity.ok()
-          .headers(headers)
-          .contentType(MediaType.APPLICATION_OCTET_STREAM)
-          .body(debtPositionPaymentNoticesZipped.getResource());
-    } else {
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @Override
+    public ResponseEntity<Resource> getUnpaidPaymentNoticeZip(Long brokerId, Long debtPositionId, String fiscalCode) {
+      log.info("getUnpaidPaymentNoticeZip was requested with brokerId {} and debtPositionId {}", brokerId, debtPositionId);
+      return getResourceForUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode);
     }
-  }
+
+    private ResponseEntity<Resource> getResourceForUnpaidPaymentNoticeZip(Long brokerId, Long debtPositionId, String fiscalCode) {
+        FileResourceDTO debtPositionPaymentNoticesZipped = debtPositionFacadeService.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode,SecurityUtils.getPrincipal());
+        if (debtPositionPaymentNoticesZipped != null && debtPositionPaymentNoticesZipped.getResource()!=null){
+          HttpHeaders headers = new HttpHeaders();
+          headers.setContentDisposition(ContentDisposition.attachment()
+              .filename(debtPositionPaymentNoticesZipped.getFileName())
+              .build());
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(debtPositionPaymentNoticesZipped.getResource());
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
 
   @Override
   public ResponseEntity<DebtPositionResponseDTO> createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body) {
@@ -78,5 +81,11 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
     public ResponseEntity<DebtPositionResponseDTO> createPublicSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body) {
         log.info("createPublicSpontaneousDebtPosition was requested with brokerId {} and organizationId {}", brokerId, body.getOrganizationId());
         return ResponseEntity.ok(debtPositionFacadeService.createSpontaneousDebtPosition(brokerId, body));
+    }
+
+    @Override
+    public ResponseEntity<Resource> getPublicUnpaidPaymentNoticeZip(Long brokerId, String xFiscalCode, Long debtPositionId) {
+        log.info("getPublicUnpaidPaymentNoticeZip was requested with brokerId {} and debtPositionId {}", brokerId, debtPositionId);
+        return getResourceForUnpaidPaymentNoticeZip(brokerId, debtPositionId, xFiscalCode);
     }
 }
