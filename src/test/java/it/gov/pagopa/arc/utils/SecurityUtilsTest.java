@@ -16,7 +16,7 @@ import java.net.URI;
 public class SecurityUtilsTest {
 
   @AfterEach
-  public void clearContext() {
+  void clearContext() {
     SecurityContextHolder.clearContext();
   }
 
@@ -52,6 +52,17 @@ public class SecurityUtilsTest {
 
     IllegalStateException ex = Assertions.assertThrows(IllegalStateException.class, SecurityUtils::getPrincipal);
     Assertions.assertEquals("Invalid principal type: expected IamUserInfoDTO but got java.lang.Object", ex.getMessage());
+  }
+
+  @Test
+  void givenDefaultAnonymousConfiguredSecurityContextThenThrowException(){
+    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+            "", null, null);
+    authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    IamUserInfoDTO user = SecurityUtils.getPrincipal();
+    Assertions.assertNull(user);
   }
 
   @Test

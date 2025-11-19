@@ -1,13 +1,15 @@
 package it.gov.pagopa.arc.controller;
 
 import it.gov.pagopa.arc.controller.generated.ReceiptApi;
+import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.service.receipt.ReceiptFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -30,5 +32,33 @@ public class ReceiptController implements ReceiptApi {
     public ResponseEntity<ReceiptDetailDTO> getReceiptDetail(Long brokerId, Long organizationId, Long receiptId, String xFiscalCode) {
         log.info("User requested getReceiptDetail having brokerId {} organizationId {} and receiptId {} ", brokerId, organizationId, receiptId);
         return ResponseEntity.ofNullable(receiptFacadeService.getReceiptDetail(brokerId, organizationId, receiptId, xFiscalCode, SecurityUtils.getPrincipal()));
+    }
+
+    @Override
+    public ResponseEntity<Resource> getReceiptPdf(Long brokerId, Long organizationId, Long receiptId, String xFiscalCode) {
+        log.info("getReceiptPdf was requested with brokerId {} organizationId {} and receiptId {}", brokerId, organizationId, receiptId);
+        return getResourceForGetReceiptPdf(brokerId, organizationId, receiptId, xFiscalCode);
+    }
+
+    @Override
+    public ResponseEntity<Resource> getPublicReceiptPdf(String xFiscalCode, Long brokerId, Long organizationId, Long receiptId) {
+        log.info("getPublicReceiptPdf was requested with brokerId {} organizationId {} and receiptId {}", brokerId, organizationId, receiptId);
+        return getResourceForGetReceiptPdf(brokerId, organizationId, receiptId, xFiscalCode);
+    }
+
+    private ResponseEntity<Resource> getResourceForGetReceiptPdf(Long brokerId, Long organizationId, Long receiptId, String debtorFiscalCode){
+        FileResourceDTO receiptFileResource = receiptFacadeService.getReceiptPdf(brokerId, organizationId, receiptId, debtorFiscalCode, SecurityUtils.getPrincipal());
+        if(receiptFileResource == null || receiptFileResource.getResource() == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDisposition(ContentDisposition.attachment()
+                .filename(receiptFileResource.getFileName())
+                .build());
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(receiptFileResource.getResource());
     }
 }

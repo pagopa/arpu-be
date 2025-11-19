@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.controller;
 
+import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.receipt.ReceiptFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtilsTest;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,5 +96,79 @@ class ReceiptControllerTest {
         assertNotNull(result);
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         assertNull(result.getBody());
+    }
+
+    @Test
+    void whenGetReceiptPdfThenOk() {
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+
+        FileResourceDTO resource = podamFactory.manufacturePojo(FileResourceDTO.class);
+        resource.setResource(new ByteArrayResource("PDF-DATA".getBytes()));
+
+        Mockito.when(receiptFacadeServiceMock.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,loggedUser))
+                .thenReturn(resource);
+
+        ResponseEntity<Resource> response = receiptController.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(resource.getResource(), response.getBody());
+        assertEquals(resource.getFileName(), response.getHeaders().getContentDisposition().getFilename());
+    }
+
+    @Test
+    void givenNullResourceWhenGetReceiptPdfThenNoContent() {
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+
+        Mockito.when(receiptFacadeServiceMock.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,loggedUser))
+                .thenReturn(null);
+
+        ResponseEntity<Resource> response = receiptController.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void whenGetPublicReceiptPdfThenOk() {
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+
+        FileResourceDTO resource = podamFactory.manufacturePojo(FileResourceDTO.class);
+        resource.setResource(new ByteArrayResource("PDF-DATA".getBytes()));
+
+        Mockito.when(receiptFacadeServiceMock.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,loggedUser))
+                .thenReturn(resource);
+
+        ResponseEntity<Resource> response = receiptController.getPublicReceiptPdf(fiscalCode,brokerId,organizationId,receiptId);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(resource.getResource(), response.getBody());
+        assertEquals(resource.getFileName(), response.getHeaders().getContentDisposition().getFilename());
+    }
+
+    @Test
+    void givenNullResourceWhenGetPublicReceiptPdfThenNoContent() {
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+
+        Mockito.when(receiptFacadeServiceMock.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,loggedUser))
+                .thenReturn(null);
+
+        ResponseEntity<Resource> response = receiptController.getPublicReceiptPdf(fiscalCode,brokerId,organizationId,receiptId);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
     }
 }

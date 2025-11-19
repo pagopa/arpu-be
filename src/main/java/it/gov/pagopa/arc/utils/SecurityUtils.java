@@ -12,12 +12,13 @@ public final class SecurityUtils {
   public static IamUserInfoDTO getPrincipal() {
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    try{
-      return (IamUserInfoDTO) principal;
-    }catch (ClassCastException e){
-      throw new IllegalStateException("Invalid principal type: expected IamUserInfoDTO but got " + principal.getClass().getName());
+    if(principal instanceof IamUserInfoDTO loggedUser){
+        return loggedUser;
+    }else if(principal instanceof String){
+        return null;
+    }else{
+        throw new IllegalStateException("Invalid principal type: expected IamUserInfoDTO but got " + principal.getClass().getName());
     }
-
   }
 
   public static String getUserFiscalCode() {
