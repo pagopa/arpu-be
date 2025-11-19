@@ -57,7 +57,7 @@ public class SecurityUtilsTest {
   @Test
   void givenDefaultAnonymousConfiguredSecurityContextThenThrowException(){
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            "", null, null);
+            "anonymousUser", null, null);
     authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
