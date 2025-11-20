@@ -69,6 +69,22 @@ class DebtPositionClientTest {
     }
 
     @Test
+    void givenNoDebtPositionWhenGetUnpaidPaymentNoticeZipThenNull(){
+        String accessToken = "accessToken";
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+
+        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        Mockito.when(debtPositionApiMock.getUnpaidPaymentNoticeZipWithHttpInfo(brokerId, fiscalCode, debtPositionId))
+                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+
+        FileResourceDTO response = debtPositionClient.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode, accessToken);
+
+        Assertions.assertNull(response);
+    }
+
+    @Test
     void whenCreateSpontaneousDebtPositionThenOk() {
         //given
         String accessToken = "accessToken";
@@ -146,5 +162,24 @@ class DebtPositionClientTest {
       Assertions.assertNotNull(response);
       Assertions.assertEquals(expectedResource,response.getResource());
       Assertions.assertEquals(expectedFileName,response.getFileName());
+    }
+
+    @Test
+    void givenNotFoundWhenGetPaymentNoticeThenNull(){
+      String accessToken = "accessToken";
+      String fiscalCode = "fiscalCode";
+      Long brokerId = 1L;
+      Long organizationId = 2L;
+      Long installmentId = 3L;
+      String iuv = "iuv";
+      String iud = "iud";
+
+      Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+      Mockito.when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, iuv, iud))
+              .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+
+      FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud, accessToken);
+
+      Assertions.assertNull(response);
     }
 }

@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.config;
 
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
+import it.gov.pagopa.arc.controller.generated.OrganizationApi;
 import it.gov.pagopa.arc.security.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.security.CustomLogoutHandler;
 import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
@@ -9,6 +10,7 @@ import it.gov.pagopa.arc.service.AccessTokenValidationService;
 import it.gov.pagopa.arc.service.AuthService;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
+import it.gov.pagopa.arc.service.organization.OrganizationFacadeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @ActiveProfiles("oauth")
-@WebMvcTest(value = {ArcAuthApi.class, ArcZendeskAssistanceApi.class})
+@WebMvcTest(value = {ArcAuthApi.class, ArcZendeskAssistanceApi.class, OrganizationApi.class})
 @Import(OAuth2LoginConfig.class)
 class OAuth2LoginConfigTest {
 
@@ -47,6 +49,8 @@ class OAuth2LoginConfigTest {
     AccessTokenValidationService accessTokenValidationService;
     @MockitoBean
     AuthorizationRequestRepository authorizationRequestRepository;
+    @MockitoBean
+    OrganizationFacadeService organizationFacadeServiceMock;
 
     @Autowired
     private MockMvc mockMvc;
@@ -70,6 +74,14 @@ class OAuth2LoginConfigTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/token/assistance")
                         .param("userEmail", "someone@email.com"))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void givenPublicURLWhenCallEndpointThenOk() throws Exception {
+        Long brokerId = 1L;
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/public/brokers/{brokerId}/spontaneous/organizations",brokerId))
+                .andExpect(status().is2xxSuccessful());
     }
 
 }

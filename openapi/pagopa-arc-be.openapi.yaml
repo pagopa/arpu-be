@@ -534,7 +534,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-  /brokers/{brokerId}/organizations/spontaneous:
+  /brokers/{brokerId}/spontaneous/organizations:
     get:
       tags:
         - Organization
@@ -564,7 +564,33 @@ paths:
           description: Forbidden - Access denied
         '500':
           description: Internal Server Error
-  /spontaneous/organizations/{organizationId}/debt-position-type-orgs:
+  /public/brokers/{brokerId}/spontaneous/organizations:
+    get:
+      tags:
+        - Organization
+      summary: "Retrieves the list of organizations with at least one dpto with flagSpontaneous and flagActive set to true for anonymous user"
+      operationId: getPublicOrganizationsWithSpontaneous
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: "OrganizationsWithSpontaneousDTO"
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs:
     get:
       tags:
         - DebtPositionTypeOrg
@@ -573,6 +599,12 @@ paths:
       security:
         - BearerAuth: [ ]
       parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
         - name: organizationId
           in: path
           required: true
@@ -594,6 +626,38 @@ paths:
           description: Forbidden - Access denied
         '500':
           description: Internal Server Error
+  /public/brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the list of debtPositionTypeOrg with flagSpontaneous and flagActive set to true for anonymous user"
+      operationId: getPublicDebtPositionTypeOrgsWithSpontaneous
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: "DebtPositionTypeOrgsWithSpontaneousDTO"
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
   /brokers/{brokerId}/debt-positions/{debtPositionId}/notice/zip:
     get:
       tags:
@@ -610,6 +674,48 @@ paths:
         - name: X-fiscal-code
           in: header
           required: false
+          schema:
+            type: string
+        - name: debtPositionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ZIP file containing the payment notices
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: No Content - No installments found
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /public/brokers/{brokerId}/debt-positions/{debtPositionId}/notice/zip:
+    get:
+      tags:
+        - DebtPosition
+      summary: "Retrieve and generate a ZIP file containing the payment notices of a specific DebtPosition for anonymous user"
+      operationId: getPublicUnpaidPaymentNoticeZip
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: true
           schema:
             type: string
         - name: debtPositionId
@@ -699,6 +805,8 @@ paths:
         - DebtPositionTypeOrg
       summary: "Retrieves the detail of debtPositionTypeOrg with flagSpontaneous and flagActive set to true"
       operationId: getDebtPositionTypeOrgsWithSpontaneousDetail
+      security:
+        - BearerAuth: [ ]
       parameters:
         - name: brokerId
           in: path
@@ -733,12 +841,90 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
+  /public/brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs/{debtPositionTypeOrgId}:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the detail of debtPositionTypeOrg with flagSpontaneous and flagActive set to true for anonymous user"
+      operationId: getPublicDebtPositionTypeOrgsWithSpontaneousDetail
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: debtPositionTypeOrgId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "DebtPositionTypeOrgsWithSpontaneousDetailsDTO"
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
   /brokers/{brokerId}/spontaneous/debt-positions:
     post:
       tags:
         - DebtPosition
       summary: "Create spontaneous debt positions"
       operationId: createSpontaneousDebtPosition
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type:  "DebtPositionRequestDTO"
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: "DebtPositionResponseDTO"
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+        '500':
+          description: Internal server error
+  /public/brokers/{brokerId}/spontaneous/debt-positions:
+    post:
+      tags:
+        - DebtPosition
+      summary: "Create spontaneous debt positions for anonymous user"
+      operationId: createPublicSpontaneousDebtPosition
       parameters:
         - name: brokerId
           in: path
@@ -811,7 +997,7 @@ paths:
   /brokers/{brokerId}/receipts:
     get:
       tags:
-        - receipt
+        - Receipt
       operationId: getPagedDebtorReceipts
       parameters:
         - name: brokerId
@@ -844,6 +1030,156 @@ paths:
         "500":
           description: Internal server error
       x-spring-paginated: true
+  /brokers/{brokerId}/organizations/{organizationId}/receipts/{receiptId}:
+    get:
+      tags:
+        - Receipt
+      summary: "Retrieve a specific receipt"
+      operationId: getReceiptDetail
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The unique identifier of the receipt
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: 'ReceiptDetailDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found - Receipt not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /brokers/{brokerId}/organizations/{organizationId}/receipts/{receiptId}/pdf:
+    get:
+      tags:
+        - Receipt
+      operationId: getReceiptPdf
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The unique identifier of the receipt
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: No Content
+        "400":
+          description: Invalid request
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        "500":
+          description: Internal server error
+  /public/brokers/{brokerId}/organizations/{organizationId}/receipts/{receiptId}/pdf:
+    get:
+      tags:
+        - Receipt
+      operationId: getPublicReceiptPdf
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The unique identifier of the receipt
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: No Content
+        "400":
+          description: Invalid request
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        "500":
+          description: Internal server error
 components:
   securitySchemes:
     BearerAuth:

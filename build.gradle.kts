@@ -1,4 +1,6 @@
 import java.util.*
+import com.github.jk1.license.render.*
+import com.github.jk1.license.filter.*
 
 plugins {
 	java
@@ -10,6 +12,7 @@ plugins {
     id("org.openapi.generator") version "7.15.0"
     id("com.gorylenko.gradle-git-properties") version "2.5.3"
 	id("org.ajoberstar.grgit") version "5.3.2"
+    id("com.github.jk1.dependency-license-report") version "3.0.1"
 }
 
 group = "it.gov.pagopa"
@@ -27,6 +30,15 @@ configurations {
     compileClasspath {
         resolutionStrategy.activateDependencyLocking()
     }
+}
+
+licenseReport {
+    renderers = arrayOf(XmlReportRenderer("third-party-libs.xml", "Back-End Libraries"))
+    outputDir = "$projectDir/dependency-licenses"
+    filters = arrayOf(SpdxLicenseBundleNormalizer())
+}
+tasks.classes {
+    finalizedBy(tasks.generateLicenseReport)
 }
 
 repositories {
@@ -182,7 +194,8 @@ openApiGenerate {
 		"DebtPositionRequestDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO",
 		"DebtPositionResponseDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO",
 		"DebtPositionDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO",
-		"PagedDebtorReceiptsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO"
+		"PagedDebtorReceiptsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO",
+        "ReceiptDetailDTO" to "it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO"
 
 	))
 }

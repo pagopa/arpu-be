@@ -54,7 +54,7 @@ class CitizenApisHolderTest extends BaseApiHolderTest {
     void whenGetDebtPositionTypeOrgApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
         assertAuthenticationShouldBeSetInThreadSafeMode(
                 accessToken -> citizenApisHolder.getDebtPositionTypeOrgApi(accessToken)
-                        .getDebtPositionTypeOrgsWithSpontaneous(1L),
+                        .getDebtPositionTypeOrgsWithSpontaneous(1L,1L),
                 new ParameterizedTypeReference<>() {},
                 citizenApisHolder::unload);
     }

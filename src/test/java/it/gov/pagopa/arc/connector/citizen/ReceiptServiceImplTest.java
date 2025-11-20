@@ -2,8 +2,10 @@ package it.gov.pagopa.arc.connector.citizen;
 
 import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.ReceiptClient;
+import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +54,42 @@ class ReceiptServiceImplTest {
         //when
         PagedDebtorReceiptsDTO result = receiptService.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest);
         //then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void whenGetReceiptDetailThenInvokeClient() {
+        String accessToken = "accessToken";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+        String fiscalCode = "fiscalCode";
+        ReceiptDetailDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailDTO.class);
+
+        Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
+        Mockito.when(receiptClientMock.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken)).thenReturn(expectedResult);
+
+        ReceiptDetailDTO result = receiptService.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void whenGetReceiptPdfThenInvokeClient() {
+        String accessToken = "accessToken";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+        String fiscalCode = "fiscalCode";
+        FileResourceDTO expectedResult = podamFactory.manufacturePojo(FileResourceDTO.class);
+
+        Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
+        Mockito.when(receiptClientMock.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,accessToken)).thenReturn(expectedResult);
+
+        FileResourceDTO result = receiptService.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode);
+
         Assertions.assertNotNull(result);
         Assertions.assertEquals(expectedResult, result);
     }

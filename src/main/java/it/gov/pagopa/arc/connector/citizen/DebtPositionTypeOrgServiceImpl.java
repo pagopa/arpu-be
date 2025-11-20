@@ -20,8 +20,8 @@ public class DebtPositionTypeOrgServiceImpl implements DebtPositionTypeOrgServic
     }
 
     @Override
-    public List<DebtPositionTypeOrgsWithSpontaneousDTO> getDebtPositionTypeOrgsWithSpontaneous(Long organizationId) {
-        return debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneous(organizationId, authnService.getAccessToken());
+    public List<DebtPositionTypeOrgsWithSpontaneousDTO> getDebtPositionTypeOrgsWithSpontaneous(Long brokerId, Long organizationId) {
+        return debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId, authnService.getAccessToken());
     }
 
     @Override

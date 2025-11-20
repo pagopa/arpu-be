@@ -23,12 +23,17 @@ public class DebtPositionClient {
     }
 
   public FileResourceDTO getUnpaidPaymentNoticeZip(Long brokerId, Long debtPositionId, String fiscalCode, String accessToken) {
-    ResponseEntity<Resource> resourceResponseEntity = apisHolder.getDebtPositionApi(accessToken)
-        .getUnpaidPaymentNoticeZipWithHttpInfo(brokerId,fiscalCode,debtPositionId);
-    return FileResourceDTO.builder()
-        .resource(resourceResponseEntity.getBody())
-        .fileName(resourceResponseEntity.getHeaders().getContentDisposition().getFilename())
-        .build();
+        try{
+            ResponseEntity<Resource> resourceResponseEntity = apisHolder.getDebtPositionApi(accessToken)
+                .getUnpaidPaymentNoticeZipWithHttpInfo(brokerId,fiscalCode,debtPositionId);
+            return FileResourceDTO.builder()
+                .resource(resourceResponseEntity.getBody())
+                .fileName(resourceResponseEntity.getHeaders().getContentDisposition().getFilename())
+                .build();
+        } catch (HttpClientErrorException.NotFound e) {
+            log.warn("DebtPosition having brokerId {} and debtPositionId {} not found", brokerId, debtPositionId);
+            return null;
+        }
   }
 
   public DebtPositionResponseDTO createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body, String accessToken){
@@ -46,11 +51,16 @@ public class DebtPositionClient {
   }
 
   public FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud, String accessToken) {
-    ResponseEntity<Resource> resourceResponseEntity = apisHolder.getDebtPositionApi(accessToken)
-        .getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, iuv, iud);
-    return FileResourceDTO.builder()
-        .resource(resourceResponseEntity.getBody())
-        .fileName(resourceResponseEntity.getHeaders().getContentDisposition().getFilename())
-        .build();
+        try{
+            ResponseEntity<Resource> resourceResponseEntity = apisHolder.getDebtPositionApi(accessToken)
+                .getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, iuv, iud);
+            return FileResourceDTO.builder()
+                .resource(resourceResponseEntity.getBody())
+                .fileName(resourceResponseEntity.getHeaders().getContentDisposition().getFilename())
+                .build();
+        } catch (HttpClientErrorException.NotFound e) {
+            log.warn("paymentNotice having brokerId {} and organizationId {} not found", brokerId, organizationId);
+            return null;
+        }
     }
 }

@@ -13,3 +13,8 @@
 ### Installation
 
 ### Usage
+
+### ⚖️ Generate dependencies licenses
+```sh
+./gradlew generateLicenseReport
+```

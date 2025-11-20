@@ -19,9 +19,9 @@ public class DebtPositionTypeOrgClient {
         this.citizenApisHolder = citizenApisHolder;
     }
 
-    public List<DebtPositionTypeOrgsWithSpontaneousDTO> getDebtPositionTypeOrgsWithSpontaneous(Long organizationId, String accessToken){
+    public List<DebtPositionTypeOrgsWithSpontaneousDTO> getDebtPositionTypeOrgsWithSpontaneous(Long brokerId, Long organizationId, String accessToken){
         return citizenApisHolder.getDebtPositionTypeOrgApi(accessToken)
-                .getDebtPositionTypeOrgsWithSpontaneous(organizationId);
+                .getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId);
     }
 
     public DebtPositionTypeOrgsWithSpontaneousDetailsDTO getDebtPositionTypeOrgsWithSpontaneousDetail(Long brokerId, Long organizationId, Long debtPositionTypeOrgId, String accessToken){

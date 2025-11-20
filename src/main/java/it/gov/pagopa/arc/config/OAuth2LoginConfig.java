@@ -79,6 +79,10 @@ public class OAuth2LoginConfig {
                 "/auth/testuser"
             ).permitAll()
 
+            .requestMatchers(
+                    "/public/**"
+            ).permitAll()
+
             .anyRequest().authenticated());
     return http.build();
   }

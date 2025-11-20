@@ -21,14 +21,26 @@ public class DebtPositionTypeOrgController implements DebtPositionTypeOrgApi {
     }
 
     @Override
-    public ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> getDebtPositionTypeOrgsWithSpontaneous(Long organizationId) {
-        log.info("getDebtPositionTypeOrgsWithSpontaneous was requested with organizationId {}", organizationId);
-        return ResponseEntity.ok(debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneous(organizationId));
+    public ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> getDebtPositionTypeOrgsWithSpontaneous(Long brokerId,Long organizationId) {
+        log.info("getDebtPositionTypeOrgsWithSpontaneous was requested with organizationId {} on brokerId{}", organizationId, brokerId);
+        return ResponseEntity.ok(debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId));
     }
 
     @Override
     public ResponseEntity<DebtPositionTypeOrgsWithSpontaneousDetailsDTO> getDebtPositionTypeOrgsWithSpontaneousDetail(Long brokerId, Long organizationId, Long debtPositionTypeOrgId) {
         log.info("getDebtPositionTypeOrgsWithSpontaneousDetail was requested with brokerId {} and organizationId {} and debtPositionTypeOrgId {}", brokerId, organizationId, debtPositionTypeOrgId);
+        return ResponseEntity.ok(debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId));
+    }
+
+    @Override
+    public ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> getPublicDebtPositionTypeOrgsWithSpontaneous(Long brokerId, Long organizationId) {
+        log.info("getPublicDebtPositionTypeOrgsWithSpontaneous was requested with organizationId {} on brokerId{}", organizationId, brokerId);
+        return ResponseEntity.ok(debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId));
+    }
+
+    @Override
+    public ResponseEntity<DebtPositionTypeOrgsWithSpontaneousDetailsDTO> getPublicDebtPositionTypeOrgsWithSpontaneousDetail(Long brokerId, Long organizationId, Long debtPositionTypeOrgId) {
+        log.info("getPublicDebtPositionTypeOrgsWithSpontaneousDetail was requested with brokerId {} and organizationId {} and debtPositionTypeOrgId {}", brokerId, organizationId, debtPositionTypeOrgId);
         return ResponseEntity.ok(debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId));
     }
 }

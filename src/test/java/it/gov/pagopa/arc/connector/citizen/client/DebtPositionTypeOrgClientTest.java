@@ -50,12 +50,13 @@ class DebtPositionTypeOrgClientTest {
         //given
         String accessToken = "accessToken";
         Long organizationId = 1L;
+        Long brokerId = 1L;
 
         List expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
         Mockito.when(citizenApisHolderMock.getDebtPositionTypeOrgApi(accessToken)).thenReturn(debtPositionTypeOrgApiMock);
-        Mockito.when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId)).thenReturn(expectedResult);
+        Mockito.when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneous(brokerId,organizationId)).thenReturn(expectedResult);
         //when
-        List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneous(organizationId, accessToken);
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId, accessToken);
         //then
         assertNotNull(result);
         assertSame(expectedResult, result);

@@ -1,6 +1,7 @@
 HELP.md
 !**/src/main/**/target/
 !**/src/test/**/target/
+dependency-licenses/*/*
 
 ### STS ###
 .apt_generated

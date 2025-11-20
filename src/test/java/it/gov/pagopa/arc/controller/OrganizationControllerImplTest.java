@@ -54,4 +54,18 @@ class OrganizationControllerImplTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(expectedResult, result.getBody());
     }
+
+    @Test
+    void givenBrokerIdWhenGetPublicOrganizationsWithSpontaneousThenOk() {
+        //given
+        Long brokerId = 1L;
+        List<OrganizationsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, OrganizationsWithSpontaneousDTO.class);
+        Mockito.when(organizationFacadeServiceMock.getOrganizationsWithSpontaneousDTO(brokerId)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<List<OrganizationsWithSpontaneousDTO>> result = organizationApi.getPublicOrganizationsWithSpontaneous(brokerId);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
 }

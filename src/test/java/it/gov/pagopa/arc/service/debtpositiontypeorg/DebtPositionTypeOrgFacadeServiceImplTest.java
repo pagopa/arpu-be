@@ -44,11 +44,12 @@ class DebtPositionTypeOrgFacadeServiceImplTest {
     @Test
     void givenOrganizationIdWhenGetDebtPositionTypeOrgsWithSpontaneousThenReturnDebtPositionTypeOrgsWithSpontaneous() {
         Long organizationId = 1L;
+        Long brokerId = 1L;
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
 
-        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId)).thenReturn(expectedResult);
+        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId)).thenReturn(expectedResult);
         //when
-        List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneous(organizationId);
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
