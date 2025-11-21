@@ -60,22 +60,31 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
   @Override
   public ResponseEntity<Resource> getPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, Long installmentId, String iuv, String iud) {
       log.info("getPaymentNotice was requested with brokerId {} and organizationId {}", brokerId, organizationId);
-
-      FileResourceDTO paymentNoticeFileResource = debtPositionFacadeService.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud,SecurityUtils.getPrincipal());
-      if (paymentNoticeFileResource != null && paymentNoticeFileResource.getResource()!=null){
-          HttpHeaders headers = new HttpHeaders();
-          headers.setContentDisposition(ContentDisposition.attachment()
-                  .filename(paymentNoticeFileResource.getFileName())
-                  .build());
-
-          return ResponseEntity.ok()
-                  .headers(headers)
-                  .contentType(MediaType.APPLICATION_PDF)
-                  .body(paymentNoticeFileResource.getResource());
-      } else {
-          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
+      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, iuv, iud);
   }
+
+  @Override
+  public ResponseEntity<Resource> getPublicPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud) {
+      log.info("getPublicPaymentNotice was requested with brokerId {} and organizationId {}", brokerId, organizationId);
+      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, iuv, iud);
+  }
+
+    private ResponseEntity<Resource> getResourceForPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, Long installmentId, String iuv, String iud) {
+        FileResourceDTO paymentNoticeFileResource = debtPositionFacadeService.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud,SecurityUtils.getPrincipal());
+        if (paymentNoticeFileResource != null && paymentNoticeFileResource.getResource()!=null){
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentDisposition(ContentDisposition.attachment()
+                    .filename(paymentNoticeFileResource.getFileName())
+                    .build());
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(paymentNoticeFileResource.getResource());
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
 
     @Override
     public ResponseEntity<DebtPositionResponseDTO> createPublicSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body) {
