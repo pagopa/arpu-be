@@ -3,10 +3,7 @@ package it.gov.pagopa.arc.connector.citizen.config;
 import it.gov.pagopa.arc.config.rest.RestTemplateConfig;
 import it.gov.pagopa.pu.citizen.controller.ApiClient;
 import it.gov.pagopa.pu.citizen.controller.BaseApi;
-import it.gov.pagopa.pu.citizen.controller.generated.DebtPositionApi;
-import it.gov.pagopa.pu.citizen.controller.generated.DebtPositionTypeOrgApi;
-import it.gov.pagopa.pu.citizen.controller.generated.OrganizationApi;
-import it.gov.pagopa.pu.citizen.controller.generated.ReceiptApi;
+import it.gov.pagopa.pu.citizen.controller.generated.*;
 import jakarta.annotation.PreDestroy;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -19,6 +16,7 @@ public class CitizenApisHolder {
     private final DebtPositionTypeOrgApi debtPositionTypeOrgApi;
     private final DebtPositionApi debtPositionApi;
     private final ReceiptApi receiptApi;
+    private final BrokerApi brokerApi;
 
     private final ThreadLocal<String> bearerTokenHolder = new ThreadLocal<>();
 
@@ -37,6 +35,7 @@ public class CitizenApisHolder {
         this.debtPositionTypeOrgApi = new DebtPositionTypeOrgApi(apiClient);
         this.debtPositionApi = new DebtPositionApi(apiClient);
         this.receiptApi = new ReceiptApi(apiClient);
+        this.brokerApi = new BrokerApi(apiClient);
     }
 
     @PreDestroy
@@ -62,6 +61,11 @@ public class CitizenApisHolder {
     /** It will return a {@link ReceiptApi} instrumented with the provided accessToken. Use null if auth is not required */
     public ReceiptApi getReceiptApi(String accessToken){
         return getApi(accessToken, receiptApi);
+    }
+
+    /** It will return a {@link BrokerApi} instrumented with the provided accessToken. Use null if auth is not required */
+    public BrokerApi getBrokerApi(String accessToken){
+        return getApi(accessToken, brokerApi);
     }
 
     private <T extends BaseApi> T getApi(String accessToken, T api) {

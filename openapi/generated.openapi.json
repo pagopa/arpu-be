@@ -13,6 +13,9 @@
     "BearerAuth" : [ ]
   } ],
   "tags" : [ {
+    "name" : "Broker",
+    "description" : "the Broker API"
+  }, {
     "name" : "arc notices",
     "description" : "the arc notices API"
   }, {
@@ -521,6 +524,73 @@
         "security" : [ {
           "BearerAuth" : [ ]
         } ]
+      }
+    },
+    "/public/brokers/{brokerId}" : {
+      "get" : {
+        "tags" : [ "Broker" ],
+        "operationId" : "getPublicBrokerInfo",
+        "parameters" : [ {
+          "name" : "brokerId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BrokerInfoDTO"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized - Missing or invalid token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BrokerInfoDTO"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden - Access denied",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BrokerInfoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BrokerInfoDTO"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BrokerInfoDTO"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/public/brokers/{brokerId}/spontaneous/organizations" : {
@@ -2807,6 +2877,21 @@
           }
         },
         "required" : [ "actionUrl", "assistanceToken", "returnTo" ]
+      },
+      "BrokerInfoDTO" : {
+        "type" : "object",
+        "properties" : {
+          "brokerName" : {
+            "type" : "string"
+          },
+          "brokerFiscalCode" : {
+            "type" : "string"
+          },
+          "brokerLogo" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "brokerFiscalCode", "brokerName" ]
       },
       "OrganizationsWithSpontaneousDTO" : {
         "type" : "object",

@@ -1237,6 +1237,33 @@ paths:
           description: Not Found
         "500":
           description: Internal server error
+  /public/brokers/{brokerId}:
+    get:
+      tags:
+        - Broker
+      operationId: getPublicBrokerInfo
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+               type: 'BrokerInfoDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
 components:
   securitySchemes:
     BearerAuth:
