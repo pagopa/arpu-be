@@ -1264,6 +1264,47 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
+  /brokers/{brokerId}/unpaid/debt-positions:
+    get:
+      tags:
+        - DebtPosition
+      operationId: getPagedUnpaidDebtPositions
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orgName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: orgFiscalCode
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'PagedDebtorDebtPositionDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+      x-spring-paginated: true
 components:
   securitySchemes:
     BearerAuth:

@@ -9,6 +9,7 @@ import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.co.jemos.podam.api.PodamFactory;
@@ -237,5 +239,24 @@ class DebtPositionControllerImplTest {
         assertNotNull(response.getBody());
         assertEquals(resource.getResource(), response.getBody());
         assertEquals(resource.getFileName(), response.getHeaders().getContentDisposition().getFilename());
+    }
+
+    @Test
+    void whenGetPagedUnpaidDebtPositionsThenOk() {
+        //given
+        Long brokerId = 1L;
+        String orgName = "orgName";
+        String orgFiscalCode = "orgFiscalCode";
+        String fiscalCode = "fiscalCode";
+
+        PagedDebtorDebtPositionDTO expectedResult = podamFactory.manufacturePojo(PagedDebtorDebtPositionDTO.class);
+
+        Mockito.when(debtPositionFacadeServiceMock.getPagedUnpaidDebtPositions(brokerId, fiscalCode, orgName, orgFiscalCode, Pageable.ofSize(1), loggedUser)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<PagedDebtorDebtPositionDTO> response = debtPositionController.getPagedUnpaidDebtPositions(brokerId, fiscalCode, orgName, orgFiscalCode, Pageable.ofSize(1));
+        //then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(expectedResult, response.getBody());
     }
 }

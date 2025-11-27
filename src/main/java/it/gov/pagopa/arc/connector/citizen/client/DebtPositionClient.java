@@ -3,11 +3,14 @@ package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
+import it.gov.pagopa.arc.utils.PageUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -62,5 +65,16 @@ public class DebtPositionClient {
             log.warn("paymentNotice having brokerId {} and organizationId {} not found", brokerId, organizationId);
             return null;
         }
+    }
+
+    public PagedDebtorDebtPositionDTO getPagedDebtorDebtPosition(String fiscalCode, Long brokerId, String orgName, String orgFiscalCode, Pageable pageable, String accessToken){
+        return apisHolder.getDebtPositionApi(accessToken).getPagedUnpaidDebtPositions(
+                fiscalCode,
+                brokerId,
+                orgName,
+                orgFiscalCode,
+                PageUtils.getPageNumber(pageable),
+                PageUtils.getPageSize(pageable),
+                PageUtils.getSortList(pageable));
     }
 }

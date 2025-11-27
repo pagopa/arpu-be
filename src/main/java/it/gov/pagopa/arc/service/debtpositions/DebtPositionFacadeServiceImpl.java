@@ -8,6 +8,8 @@ import it.gov.pagopa.arc.service.AuthorizationService;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,5 +44,10 @@ public class DebtPositionFacadeServiceImpl implements DebtPositionFacadeService 
     @Override
     public FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud, IamUserInfoDTO loggedUser) {
         return debtPositionService.getPaymentNotice(AuthorizationService.getDebtorFiscalCode(fiscalCode,loggedUser), brokerId, organizationId,installmentId, iuv, iud);
+    }
+
+    @Override
+    public PagedDebtorDebtPositionDTO getPagedUnpaidDebtPositions(Long brokerId, String xFiscalCode, String orgName, String orgFiscalCode, Pageable pageable, IamUserInfoDTO loggedUser) {
+        return debtPositionService.getPagedDebtorDebtPosition(AuthorizationService.getDebtorFiscalCode(xFiscalCode, loggedUser), brokerId, orgName, orgFiscalCode, pageable);
     }
 }

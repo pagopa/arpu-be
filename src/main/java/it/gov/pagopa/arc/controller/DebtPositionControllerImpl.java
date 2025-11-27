@@ -7,8 +7,10 @@ import it.gov.pagopa.arc.utils.SecurityUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -96,5 +98,11 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
     public ResponseEntity<Resource> getPublicUnpaidPaymentNoticeZip(Long brokerId, String xFiscalCode, Long debtPositionId) {
         log.info("getPublicUnpaidPaymentNoticeZip was requested with brokerId {} and debtPositionId {}", brokerId, debtPositionId);
         return getResourceForUnpaidPaymentNoticeZip(brokerId, debtPositionId, xFiscalCode);
+    }
+
+    @Override
+    public ResponseEntity<PagedDebtorDebtPositionDTO> getPagedUnpaidDebtPositions(Long brokerId, String xFiscalCode, String orgName, String orgFiscalCode, Pageable pageable) {
+        log.info("User requested getPagedUnpaidDebtPositions having brokerId {} orgName {} and orgFiscalCode {}", brokerId, orgName, orgFiscalCode);
+      return ResponseEntity.ok(debtPositionFacadeService.getPagedUnpaidDebtPositions(brokerId, xFiscalCode, orgName, orgFiscalCode, pageable, SecurityUtils.getPrincipal()));
     }
 }

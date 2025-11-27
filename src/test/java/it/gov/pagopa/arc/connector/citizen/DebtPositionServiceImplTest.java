@@ -7,6 +7,7 @@ import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 import uk.co.jemos.podam.api.PodamFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -111,6 +113,26 @@ class DebtPositionServiceImplTest {
 
         FileResourceDTO result = debtPositionService.getPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,iuv,iud);
 
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void whenGetPagedDebtorDebtPositionThenOk() {
+        //given
+        String accessToken = "accessToken";
+        Long brokerId = 1L;
+        String orgName = "orgName";
+        String orgFiscalCode = "orgFiscalCode";
+        String fiscalCode = "fiscalCode";
+        PageRequest pageRequest = PageRequest.of(1, 10);
+
+        PagedDebtorDebtPositionDTO expectedResult = podamFactory.manufacturePojo(PagedDebtorDebtPositionDTO.class);
+        Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
+        Mockito.when(debtPositionClientMock.getPagedDebtorDebtPosition(fiscalCode, brokerId, orgName, orgFiscalCode, pageRequest, accessToken)).thenReturn(expectedResult);
+        //when
+        PagedDebtorDebtPositionDTO result = debtPositionService.getPagedDebtorDebtPosition(fiscalCode, brokerId, orgName, orgFiscalCode, pageRequest);
+        //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
     }

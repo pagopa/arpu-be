@@ -6,6 +6,7 @@ import it.gov.pagopa.pu.citizen.controller.generated.DebtPositionApi;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,11 +17,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -181,5 +185,25 @@ class DebtPositionClientTest {
       FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud, accessToken);
 
       Assertions.assertNull(response);
+    }
+
+    @Test
+    void whenGetPagedDebtorDebtPositionThenOk() {
+        //given
+        String accessToken = "accessToken";
+        Long brokerId = 1L;
+        String orgName = "orgName";
+        String orgFiscalCode = "orgFiscalCode";
+        String fiscalCode = "fiscalCode";
+        PageRequest pageRequest = PageRequest.of(1, 10);
+
+        PagedDebtorDebtPositionDTO expectedResult = new PagedDebtorDebtPositionDTO();
+        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        Mockito.when(debtPositionApiMock.getPagedUnpaidDebtPositions(fiscalCode, brokerId, orgName, orgFiscalCode, 1,10, new ArrayList<>())).thenReturn(expectedResult);
+        //when
+        PagedDebtorDebtPositionDTO result = debtPositionClient.getPagedDebtorDebtPosition(fiscalCode, brokerId, orgName, orgFiscalCode, pageRequest, accessToken);
+        //then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(expectedResult, result);
     }
 }
