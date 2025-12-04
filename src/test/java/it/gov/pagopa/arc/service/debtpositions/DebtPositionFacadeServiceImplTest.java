@@ -5,10 +5,7 @@ import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
 import it.gov.pagopa.arc.utils.TestUtils;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -140,4 +137,30 @@ class DebtPositionFacadeServiceImplTest {
         assertNotNull(result);
         assertEquals(expectedResult, result);
     }
+
+    @Test
+    void whenGetDebtorUnpaidDebtPositionOverviewThenOk() {
+        // given
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+        String xFiscalCode = "fiscalCode";
+        Long organizationId = 3L;
+        IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
+
+        DebtorUnpaidDebtPositionOverviewDTO expectedResult =
+                podamFactory.manufacturePojo(DebtorUnpaidDebtPositionOverviewDTO.class);
+
+        Mockito.when(debtPositionServiceMock.getDebtorUnpaidDebtPositionOverview(
+                        brokerId, debtPositionId, xFiscalCode, organizationId))
+                .thenReturn(expectedResult);
+
+        // when
+        DebtorUnpaidDebtPositionOverviewDTO result = debtPositionFacadeService.getDebtorUnpaidDebtPositionOverview(
+                brokerId, debtPositionId, xFiscalCode, organizationId, loggedUser);
+
+        // then
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
+
 }

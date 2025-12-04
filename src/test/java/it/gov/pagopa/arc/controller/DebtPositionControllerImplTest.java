@@ -6,10 +6,7 @@ import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.debtpositions.DebtPositionFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtilsTest;
 import it.gov.pagopa.arc.utils.TestUtils;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -259,4 +256,52 @@ class DebtPositionControllerImplTest {
         assertNotNull(response.getBody());
         assertEquals(expectedResult, response.getBody());
     }
+
+    @Test
+    void whenGetDebtorUnpaidDebtPositionOverviewThenOk() {
+        // given
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+        String fiscalCode = "fiscalCode";
+        Long organizationId = 3L;
+
+        DebtorUnpaidDebtPositionOverviewDTO expectedResult = podamFactory.manufacturePojo(DebtorUnpaidDebtPositionOverviewDTO.class);
+
+        Mockito.when(debtPositionFacadeServiceMock.getDebtorUnpaidDebtPositionOverview(
+                        brokerId, debtPositionId, fiscalCode, organizationId, loggedUser))
+                .thenReturn(expectedResult);
+
+        // when
+        ResponseEntity<DebtorUnpaidDebtPositionOverviewDTO> response =
+                debtPositionController.getDebtorUnpaidDebtPositionOverview(
+                        brokerId, debtPositionId, fiscalCode, organizationId);
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(expectedResult, response.getBody());
+    }
+
+    @Test
+    void givenNullOverviewWhenGetDebtorUnpaidDebtPositionOverviewThenNotFound() {
+        // given
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+        String fiscalCode = "fiscalCode";
+        Long organizationId = 3L;
+
+        Mockito.when(debtPositionFacadeServiceMock.getDebtorUnpaidDebtPositionOverview(
+                        brokerId, debtPositionId, fiscalCode, organizationId, loggedUser))
+                .thenReturn(null);
+
+        // when
+        ResponseEntity<DebtorUnpaidDebtPositionOverviewDTO> response =
+                debtPositionController.getDebtorUnpaidDebtPositionOverview(
+                        brokerId, debtPositionId, fiscalCode, organizationId);
+
+        // then
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
 }
