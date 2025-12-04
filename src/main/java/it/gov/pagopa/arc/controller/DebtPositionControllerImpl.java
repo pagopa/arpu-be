@@ -4,10 +4,7 @@ import it.gov.pagopa.arc.controller.generated.DebtPositionApi;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.service.debtpositions.DebtPositionFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
@@ -104,5 +101,11 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
     public ResponseEntity<PagedDebtorDebtPositionDTO> getPagedUnpaidDebtPositions(Long brokerId, String xFiscalCode, String orgName, String orgFiscalCode, Pageable pageable) {
         log.info("User requested getPagedUnpaidDebtPositions having brokerId {} orgName {} and orgFiscalCode {}", brokerId, orgName, orgFiscalCode);
       return ResponseEntity.ok(debtPositionFacadeService.getPagedUnpaidDebtPositions(brokerId, xFiscalCode, orgName, orgFiscalCode, pageable, SecurityUtils.getPrincipal()));
+    }
+
+    @Override
+    public ResponseEntity<DebtorUnpaidDebtPositionOverviewDTO> getDebtorUnpaidDebtPositionOverview(Long brokerId, Long debtPositionId, String xFiscalCode, Long organizationId) {
+        log.info("User requested getDebtorUnpaidDebtPositionOverview having brokerId {} debtPositionId {} and organizationId {}", brokerId, debtPositionId, organizationId);
+        return ResponseEntity.ofNullable(debtPositionFacadeService.getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, xFiscalCode, organizationId, SecurityUtils.getPrincipal()));
     }
 }

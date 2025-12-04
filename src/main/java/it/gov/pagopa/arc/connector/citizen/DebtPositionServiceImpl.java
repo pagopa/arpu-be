@@ -3,10 +3,7 @@ package it.gov.pagopa.arc.connector.citizen;
 import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.DebtPositionClient;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +40,10 @@ public class DebtPositionServiceImpl implements DebtPositionService{
     @Override
     public PagedDebtorDebtPositionDTO getPagedDebtorDebtPosition(String fiscalCode, Long brokerId, String orgName, String orgFiscalCode, Pageable pageable) {
         return debtPositionClient.getPagedDebtorDebtPosition(fiscalCode, brokerId, orgName, orgFiscalCode, pageable, authnService.getAccessToken());
+    }
+
+    @Override
+    public DebtorUnpaidDebtPositionOverviewDTO getDebtorUnpaidDebtPositionOverview(Long brokerId, Long debtPositionId, String xFiscalCode, Long organizationId) {
+        return debtPositionClient.getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, xFiscalCode, organizationId, authnService.getAccessToken());
     }
 }

@@ -4,10 +4,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.utils.PageUtils;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
@@ -76,5 +73,15 @@ public class DebtPositionClient {
                 PageUtils.getPageNumber(pageable),
                 PageUtils.getPageSize(pageable),
                 PageUtils.getSortList(pageable));
+    }
+
+    public DebtorUnpaidDebtPositionOverviewDTO getDebtorUnpaidDebtPositionOverview(Long brokerId, Long debtPositionId, String xFiscalCode, Long organizationId, String accessToken){
+        try {
+            return apisHolder.getDebtPositionApi(accessToken)
+                    .getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, xFiscalCode, organizationId);
+        }catch (HttpClientErrorException.NotFound e){
+            log.warn("DebtorUnpaidDebtPositionOverview having debtPositionId {} with brokerId {} and organizationId {} not found", debtPositionId, brokerId, organizationId);
+            return null;
+        }
     }
 }

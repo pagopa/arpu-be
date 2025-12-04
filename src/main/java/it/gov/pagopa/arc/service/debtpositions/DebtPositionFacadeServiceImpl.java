@@ -5,10 +5,7 @@ import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
 import it.gov.pagopa.arc.service.AuthorizationService;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +46,10 @@ public class DebtPositionFacadeServiceImpl implements DebtPositionFacadeService 
     @Override
     public PagedDebtorDebtPositionDTO getPagedUnpaidDebtPositions(Long brokerId, String xFiscalCode, String orgName, String orgFiscalCode, Pageable pageable, IamUserInfoDTO loggedUser) {
         return debtPositionService.getPagedDebtorDebtPosition(AuthorizationService.getDebtorFiscalCode(xFiscalCode, loggedUser), brokerId, orgName, orgFiscalCode, pageable);
+    }
+
+    @Override
+    public DebtorUnpaidDebtPositionOverviewDTO getDebtorUnpaidDebtPositionOverview(Long brokerId, Long debtPositionId, String xFiscalCode, Long organizationId, IamUserInfoDTO loggedUser) {
+        return debtPositionService.getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, AuthorizationService.getDebtorFiscalCode(xFiscalCode,loggedUser), organizationId);
     }
 }
