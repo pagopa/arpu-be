@@ -274,7 +274,7 @@ class DebtPositionControllerImplTest {
         // when
         ResponseEntity<DebtorUnpaidDebtPositionOverviewDTO> response =
                 debtPositionController.getDebtorUnpaidDebtPositionOverview(
-                        brokerId, debtPositionId, fiscalCode, organizationId);
+                        brokerId, debtPositionId, organizationId, fiscalCode);
 
         // then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -297,7 +297,7 @@ class DebtPositionControllerImplTest {
         // when
         ResponseEntity<DebtorUnpaidDebtPositionOverviewDTO> response =
                 debtPositionController.getDebtorUnpaidDebtPositionOverview(
-                        brokerId, debtPositionId, fiscalCode, organizationId);
+                        brokerId, debtPositionId, organizationId, fiscalCode);
 
         // then
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
