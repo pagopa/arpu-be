@@ -6,9 +6,7 @@ import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.debtpositions.DebtPositionFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtilsTest;
 import it.gov.pagopa.arc.utils.TestUtils;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.co.jemos.podam.api.PodamFactory;
@@ -163,6 +162,47 @@ class DebtPositionControllerImplTest {
     }
 
     @Test
+    void whenGetPublicPaymentNoticeThenOk() {
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long installmentId = 3L;
+        String iuv = "iuv";
+        String iud = "iud";
+
+        FileResourceDTO resource = podamFactory.manufacturePojo(FileResourceDTO.class);
+        resource.setResource(new ByteArrayResource("PDF-DATA".getBytes()));
+
+        Mockito.when(debtPositionFacadeServiceMock.getPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,iuv,iud,loggedUser))
+                .thenReturn(resource);
+
+        ResponseEntity<Resource> response = debtPositionController.getPublicPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,iuv,iud);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(resource.getResource(), response.getBody());
+        assertEquals(resource.getFileName(), response.getHeaders().getContentDisposition().getFilename());
+    }
+
+    @Test
+    void givenNullResourceWhenGetPublicPaymentNoticeThenNoContent() {
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long installmentId = 3L;
+        String iuv = "iuv";
+        String iud = "iud";
+
+        Mockito.when(debtPositionFacadeServiceMock.getPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,iuv,iud, loggedUser))
+                .thenReturn(null);
+
+        ResponseEntity<Resource> response = debtPositionController.getPublicPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,iuv,iud);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
     void givenBrokerIdAndDebtPositionRequestDTOWhenPublicCreateSpontaneousDebtPositionThenReturnDebtPositionResponseDTO() {
         //given
         Long brokerId = 1L;
@@ -197,4 +237,71 @@ class DebtPositionControllerImplTest {
         assertEquals(resource.getResource(), response.getBody());
         assertEquals(resource.getFileName(), response.getHeaders().getContentDisposition().getFilename());
     }
+
+    @Test
+    void whenGetPagedUnpaidDebtPositionsThenOk() {
+        //given
+        Long brokerId = 1L;
+        String orgName = "orgName";
+        String orgFiscalCode = "orgFiscalCode";
+        String fiscalCode = "fiscalCode";
+
+        PagedDebtorDebtPositionDTO expectedResult = podamFactory.manufacturePojo(PagedDebtorDebtPositionDTO.class);
+
+        Mockito.when(debtPositionFacadeServiceMock.getPagedUnpaidDebtPositions(brokerId, fiscalCode, orgName, orgFiscalCode, Pageable.ofSize(1), loggedUser)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<PagedDebtorDebtPositionDTO> response = debtPositionController.getPagedUnpaidDebtPositions(brokerId, fiscalCode, orgName, orgFiscalCode, Pageable.ofSize(1));
+        //then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(expectedResult, response.getBody());
+    }
+
+    @Test
+    void whenGetDebtorUnpaidDebtPositionOverviewThenOk() {
+        // given
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+        String fiscalCode = "fiscalCode";
+        Long organizationId = 3L;
+
+        DebtorUnpaidDebtPositionOverviewDTO expectedResult = podamFactory.manufacturePojo(DebtorUnpaidDebtPositionOverviewDTO.class);
+
+        Mockito.when(debtPositionFacadeServiceMock.getDebtorUnpaidDebtPositionOverview(
+                        brokerId, debtPositionId, fiscalCode, organizationId, loggedUser))
+                .thenReturn(expectedResult);
+
+        // when
+        ResponseEntity<DebtorUnpaidDebtPositionOverviewDTO> response =
+                debtPositionController.getDebtorUnpaidDebtPositionOverview(
+                        brokerId, debtPositionId, organizationId, fiscalCode);
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(expectedResult, response.getBody());
+    }
+
+    @Test
+    void givenNullOverviewWhenGetDebtorUnpaidDebtPositionOverviewThenNotFound() {
+        // given
+        Long brokerId = 1L;
+        Long debtPositionId = 2L;
+        String fiscalCode = "fiscalCode";
+        Long organizationId = 3L;
+
+        Mockito.when(debtPositionFacadeServiceMock.getDebtorUnpaidDebtPositionOverview(
+                        brokerId, debtPositionId, fiscalCode, organizationId, loggedUser))
+                .thenReturn(null);
+
+        // when
+        ResponseEntity<DebtorUnpaidDebtPositionOverviewDTO> response =
+                debtPositionController.getDebtorUnpaidDebtPositionOverview(
+                        brokerId, debtPositionId, organizationId, fiscalCode);
+
+        // then
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
 }

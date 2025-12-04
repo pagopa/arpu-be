@@ -4,11 +4,10 @@ import it.gov.pagopa.arc.controller.generated.DebtPositionApi;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.service.debtpositions.DebtPositionFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionRequestDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,22 +59,31 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
   @Override
   public ResponseEntity<Resource> getPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, Long installmentId, String iuv, String iud) {
       log.info("getPaymentNotice was requested with brokerId {} and organizationId {}", brokerId, organizationId);
-
-      FileResourceDTO paymentNoticeFileResource = debtPositionFacadeService.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud,SecurityUtils.getPrincipal());
-      if (paymentNoticeFileResource != null && paymentNoticeFileResource.getResource()!=null){
-          HttpHeaders headers = new HttpHeaders();
-          headers.setContentDisposition(ContentDisposition.attachment()
-                  .filename(paymentNoticeFileResource.getFileName())
-                  .build());
-
-          return ResponseEntity.ok()
-                  .headers(headers)
-                  .contentType(MediaType.APPLICATION_PDF)
-                  .body(paymentNoticeFileResource.getResource());
-      } else {
-          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
+      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, iuv, iud);
   }
+
+  @Override
+  public ResponseEntity<Resource> getPublicPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud) {
+      log.info("getPublicPaymentNotice was requested with brokerId {} and organizationId {}", brokerId, organizationId);
+      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, iuv, iud);
+  }
+
+    private ResponseEntity<Resource> getResourceForPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, Long installmentId, String iuv, String iud) {
+        FileResourceDTO paymentNoticeFileResource = debtPositionFacadeService.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud,SecurityUtils.getPrincipal());
+        if (paymentNoticeFileResource != null && paymentNoticeFileResource.getResource()!=null){
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentDisposition(ContentDisposition.attachment()
+                    .filename(paymentNoticeFileResource.getFileName())
+                    .build());
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(paymentNoticeFileResource.getResource());
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
 
     @Override
     public ResponseEntity<DebtPositionResponseDTO> createPublicSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body) {
@@ -87,5 +95,17 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
     public ResponseEntity<Resource> getPublicUnpaidPaymentNoticeZip(Long brokerId, String xFiscalCode, Long debtPositionId) {
         log.info("getPublicUnpaidPaymentNoticeZip was requested with brokerId {} and debtPositionId {}", brokerId, debtPositionId);
         return getResourceForUnpaidPaymentNoticeZip(brokerId, debtPositionId, xFiscalCode);
+    }
+
+    @Override
+    public ResponseEntity<PagedDebtorDebtPositionDTO> getPagedUnpaidDebtPositions(Long brokerId, String xFiscalCode, String orgName, String orgFiscalCode, Pageable pageable) {
+        log.info("User requested getPagedUnpaidDebtPositions having brokerId {} orgName {} and orgFiscalCode {}", brokerId, orgName, orgFiscalCode);
+      return ResponseEntity.ok(debtPositionFacadeService.getPagedUnpaidDebtPositions(brokerId, xFiscalCode, orgName, orgFiscalCode, pageable, SecurityUtils.getPrincipal()));
+    }
+
+    @Override
+    public ResponseEntity<DebtorUnpaidDebtPositionOverviewDTO> getDebtorUnpaidDebtPositionOverview(Long brokerId, Long debtPositionId, Long organizationId, String xFiscalCode) {
+        log.info("User requested getDebtorUnpaidDebtPositionOverview having brokerId {} debtPositionId {} and organizationId {}", brokerId, debtPositionId, organizationId);
+        return ResponseEntity.ofNullable(debtPositionFacadeService.getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, xFiscalCode, organizationId, SecurityUtils.getPrincipal()));
     }
 }
