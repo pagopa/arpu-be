@@ -1,5 +1,5 @@
-import com.github.jk1.license.filter.*
-import com.github.jk1.license.render.*
+import com.github.jk1.license.filter.SpdxLicenseBundleNormalizer
+import com.github.jk1.license.render.XmlReportRenderer
 import java.util.*
 
 plugins {
@@ -198,7 +198,8 @@ openApiGenerate {
         "ReceiptDetailDTO" to "it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO",
         "BrokerInfoDTO" to "it.gov.pagopa.pu.citizen.dto.generated.BrokerInfoDTO",
 		"PagedDebtorDebtPositionDTO" to "it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO",
-		"DebtorUnpaidDebtPositionOverviewDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionOverviewDTO"
+		"DebtorUnpaidDebtPositionOverviewDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionOverviewDTO",
+		"InstallmentDebtorExtendedDTO" to "it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO"
 
 	))
 }

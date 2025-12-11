@@ -1297,7 +1297,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'PagedDebtorDebtPositionDTO'
+                type: 'PagedDebtorDebtPositionDTO'
         '401':
           description: Unauthorized - Missing or invalid token
         '403':
@@ -1349,6 +1349,48 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
+  /public/brokers/{brokerId}/installments:
+    get:
+      tags:
+        - installment
+      operationId: getPublicInstallmentsByIuvOrNav
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: iuvOrNav
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: orgFiscalCode
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: 'InstallmentDebtorExtendedDTO'
+        "400":
+          description: Invalid request
+        '404':
+          description: Not Found
+        "500":
+          description: Internal server error
 components:
   securitySchemes:
     BearerAuth:

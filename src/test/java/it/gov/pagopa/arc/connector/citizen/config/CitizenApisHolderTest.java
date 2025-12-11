@@ -85,4 +85,13 @@ class CitizenApisHolderTest extends BaseApiHolderTest {
                 new ParameterizedTypeReference<>() {},
                 citizenApisHolder::unload);
     }
+
+    @Test
+    void whenGetInstallmentApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
+        assertAuthenticationShouldBeSetInThreadSafeMode(
+                accessToken -> citizenApisHolder.getInstallmentApi(accessToken)
+                        .getInstallmentsByIuvOrNav(1L,"iuvOrNav","debtorFiscalCode","orgFiscalCode"),
+                new ParameterizedTypeReference<>() {},
+                citizenApisHolder::unload);
+    }
 }
