@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.controller.generated.InstallmentApi;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -75,4 +76,31 @@ class InstallmentClientTest {
         Assertions.assertNotNull(response);
         Assertions.assertTrue(response.isEmpty());
     }
+
+    @Test
+    void whenGetDebtorUnpaidDebtPositionInstallmentsThenOk() {
+        String accessToken = "accessToken";
+        Long brokerId = 1L;
+        Long debtPositionId = 10L;
+        Long paymentOptionId = 20L;
+        String xFiscalCode = "ABCDEF12G34H567I";
+        Long organizationId = 100L;
+
+        List<DebtorUnpaidDebtPositionInstallmentsDTO> expectedResult =
+                podamFactory.manufacturePojo(List.class, DebtorUnpaidDebtPositionInstallmentsDTO.class);
+
+        Mockito.when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
+        Mockito.when(installmentApiMock.getDebtorUnpaidDebtPositionInstallments(
+                brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId
+        )).thenReturn(expectedResult);
+
+        List<DebtorUnpaidDebtPositionInstallmentsDTO> response =
+                installmentClient.getDebtorUnpaidDebtPositionInstallments(
+                        accessToken, brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId
+                );
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(expectedResult, response);
+    }
+
 }

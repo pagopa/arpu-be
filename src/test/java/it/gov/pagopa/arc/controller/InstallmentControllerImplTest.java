@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.installment.InstallmentFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtilsTest;
 import it.gov.pagopa.arc.utils.TestUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,6 +67,31 @@ class InstallmentControllerImplTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
+        assertEquals(expectedResult, response.getBody());
+    }
+
+    @Test
+    void whenGetDebtorUnpaidDebtPositionInstallmentsThenOk() {
+        Long brokerId = 1L;
+        Long debtPositionId = 10L;
+        Long paymentOptionId = 20L;
+        String xFiscalCode = "XYZABC12D34E567F";
+        Long organizationId = 100L;
+
+        List<DebtorUnpaidDebtPositionInstallmentsDTO> expectedResult =
+                podamFactory.manufacturePojo(List.class, DebtorUnpaidDebtPositionInstallmentsDTO.class);
+
+        Mockito.when(installmentFacadeServiceMock.getDebtorUnpaidDebtPositionInstallments(
+                        brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId))
+                .thenReturn(expectedResult);
+
+        ResponseEntity<List<DebtorUnpaidDebtPositionInstallmentsDTO>> response =
+                installmentController.getDebtorUnpaidDebtPositionInstallments(
+                        brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId
+                );
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCode());
         assertEquals(expectedResult, response.getBody());
     }
 }
