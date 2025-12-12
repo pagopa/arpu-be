@@ -91,7 +91,7 @@ class InstallmentControllerImplTest {
                 );
 
         assertNotNull(response);
-        assertEquals(200, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedResult, response.getBody());
     }
 }
