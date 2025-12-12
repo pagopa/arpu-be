@@ -87,7 +87,7 @@ class InstallmentControllerImplTest {
 
         ResponseEntity<List<DebtorUnpaidDebtPositionInstallmentsDTO>> response =
                 installmentController.getDebtorUnpaidDebtPositionInstallments(
-                        brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId
+                        brokerId, debtPositionId, paymentOptionId, organizationId, xFiscalCode
                 );
 
         assertNotNull(response);

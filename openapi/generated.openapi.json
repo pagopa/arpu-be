@@ -2686,19 +2686,19 @@
             "format" : "int64"
           }
         }, {
-          "name" : "X-fiscal-code",
-          "in" : "header",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
           "name" : "organizationId",
           "in" : "query",
           "required" : true,
           "schema" : {
             "type" : "integer",
             "format" : "int64"
+          }
+        }, {
+          "name" : "X-fiscal-code",
+          "in" : "header",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
           }
         } ],
         "responses" : {

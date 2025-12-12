@@ -29,7 +29,7 @@ public class InstallmentControllerImpl implements InstallmentApi {
 
 
     @Override
-    public ResponseEntity<List<DebtorUnpaidDebtPositionInstallmentsDTO>> getDebtorUnpaidDebtPositionInstallments(Long brokerId, Long debtPositionId, Long paymentOptionId, String xFiscalCode, Long organizationId) {
+    public ResponseEntity<List<DebtorUnpaidDebtPositionInstallmentsDTO>> getDebtorUnpaidDebtPositionInstallments(Long brokerId, Long debtPositionId, Long paymentOptionId, Long organizationId, String xFiscalCode) {
         log.info("Requested getDebtorUnpaidDebtPositionInstallments on brokerId {} debtPositionId {} paymentOptionId {} and organizationId {}", brokerId, debtPositionId, paymentOptionId, organizationId);
         return ResponseEntity.ok(installmentFacadeService.getDebtorUnpaidDebtPositionInstallments(brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId, SecurityUtils.getPrincipal()));
     }
