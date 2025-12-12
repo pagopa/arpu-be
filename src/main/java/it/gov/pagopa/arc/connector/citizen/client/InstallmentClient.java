@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,10 @@ public class InstallmentClient {
             log.warn("Installments having brokerId {} and iuvOrNav {} not found", brokerId, iuvOrNav);
             return Collections.emptyList();
         }
+    }
+
+    public List<DebtorUnpaidDebtPositionInstallmentsDTO> getDebtorUnpaidDebtPositionInstallments(String accessToken, Long brokerId, Long debtPositionId, Long paymentOptionId, String xFiscalCode, Long organizationId){
+        return apisHolder.getInstallmentApi(accessToken)
+                .getDebtorUnpaidDebtPositionInstallments(brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId);
     }
 }
