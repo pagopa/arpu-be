@@ -61,4 +61,10 @@ public class ReceiptController implements ReceiptApi {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(receiptFileResource.getResource());
     }
+
+    @Override
+    public ResponseEntity<ReceiptDetailDTO> getPublicReceiptDetail(String debtorFiscalCode, Long brokerId, Long organizationId, Long receiptId) {
+        log.info("User requested getPublicReceiptDetail having brokerId {} organizationId {} and receiptId {} ", brokerId, organizationId, receiptId);
+        return ResponseEntity.ofNullable(receiptFacadeService.getReceiptDetail(brokerId, organizationId, receiptId, debtorFiscalCode, SecurityUtils.getPrincipal()));
+    }
 }

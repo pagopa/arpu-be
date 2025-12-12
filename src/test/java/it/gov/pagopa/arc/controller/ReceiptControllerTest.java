@@ -171,4 +171,21 @@ class ReceiptControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
+
+    @Test
+    void whenGetPublicReceiptDetailThenOk() {
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long receiptId = 3L;
+        String fiscalCode = "fiscalCode";
+        ReceiptDetailDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailDTO.class);
+
+        Mockito.when(receiptFacadeServiceMock.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,loggedUser)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<ReceiptDetailDTO> result = receiptController.getPublicReceiptDetail(fiscalCode, brokerId, organizationId, receiptId);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
 }
