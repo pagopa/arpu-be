@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.service.installment;
 
 import it.gov.pagopa.arc.connector.citizen.InstallmentService;
+import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
@@ -60,6 +61,7 @@ class InstallmentFacadeServiceImplTest {
         String xFiscalCode = "ABCDEF12G34H567I";
         Long organizationId = 100L;
 
+        IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
         List<DebtorUnpaidDebtPositionInstallmentsDTO> expectedResult =
                 podamFactory.manufacturePojo(List.class, DebtorUnpaidDebtPositionInstallmentsDTO.class);
 
@@ -69,7 +71,7 @@ class InstallmentFacadeServiceImplTest {
 
         List<DebtorUnpaidDebtPositionInstallmentsDTO> result =
                 installmentFacadeService.getDebtorUnpaidDebtPositionInstallments(
-                        brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId
+                        brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId, loggedUser
                 );
 
         assertNotNull(result);

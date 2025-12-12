@@ -1,6 +1,8 @@
 package it.gov.pagopa.arc.service.installment;
 
 import it.gov.pagopa.arc.connector.citizen.InstallmentService;
+import it.gov.pagopa.arc.dto.IamUserInfoDTO;
+import it.gov.pagopa.arc.service.AuthorizationService;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ public class InstallmentFacadeServiceImpl implements InstallmentFacadeService {
     }
 
     @Override
-    public List<DebtorUnpaidDebtPositionInstallmentsDTO> getDebtorUnpaidDebtPositionInstallments(Long brokerId, Long debtPositionId, Long paymentOptionId, String xFiscalCode, Long organizationId) {
-        return installmentService.getDebtorUnpaidDebtPositionInstallments(brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId);
+    public List<DebtorUnpaidDebtPositionInstallmentsDTO> getDebtorUnpaidDebtPositionInstallments(Long brokerId, Long debtPositionId, Long paymentOptionId, String xFiscalCode, Long organizationId, IamUserInfoDTO loggedUser) {
+        return installmentService.getDebtorUnpaidDebtPositionInstallments(brokerId, debtPositionId, paymentOptionId, AuthorizationService.getDebtorFiscalCode(xFiscalCode, loggedUser), organizationId);
     }
 }

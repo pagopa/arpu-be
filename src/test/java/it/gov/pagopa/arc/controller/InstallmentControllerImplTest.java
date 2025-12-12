@@ -82,7 +82,7 @@ class InstallmentControllerImplTest {
                 podamFactory.manufacturePojo(List.class, DebtorUnpaidDebtPositionInstallmentsDTO.class);
 
         Mockito.when(installmentFacadeServiceMock.getDebtorUnpaidDebtPositionInstallments(
-                        brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId))
+                        brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId, loggedUser))
                 .thenReturn(expectedResult);
 
         ResponseEntity<List<DebtorUnpaidDebtPositionInstallmentsDTO>> response =

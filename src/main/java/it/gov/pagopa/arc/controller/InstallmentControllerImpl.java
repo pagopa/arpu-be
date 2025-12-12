@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.controller;
 
 import it.gov.pagopa.arc.controller.generated.InstallmentApi;
 import it.gov.pagopa.arc.service.installment.InstallmentFacadeService;
+import it.gov.pagopa.arc.utils.SecurityUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,6 @@ public class InstallmentControllerImpl implements InstallmentApi {
     @Override
     public ResponseEntity<List<DebtorUnpaidDebtPositionInstallmentsDTO>> getDebtorUnpaidDebtPositionInstallments(Long brokerId, Long debtPositionId, Long paymentOptionId, String xFiscalCode, Long organizationId) {
         log.info("Requested getDebtorUnpaidDebtPositionInstallments on brokerId {} debtPositionId {} paymentOptionId {} and organizationId {}", brokerId, debtPositionId, paymentOptionId, organizationId);
-        return ResponseEntity.ok(installmentFacadeService.getDebtorUnpaidDebtPositionInstallments(brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId));
+        return ResponseEntity.ok(installmentFacadeService.getDebtorUnpaidDebtPositionInstallments(brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId, SecurityUtils.getPrincipal()));
     }
 }
