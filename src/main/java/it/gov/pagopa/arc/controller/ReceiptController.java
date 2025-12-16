@@ -5,7 +5,7 @@ import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.service.receipt.ReceiptFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +29,7 @@ public class ReceiptController implements ReceiptApi {
     }
 
     @Override
-    public ResponseEntity<ReceiptDetailDTO> getReceiptDetail(Long brokerId, Long organizationId, Long receiptId, String xFiscalCode) {
+    public ResponseEntity<ReceiptDetailExtendedDTO> getReceiptDetail(Long brokerId, Long organizationId, Long receiptId, String xFiscalCode) {
         log.info("User requested getReceiptDetail having brokerId {} organizationId {} and receiptId {} ", brokerId, organizationId, receiptId);
         return ResponseEntity.ofNullable(receiptFacadeService.getReceiptDetail(brokerId, organizationId, receiptId, xFiscalCode, SecurityUtils.getPrincipal()));
     }
@@ -63,7 +63,7 @@ public class ReceiptController implements ReceiptApi {
     }
 
     @Override
-    public ResponseEntity<ReceiptDetailDTO> getPublicReceiptDetail(String debtorFiscalCode, Long brokerId, Long organizationId, Long receiptId) {
+    public ResponseEntity<ReceiptDetailExtendedDTO> getPublicReceiptDetail(String debtorFiscalCode, Long brokerId, Long organizationId, Long receiptId) {
         log.info("User requested getPublicReceiptDetail having brokerId {} organizationId {} and receiptId {} ", brokerId, organizationId, receiptId);
         return ResponseEntity.ofNullable(receiptFacadeService.getReceiptDetail(brokerId, organizationId, receiptId, debtorFiscalCode, SecurityUtils.getPrincipal()));
     }

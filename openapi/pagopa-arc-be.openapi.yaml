@@ -1124,7 +1124,7 @@ paths:
           content:
             application/json:
               schema:
-                type: 'ReceiptDetailDTO'
+                type: 'ReceiptDetailExtendedDTO'
         '401':
           description: Unauthorized - Missing or invalid token
         '403':
@@ -1476,7 +1476,7 @@ paths:
           content:
             application/json:
               schema:
-                type: 'ReceiptDetailDTO'
+                type: 'ReceiptDetailExtendedDTO'
         '401':
           description: Unauthorized - Missing or invalid token
         '403':

@@ -836,7 +836,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ReceiptDetailDTO"
+                  "$ref" : "#/components/schemas/ReceiptDetailExtendedDTO"
                 }
               }
             }
@@ -846,7 +846,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ReceiptDetailDTO"
+                  "$ref" : "#/components/schemas/ReceiptDetailExtendedDTO"
                 }
               }
             }
@@ -856,7 +856,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ReceiptDetailDTO"
+                  "$ref" : "#/components/schemas/ReceiptDetailExtendedDTO"
                 }
               }
             }
@@ -866,7 +866,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ReceiptDetailDTO"
+                  "$ref" : "#/components/schemas/ReceiptDetailExtendedDTO"
                 }
               }
             }
@@ -2172,7 +2172,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ReceiptDetailDTO"
+                  "$ref" : "#/components/schemas/ReceiptDetailExtendedDTO"
                 }
               }
             }
@@ -2182,7 +2182,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ReceiptDetailDTO"
+                  "$ref" : "#/components/schemas/ReceiptDetailExtendedDTO"
                 }
               }
             }
@@ -2192,7 +2192,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ReceiptDetailDTO"
+                  "$ref" : "#/components/schemas/ReceiptDetailExtendedDTO"
                 }
               }
             }
@@ -2202,7 +2202,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ReceiptDetailDTO"
+                  "$ref" : "#/components/schemas/ReceiptDetailExtendedDTO"
                 }
               }
             }
@@ -3681,7 +3681,11 @@
           }
         }
       },
-      "ReceiptDetailDTO" : {
+      "DebtPositionOrigin" : {
+        "type" : "string",
+        "enum" : [ "ORDINARY", "ORDINARY_SIL", "SPONTANEOUS", "SPONTANEOUS_SIL", "SPONTANEOUS_MIXED", "SECONDARY_ORG", "RECEIPT_FILE", "RECEIPT_PAGOPA", "REPORTING_PAGOPA" ]
+      },
+      "ReceiptDetailExtendedDTO" : {
         "type" : "object",
         "properties" : {
           "receiptId" : {
@@ -3727,9 +3731,29 @@
           "notificationFeeCents" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "receiptOrigin" : {
+            "$ref" : "#/components/schemas/ReceiptOriginType"
+          },
+          "debtPositionOrigin" : {
+            "$ref" : "#/components/schemas/DebtPositionOrigin"
+          },
+          "organizationId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "orgName" : {
+            "type" : "string"
+          },
+          "orgFiscalCode" : {
+            "type" : "string"
           }
         },
-        "required" : [ "debtPositionTypeOrgDescription", "debtor", "iud", "paymentAmountCents", "pspCompanyName", "receiptId", "remittanceInformation" ]
+        "required" : [ "debtPositionOrigin", "debtPositionTypeOrgDescription", "debtor", "iud", "paymentAmountCents", "pspCompanyName", "receiptId", "receiptOrigin", "remittanceInformation" ]
+      },
+      "ReceiptOriginType" : {
+        "type" : "string",
+        "enum" : [ "RECEIPT_PAGOPA", "RECEIPT_FILE", "PAYMENTS_REPORTING" ]
       },
       "InstallmentDebtorExtendedDTO" : {
         "type" : "object",
@@ -4268,10 +4292,6 @@
         },
         "required" : [ "content", "number", "size", "totalElements", "totalPages" ]
       },
-      "ReceiptOriginType" : {
-        "type" : "string",
-        "enum" : [ "RECEIPT_PAGOPA", "RECEIPT_FILE", "PAYMENTS_REPORTING" ]
-      },
       "Action" : {
         "type" : "string",
         "enum" : [ "I", "M", "A" ]
@@ -4335,10 +4355,6 @@
           }
         },
         "required" : [ "debtPositionOrigin", "debtPositionTypeOrgId", "flagPuPagoPaPayment", "organizationId", "paymentOptions" ]
-      },
-      "DebtPositionOrigin" : {
-        "type" : "string",
-        "enum" : [ "ORDINARY", "ORDINARY_SIL", "SPONTANEOUS", "SPONTANEOUS_SIL", "SPONTANEOUS_MIXED", "SECONDARY_ORG", "RECEIPT_FILE", "RECEIPT_PAGOPA", "REPORTING_PAGOPA" ]
       },
       "DebtPositionStatus" : {
         "type" : "string",

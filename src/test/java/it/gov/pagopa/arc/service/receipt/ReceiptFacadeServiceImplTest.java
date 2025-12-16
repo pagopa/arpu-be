@@ -5,7 +5,7 @@ import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,11 +64,11 @@ class ReceiptFacadeServiceImplTest {
         Long receiptId = 3L;
         String fiscalCode = "fiscalCode";
         IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
-        ReceiptDetailDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailDTO.class);
+        ReceiptDetailExtendedDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailExtendedDTO.class);
 
         Mockito.when(receiptServiceMock.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode)).thenReturn(expectedResult);
 
-        ReceiptDetailDTO result = receiptFacadeService.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode, loggedUser);
+        ReceiptDetailExtendedDTO result = receiptFacadeService.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode, loggedUser);
 
         assertNotNull(result);
         assertEquals(expectedResult, result);

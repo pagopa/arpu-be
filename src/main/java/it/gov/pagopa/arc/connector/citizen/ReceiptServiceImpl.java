@@ -4,7 +4,7 @@ import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.ReceiptClient;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class ReceiptServiceImpl implements ReceiptService{
     }
 
     @Override
-    public ReceiptDetailDTO getReceiptDetail(Long brokerId, Long organizationId, Long receiptId, String debtorFiscalCode) {
+    public ReceiptDetailExtendedDTO getReceiptDetail(Long brokerId, Long organizationId, Long receiptId, String debtorFiscalCode) {
         return receiptClient.getReceiptDetail(brokerId, organizationId, receiptId, debtorFiscalCode, authnService.getAccessToken());
     }
 

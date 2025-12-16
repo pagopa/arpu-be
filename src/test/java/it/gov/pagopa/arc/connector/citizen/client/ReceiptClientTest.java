@@ -6,7 +6,7 @@ import it.gov.pagopa.arc.utils.PageUtils;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.controller.generated.ReceiptApi;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,14 +78,14 @@ class ReceiptClientTest {
         Long organizationId = 2L;
         Long receiptId = 3L;
         String fiscalCode = "fiscalCode";
-        ReceiptDetailDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailDTO.class);
+        ReceiptDetailExtendedDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailExtendedDTO.class);
 
         when(citizenApisHolderMock.getReceiptApi(accessToken))
                 .thenReturn(receiptApiMock);
         when(receiptApiMock.getReceiptDetail(fiscalCode,brokerId,organizationId,receiptId))
                 .thenReturn(expectedResult);
 
-        ReceiptDetailDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
+        ReceiptDetailExtendedDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
 
         assertSame(expectedResult, result);
     }
@@ -103,7 +103,7 @@ class ReceiptClientTest {
         when(receiptApiMock.getReceiptDetail(fiscalCode,brokerId,organizationId,receiptId))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
-        ReceiptDetailDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
+        ReceiptDetailExtendedDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
 
         Assertions.assertNull(result);
     }
