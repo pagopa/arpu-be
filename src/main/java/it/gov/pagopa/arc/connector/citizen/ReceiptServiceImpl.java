@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.connector.citizen;
 
 import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.ReceiptClient;
+import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
@@ -20,8 +21,8 @@ public class ReceiptServiceImpl implements ReceiptService{
     }
 
     @Override
-    public PagedDebtorReceiptsDTO getPagedDebtorReceipts(Long brokerId, String debtorFiscalCode, String orgName, Pageable pageable) {
-        return receiptClient.getPagedDebtorReceipts(brokerId, debtorFiscalCode, orgName, pageable, authnService.getAccessToken());
+    public PagedDebtorReceiptsDTO getPagedDebtorReceipts(Long brokerId, String debtorFiscalCode, DebtorReceiptsFiltersDTO debtorReceiptsFiltersDTO, Pageable pageable) {
+        return receiptClient.getPagedDebtorReceipts(brokerId, debtorFiscalCode, debtorReceiptsFiltersDTO, pageable, authnService.getAccessToken());
     }
 
     @Override

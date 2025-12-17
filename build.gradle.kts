@@ -186,7 +186,7 @@ openApiGenerate {
         "additionalModelTypeAnnotations" to "@lombok.Builder"
 	))
 	typeMappings.set(mapOf(
-        "DateTime" to "java.time.LocalDateTime",
+        "DateTime" to "java.time.OffsetDateTime",
         "zoned-date-time" to "java.time.ZonedDateTime",
 		"OrganizationsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO",
 		"DebtPositionTypeOrgsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO",

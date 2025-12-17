@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.controller;
 
+import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.receipt.ReceiptFacadeService;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.co.jemos.podam.api.PodamFactory;
+
+import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,12 +56,21 @@ class ReceiptControllerTest {
         Long brokerId = 1L;
         String fiscalCode = "fiscalCode";
         String orgName = "orgName";
+        String noticeNumberOrIuv = "noticeNumberOrIuv";
+        OffsetDateTime paymentDateTimeFrom = OffsetDateTime.now().minusDays(1);
+        OffsetDateTime paymentDateTimeTo = OffsetDateTime.now();
+        DebtorReceiptsFiltersDTO debtorReceiptsFiltersDTO = DebtorReceiptsFiltersDTO.builder()
+                .orgName(orgName)
+                .noticeNumberOrIuv(noticeNumberOrIuv)
+                .paymentDateTimeFrom(paymentDateTimeFrom)
+                .paymentDateTimeTo(paymentDateTimeTo)
+                .build();
         PageRequest pageRequest = PageRequest.of(1, 10);
         PagedDebtorReceiptsDTO expectedResult = podamFactory.manufacturePojo(PagedDebtorReceiptsDTO.class);
 
-        Mockito.when(receiptFacadeServiceMock.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest, loggedUser)).thenReturn(expectedResult);
+        Mockito.when(receiptFacadeServiceMock.getPagedDebtorReceipts(brokerId, fiscalCode, debtorReceiptsFiltersDTO, pageRequest, loggedUser)).thenReturn(expectedResult);
         //when
-        ResponseEntity<PagedDebtorReceiptsDTO> result = receiptController.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest);
+        ResponseEntity<PagedDebtorReceiptsDTO> result = receiptController.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, noticeNumberOrIuv, paymentDateTimeFrom, paymentDateTimeTo, pageRequest);
         //then
         assertNotNull(result);
         assertEquals(HttpStatus.OK, result.getStatusCode());

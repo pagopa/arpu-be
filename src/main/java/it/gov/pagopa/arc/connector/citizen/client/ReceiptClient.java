@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
+import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.utils.PageUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
@@ -22,12 +23,15 @@ public class ReceiptClient {
         this.citizenApisHolder = citizenApisHolder;
     }
 
-    public PagedDebtorReceiptsDTO getPagedDebtorReceipts(Long brokerId, String debtorFiscalCode, String orgName, Pageable pageable, String accessToken){
+    public PagedDebtorReceiptsDTO getPagedDebtorReceipts(Long brokerId, String debtorFiscalCode, DebtorReceiptsFiltersDTO debtorReceiptsFiltersDTO, Pageable pageable, String accessToken){
         return citizenApisHolder.getReceiptApi(accessToken)
                 .getPagedDebtorReceipts(
                         brokerId,
                         debtorFiscalCode,
-                        orgName,
+                        debtorReceiptsFiltersDTO.getOrgName(),
+                        debtorReceiptsFiltersDTO.getNoticeNumberOrIuv(),
+                        debtorReceiptsFiltersDTO.getPaymentDateTimeFrom(),
+                        debtorReceiptsFiltersDTO.getPaymentDateTimeTo(),
                         PageUtils.getPageNumber(pageable),
                         PageUtils.getPageSize(pageable),
                         PageUtils.getSortList(pageable)

@@ -12,6 +12,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,7 +73,9 @@ class CitizenApisHolderTest extends BaseApiHolderTest {
     void whenGetReceiptApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
         assertAuthenticationShouldBeSetInThreadSafeMode(
                 accessToken -> citizenApisHolder.getReceiptApi(accessToken)
-                        .getPagedDebtorReceipts(1L,"fiscalCode","orgName", 0, 1, new ArrayList<>()),
+                        .getPagedDebtorReceipts(1L,"fiscalCode","orgName",
+                        "noticeNumberOrIuv", OffsetDateTime.now(),
+                        OffsetDateTime.now(), 0, 1, new ArrayList<>()),
                 new ParameterizedTypeReference<>() {},
                 citizenApisHolder::unload);
     }

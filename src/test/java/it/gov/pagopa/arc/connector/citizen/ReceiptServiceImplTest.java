@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.connector.citizen;
 
 import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.ReceiptClient;
+import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
@@ -45,14 +46,14 @@ class ReceiptServiceImplTest {
         String accessToken = "accessToken";
         Long brokerId = 1L;
         String fiscalCode = "fiscalCode";
-        String orgName = "orgName";
+        DebtorReceiptsFiltersDTO debtorReceiptsFiltersDTO = podamFactory.manufacturePojo(DebtorReceiptsFiltersDTO.class);
         PageRequest pageRequest = PageRequest.of(1, 10);
         PagedDebtorReceiptsDTO expectedResult = podamFactory.manufacturePojo(PagedDebtorReceiptsDTO.class);
 
         Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
-        Mockito.when(receiptClientMock.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest, accessToken)).thenReturn(expectedResult);
+        Mockito.when(receiptClientMock.getPagedDebtorReceipts(brokerId, fiscalCode, debtorReceiptsFiltersDTO, pageRequest, accessToken)).thenReturn(expectedResult);
         //when
-        PagedDebtorReceiptsDTO result = receiptService.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest);
+        PagedDebtorReceiptsDTO result = receiptService.getPagedDebtorReceipts(brokerId, fiscalCode, debtorReceiptsFiltersDTO, pageRequest);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(expectedResult, result);
