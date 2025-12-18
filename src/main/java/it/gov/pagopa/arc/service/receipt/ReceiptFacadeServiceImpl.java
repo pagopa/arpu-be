@@ -1,11 +1,12 @@
 package it.gov.pagopa.arc.service.receipt;
 
 import it.gov.pagopa.arc.connector.citizen.ReceiptService;
+import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.AuthorizationService;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +20,12 @@ public class ReceiptFacadeServiceImpl implements ReceiptFacadeService{
     }
 
     @Override
-    public PagedDebtorReceiptsDTO getPagedDebtorReceipts(Long brokerId, String debtorFiscalCode, String orgName, Pageable pageable, IamUserInfoDTO loggedUser) {
-        return receiptService.getPagedDebtorReceipts(brokerId, AuthorizationService.getDebtorFiscalCode(debtorFiscalCode,loggedUser), orgName, pageable);
+    public PagedDebtorReceiptsDTO getPagedDebtorReceipts(Long brokerId, String debtorFiscalCode, DebtorReceiptsFiltersDTO debtorReceiptsFiltersDTO, Pageable pageable, IamUserInfoDTO loggedUser) {
+        return receiptService.getPagedDebtorReceipts(brokerId, AuthorizationService.getDebtorFiscalCode(debtorFiscalCode,loggedUser), debtorReceiptsFiltersDTO, pageable);
     }
 
     @Override
-    public ReceiptDetailDTO getReceiptDetail(Long brokerId, Long organizationId, Long receiptId, String debtorFiscalCode, IamUserInfoDTO loggedUser) {
+    public ReceiptDetailExtendedDTO getReceiptDetail(Long brokerId, Long organizationId, Long receiptId, String debtorFiscalCode, IamUserInfoDTO loggedUser) {
         return receiptService.getReceiptDetail(brokerId,organizationId,receiptId,AuthorizationService.getDebtorFiscalCode(debtorFiscalCode,loggedUser));
     }
 

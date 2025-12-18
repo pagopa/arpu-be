@@ -1,12 +1,13 @@
 package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
+import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.utils.PageUtils;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.controller.generated.ReceiptApi;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import uk.co.jemos.podam.api.PodamFactory;
+
+import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -58,13 +61,22 @@ class ReceiptClientTest {
         Long brokerId = 1L;
         String fiscalCode = "fiscalCode";
         String orgName = "orgName";
+        String noticeNumberOrIuv = "noticeNumberOrIuv";
+        OffsetDateTime paymentDateTimeFrom = OffsetDateTime.now().minusDays(1);
+        OffsetDateTime paymentDateTimeTo = OffsetDateTime.now();
+        DebtorReceiptsFiltersDTO debtorReceiptsFiltersDTO = DebtorReceiptsFiltersDTO.builder()
+                .orgName(orgName)
+                .noticeNumberOrIuv(noticeNumberOrIuv)
+                .paymentDateTimeFrom(paymentDateTimeFrom)
+                .paymentDateTimeTo(paymentDateTimeTo)
+                .build();
         PageRequest pageRequest = PageRequest.of(1, 10);
         PagedDebtorReceiptsDTO expectedResult = podamFactory.manufacturePojo(PagedDebtorReceiptsDTO.class);
 
         Mockito.when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
-        Mockito.when(receiptApiMock.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest.getPageNumber(), pageRequest.getPageSize(), PageUtils.getSortList(pageRequest))).thenReturn(expectedResult);
+        Mockito.when(receiptApiMock.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, noticeNumberOrIuv, paymentDateTimeFrom, paymentDateTimeTo, pageRequest.getPageNumber(), pageRequest.getPageSize(), PageUtils.getSortList(pageRequest))).thenReturn(expectedResult);
         //when
-        PagedDebtorReceiptsDTO result = receiptClient.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest, accessToken);
+        PagedDebtorReceiptsDTO result = receiptClient.getPagedDebtorReceipts(brokerId, fiscalCode, debtorReceiptsFiltersDTO, pageRequest, accessToken);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
@@ -78,14 +90,14 @@ class ReceiptClientTest {
         Long organizationId = 2L;
         Long receiptId = 3L;
         String fiscalCode = "fiscalCode";
-        ReceiptDetailDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailDTO.class);
+        ReceiptDetailExtendedDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailExtendedDTO.class);
 
         when(citizenApisHolderMock.getReceiptApi(accessToken))
                 .thenReturn(receiptApiMock);
         when(receiptApiMock.getReceiptDetail(fiscalCode,brokerId,organizationId,receiptId))
                 .thenReturn(expectedResult);
 
-        ReceiptDetailDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
+        ReceiptDetailExtendedDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
 
         assertSame(expectedResult, result);
     }
@@ -103,7 +115,7 @@ class ReceiptClientTest {
         when(receiptApiMock.getReceiptDetail(fiscalCode,brokerId,organizationId,receiptId))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
-        ReceiptDetailDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
+        ReceiptDetailExtendedDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
 
         Assertions.assertNull(result);
     }

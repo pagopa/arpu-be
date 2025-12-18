@@ -17,6 +17,7 @@ public class CitizenApisHolder {
     private final DebtPositionApi debtPositionApi;
     private final ReceiptApi receiptApi;
     private final BrokerApi brokerApi;
+    private final InstallmentApi installmentApi;
 
     private final ThreadLocal<String> bearerTokenHolder = new ThreadLocal<>();
 
@@ -36,6 +37,7 @@ public class CitizenApisHolder {
         this.debtPositionApi = new DebtPositionApi(apiClient);
         this.receiptApi = new ReceiptApi(apiClient);
         this.brokerApi = new BrokerApi(apiClient);
+        this.installmentApi = new InstallmentApi(apiClient);
     }
 
     @PreDestroy
@@ -66,6 +68,11 @@ public class CitizenApisHolder {
     /** It will return a {@link BrokerApi} instrumented with the provided accessToken. Use null if auth is not required */
     public BrokerApi getBrokerApi(String accessToken){
         return getApi(accessToken, brokerApi);
+    }
+
+    /** It will return a {@link InstallmentApi} instrumented with the provided accessToken. Use null if auth is not required */
+    public InstallmentApi getInstallmentApi(String accessToken){
+        return getApi(accessToken, installmentApi);
     }
 
     private <T extends BaseApi> T getApi(String accessToken, T api) {

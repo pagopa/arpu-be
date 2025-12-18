@@ -1,5 +1,5 @@
-import com.github.jk1.license.filter.*
-import com.github.jk1.license.render.*
+import com.github.jk1.license.filter.SpdxLicenseBundleNormalizer
+import com.github.jk1.license.render.XmlReportRenderer
 import java.util.*
 
 plugins {
@@ -186,7 +186,7 @@ openApiGenerate {
         "additionalModelTypeAnnotations" to "@lombok.Builder"
 	))
 	typeMappings.set(mapOf(
-        "DateTime" to "java.time.LocalDateTime",
+        "DateTime" to "java.time.OffsetDateTime",
         "zoned-date-time" to "java.time.ZonedDateTime",
 		"OrganizationsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO",
 		"DebtPositionTypeOrgsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO",
@@ -195,10 +195,12 @@ openApiGenerate {
 		"DebtPositionResponseDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionResponseDTO",
 		"DebtPositionDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtPositionDTO",
 		"PagedDebtorReceiptsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO",
-        "ReceiptDetailDTO" to "it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO",
+        "ReceiptDetailExtendedDTO" to "it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO",
         "BrokerInfoDTO" to "it.gov.pagopa.pu.citizen.dto.generated.BrokerInfoDTO",
 		"PagedDebtorDebtPositionDTO" to "it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO",
-		"DebtorUnpaidDebtPositionOverviewDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionOverviewDTO"
+		"DebtorUnpaidDebtPositionOverviewDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionOverviewDTO",
+		"InstallmentDebtorExtendedDTO" to "it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO",
+		"DebtorUnpaidDebtPositionInstallmentsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO"
 
 	))
 }

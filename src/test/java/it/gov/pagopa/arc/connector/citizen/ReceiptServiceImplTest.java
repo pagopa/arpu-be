@@ -2,10 +2,11 @@ package it.gov.pagopa.arc.connector.citizen;
 
 import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.ReceiptClient;
+import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
-import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,14 +46,14 @@ class ReceiptServiceImplTest {
         String accessToken = "accessToken";
         Long brokerId = 1L;
         String fiscalCode = "fiscalCode";
-        String orgName = "orgName";
+        DebtorReceiptsFiltersDTO debtorReceiptsFiltersDTO = podamFactory.manufacturePojo(DebtorReceiptsFiltersDTO.class);
         PageRequest pageRequest = PageRequest.of(1, 10);
         PagedDebtorReceiptsDTO expectedResult = podamFactory.manufacturePojo(PagedDebtorReceiptsDTO.class);
 
         Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
-        Mockito.when(receiptClientMock.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest, accessToken)).thenReturn(expectedResult);
+        Mockito.when(receiptClientMock.getPagedDebtorReceipts(brokerId, fiscalCode, debtorReceiptsFiltersDTO, pageRequest, accessToken)).thenReturn(expectedResult);
         //when
-        PagedDebtorReceiptsDTO result = receiptService.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, pageRequest);
+        PagedDebtorReceiptsDTO result = receiptService.getPagedDebtorReceipts(brokerId, fiscalCode, debtorReceiptsFiltersDTO, pageRequest);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(expectedResult, result);
@@ -65,12 +66,12 @@ class ReceiptServiceImplTest {
         Long organizationId = 2L;
         Long receiptId = 3L;
         String fiscalCode = "fiscalCode";
-        ReceiptDetailDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailDTO.class);
+        ReceiptDetailExtendedDTO expectedResult = podamFactory.manufacturePojo(ReceiptDetailExtendedDTO.class);
 
         Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
         Mockito.when(receiptClientMock.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken)).thenReturn(expectedResult);
 
-        ReceiptDetailDTO result = receiptService.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode);
+        ReceiptDetailExtendedDTO result = receiptService.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(expectedResult, result);
