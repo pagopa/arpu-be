@@ -1,6 +1,5 @@
 package it.gov.pagopa.arc.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.config.JWTConfiguration;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
@@ -8,9 +7,6 @@ import it.gov.pagopa.arc.service.AccessTokenBuilderService;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Set;
-
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -18,24 +14,28 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
+
+import java.io.IOException;
+import java.util.Set;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
   private final AccessTokenBuilderService accessTokenBuilderService;
-  private final ObjectMapper objectMapper;
+  private final JsonMapper jsonMapper;
   private final TokenStoreService tokenStoreService;
   private final JWTConfiguration jwtConfiguration;
   private final Set<String> cfWhitelist;
 
   public CustomAuthenticationSuccessHandler(
       AccessTokenBuilderService accessTokenBuilderService,
-      ObjectMapper objectMapper,
+      JsonMapper jsonMapper,
       JWTConfiguration jwtConfiguration,
       TokenStoreService tokenStoreService,
       @Value("${white-list-cf-users}") Set<String> cfWhitelist){
     this.accessTokenBuilderService = accessTokenBuilderService;
-    this.objectMapper = objectMapper;
+    this.jsonMapper = jsonMapper;
     this.jwtConfiguration = jwtConfiguration;
     this.tokenStoreService = tokenStoreService;
     this.cfWhitelist = cfWhitelist;
@@ -58,7 +58,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
           null);
 
       tokenStoreService.save( accessToken.getAccessToken() , userInfoDTO );
-      body = objectMapper.writeValueAsString(accessToken);
+      body = jsonMapper.writeValueAsString(accessToken);
     } else {
       authentication.setAuthenticated(false);
       response.setStatus(403);

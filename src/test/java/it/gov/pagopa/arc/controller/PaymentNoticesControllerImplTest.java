@@ -70,12 +70,12 @@ class PaymentNoticesControllerImplTest {
 
     @BeforeEach
     void setUp() {
+        TestUtils.clearDefaultTimezone();
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 iamUserInfoDTO, null, null);
         authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        TestUtils.clearDefaultTimezone();
     }
     @AfterEach
     void clearContext() {

@@ -76,12 +76,12 @@ class NoticesControllerImplTest {
 
     @BeforeEach
     void setUp() {
+        TestUtils.clearDefaultTimezone();
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 IamUserInfoDTOFaker.mockInstance(), null, null);
         authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        TestUtils.clearDefaultTimezone();
     }
 
     @AfterEach
