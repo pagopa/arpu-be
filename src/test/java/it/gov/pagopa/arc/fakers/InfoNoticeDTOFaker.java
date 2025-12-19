@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.fakers;
 import it.gov.pagopa.arc.model.generated.InfoNoticeDTO;
 import it.gov.pagopa.arc.model.generated.UserDetailDTO;
 import it.gov.pagopa.arc.model.generated.WalletInfoDTO;
+import it.gov.pagopa.arc.utils.Constants;
 import it.gov.pagopa.arc.utils.TestUtils;
 
 import java.time.ZonedDateTime;
@@ -16,7 +17,7 @@ public class InfoNoticeDTOFaker {
                 .eventId("EVENT_ID")
                 .authCode("250863")
                 .rrn("51561651")
-                .noticeDate(ZonedDateTime.parse("2024-06-27T13:07:25Z"))
+                .noticeDate(ZonedDateTime.parse("2024-06-27T13:07:25Z").withZoneSameInstant(Constants.ZONEID))
                 .pspName("Worldline Merchant Services Italia S.p.A.")
                 .walletInfo(walletInfo)
                 .paymentMethod(InfoNoticeDTO.PaymentMethodEnum.PO)

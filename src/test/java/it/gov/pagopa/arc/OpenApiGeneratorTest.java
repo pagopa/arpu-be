@@ -10,7 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration;
+import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
+import org.springframework.boot.security.oauth2.client.autoconfigure.OAuth2ClientAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -28,7 +32,12 @@ import java.nio.file.StandardOpenOption;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest()
+@EnableAutoConfiguration(exclude = {
+        SecurityAutoConfiguration.class,
+        OAuth2ClientAutoConfiguration.class,
+        DataRedisAutoConfiguration.class
+})
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
@@ -39,6 +48,7 @@ class OpenApiGeneratorTest {
 
     @Autowired
     private MockMvc mockMvc;
+
     @MockitoBean
     private AccessTokenBuilderService accessTokenBuilderService;
     @MockitoBean
@@ -65,17 +75,17 @@ class OpenApiGeneratorTest {
         Assertions.assertTrue(openApiResult.startsWith("{\n  \"openapi\" : \"3."));
 
         Path openApiGeneratedPath = Path.of("openapi/generated.openapi.json");
-        boolean toStore=true;
-        if(Files.exists(openApiGeneratedPath)){
+        boolean toStore = true;
+        if (Files.exists(openApiGeneratedPath)) {
             String storedOpenApi = Files.readString(openApiGeneratedPath);
             try {
                 JsonAssert.comparator(JsonCompareMode.STRICT).assertIsMatch(storedOpenApi, openApiResult);
-                toStore=false;
-            } catch (Throwable e){
+                toStore = false;
+            } catch (Throwable e) {
                 log.info("Observed the following changes: {}", e.getMessage());
             }
         }
-        if(toStore){
+        if (toStore) {
             Files.writeString(openApiGeneratedPath, openApiResult, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         }
 

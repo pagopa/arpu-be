@@ -1,6 +1,6 @@
 package it.gov.pagopa.arc.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcPaymentNoticesApi;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.fakers.PaymentNoticePayloadDTOFaker;
@@ -17,13 +17,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
+import org.springframework.boot.security.oauth2.client.autoconfigure.OAuth2ClientAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,9 +47,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = JwtAuthenticationFilter.class),
         excludeAutoConfiguration = {
                 SecurityAutoConfiguration.class,
-                OAuth2ClientAutoConfiguration.class,
-                OAuth2ResourceServerAutoConfiguration.class
+                OAuth2ClientAutoConfiguration.class
         })
+@Import(JsonConfig.class)
 @AutoConfigureMockMvc(addFilters = false)
 class PaymentNoticesControllerImplTest {
     private static final int PAGE = 1;
@@ -61,9 +61,8 @@ class PaymentNoticesControllerImplTest {
     private static final String PA_TAX_CODE = "DUMMY_ORGANIZATION_FISCAL_CODE";
 
     @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
     private MockMvc mockMvc;
+
     @MockitoBean
     private PaymentNoticesService paymentNoticesServiceMock;
 
@@ -104,7 +103,7 @@ class PaymentNoticesControllerImplTest {
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        PaymentNoticesListDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+        PaymentNoticesListDTO resultResponse = TestUtils.jsonMapper.readValue(result.getResponse().getContentAsString(),
                 PaymentNoticesListDTO.class);
         //then
         Assertions.assertNotNull(resultResponse);
@@ -124,7 +123,7 @@ class PaymentNoticesControllerImplTest {
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        PaymentNoticeDetailsDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+        PaymentNoticeDetailsDTO resultResponse = TestUtils.jsonMapper.readValue(result.getResponse().getContentAsString(),
                 PaymentNoticeDetailsDTO.class);
         //then
         Assertions.assertNotNull(resultResponse);
@@ -144,7 +143,7 @@ class PaymentNoticesControllerImplTest {
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        PaymentNoticeDetailsDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+        PaymentNoticeDetailsDTO resultResponse = TestUtils.jsonMapper.readValue(result.getResponse().getContentAsString(),
                 PaymentNoticeDetailsDTO.class);
         //then
         Assertions.assertNotNull(resultResponse);
@@ -161,7 +160,7 @@ class PaymentNoticesControllerImplTest {
 
         Mockito.when(paymentNoticesServiceMock.retrieveGeneratedNotice(iamUserInfoDTO, paymentNoticePayloadDTO)).thenReturn(paymentNoticeDetailsDTO);
 
-        String bodyRequest = TestUtils.objectMapper.writeValueAsString(paymentNoticePayloadDTO);
+        String bodyRequest = TestUtils.jsonMapper.writeValueAsString(paymentNoticePayloadDTO);
 
         //When
         MvcResult result = mockMvc.perform(
@@ -171,7 +170,7 @@ class PaymentNoticesControllerImplTest {
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        PaymentNoticeDetailsDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+        PaymentNoticeDetailsDTO resultResponse = TestUtils.jsonMapper.readValue(result.getResponse().getContentAsString(),
                 PaymentNoticeDetailsDTO.class);
 
         //then
@@ -191,7 +190,7 @@ class PaymentNoticesControllerImplTest {
 
         Mockito.when(paymentNoticesServiceMock.retrieveGeneratedNotice(iamUserInfoDTO, paymentNoticePayloadDTO)).thenReturn(paymentNoticeResponseDTO);
 
-        String bodyRequest = TestUtils.objectMapper.writeValueAsString(paymentNoticePayloadDTO);
+        String bodyRequest = TestUtils.jsonMapper.writeValueAsString(paymentNoticePayloadDTO);
         //When
         MvcResult result = mockMvc.perform(
                         MockMvcRequestBuilders.post("/payment-notices")
@@ -201,7 +200,7 @@ class PaymentNoticesControllerImplTest {
                 .andReturn();
 
 
-        ErrorDTO errorDTO = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+        ErrorDTO errorDTO = TestUtils.jsonMapper.readValue(result.getResponse().getContentAsString(),
                 ErrorDTO.class);
 
         //then

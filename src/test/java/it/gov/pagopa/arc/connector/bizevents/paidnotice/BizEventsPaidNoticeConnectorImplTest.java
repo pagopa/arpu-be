@@ -2,11 +2,11 @@ package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
@@ -30,13 +30,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.http.converter.autoconfigure.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import tools.jackson.core.exc.JacksonIOException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +58,7 @@ import static org.mockito.Mockito.doThrow;
         initializers = WireMockConfig.WireMockInitializer.class,
         classes = {
                 BizEventsPaidNoticeConnectorImpl.class,
-                ObjectMapper.class,
+                JsonConfig.class,
                 FeignConfig.class,
                 BizEventsPaidNoticeRestClient.class,
                 FeignAutoConfiguration.class,
@@ -69,12 +71,15 @@ import static org.mockito.Mockito.doThrow;
         "rest-client.gpd.baseUrl=gpdMock"
 })
 class BizEventsPaidNoticeConnectorImplTest {
+
     @Autowired
     private BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector;
     @MockitoBean
     private BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper bizEventsPaidNoticeDTO2NoticesListResponseDTOMapperMock;
+
     private MemoryAppender memoryAppender;
-    private ObjectMapper objectMapper;
+
+    private final JsonMapper jsonMapper =  TestUtils.jsonMapper;
 
 
     @BeforeEach
@@ -85,7 +90,6 @@ class BizEventsPaidNoticeConnectorImplTest {
         logger.setLevel(ch.qos.logback.classic.Level.INFO);
         logger.addAppender(memoryAppender);
         memoryAppender.start();
-        objectMapper =  TestUtils.objectMapper;
     }
 
     @Test
@@ -179,7 +183,7 @@ class BizEventsPaidNoticeConnectorImplTest {
                 anyString()))
                 .thenReturn(mockResponse);
 
-        bizEventsPaidNoticeConnector = new BizEventsPaidNoticeConnectorImpl("", bizEventsPaidNoticeRestClient, bizEventsPaidNoticeDTO2NoticesListResponseDTOMapperMock, objectMapper);
+        bizEventsPaidNoticeConnector = new BizEventsPaidNoticeConnectorImpl("", bizEventsPaidNoticeRestClient, bizEventsPaidNoticeDTO2NoticesListResponseDTOMapperMock, jsonMapper);
         NoticeRequestDTO noticeRequestDTO = NoticeRequestDTOFaker.mockInstance();
         // when & then
         BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class, () ->
@@ -196,11 +200,11 @@ class BizEventsPaidNoticeConnectorImplTest {
         BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient = Mockito.mock(BizEventsPaidNoticeRestClient.class);
         Request originalRequest = Request.create(Request.HttpMethod.GET, "http://dummy-url", Collections.emptyMap(), null, null, null);
 
-        ObjectMapper mockObjectMapper = Mockito.mock(ObjectMapper.class);
-        bizEventsPaidNoticeConnector = new BizEventsPaidNoticeConnectorImpl("", bizEventsPaidNoticeRestClient, bizEventsPaidNoticeDTO2NoticesListResponseDTOMapperMock, mockObjectMapper);
+        JsonMapper mockJsonMapper = Mockito.mock(JsonMapper.class);
+        bizEventsPaidNoticeConnector = new BizEventsPaidNoticeConnectorImpl("", bizEventsPaidNoticeRestClient, bizEventsPaidNoticeDTO2NoticesListResponseDTOMapperMock, mockJsonMapper);
 
-        doThrow(new IOException("Deserialization error"))
-                .when(mockObjectMapper)
+        doThrow(JacksonIOException.construct(new IOException("Deserialization error")))
+                .when(mockJsonMapper)
                 .readValue(any(InputStream.class), eq(BizEventsPaidNoticeListDTO.class));
 
         Response.Body mockBody = Mockito.mock(Response.Body.class);

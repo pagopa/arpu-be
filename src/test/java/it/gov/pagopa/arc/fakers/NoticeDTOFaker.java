@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.fakers;
 
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
+import it.gov.pagopa.arc.utils.Constants;
 import it.gov.pagopa.arc.utils.TestUtils;
 
 import java.time.ZonedDateTime;
@@ -17,7 +18,7 @@ public class NoticeDTOFaker {
                     .payeeName("PAYEE_NAME%d".formatted(bias))
                     .payeeTaxCode("PAYEE_TAX_CODE%d".formatted(bias))
                     .amount(268152L)
-                    .noticeDate(ZonedDateTime.parse("2024-05-31T13:07:25Z"))
+                    .noticeDate(ZonedDateTime.parse("2024-05-31T13:07:25Z").withZoneSameInstant(Constants.ZONEID))
                     .isCart(false)
                     .paidByMe(true)
                     .registeredToMe(true);
