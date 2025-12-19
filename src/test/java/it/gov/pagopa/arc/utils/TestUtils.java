@@ -36,7 +36,7 @@ public class TestUtils {
     }
 
     public static void clearDefaultTimezone() {
-        TimeZone.setDefault(TimeZone.getTimeZone(Constants.ZONEID));
+        TimeZone.setDefault(Constants.DEFAULT_TIMEZONE);
     }
 
     public static void wait(long timeout, TimeUnit timeoutUnit) {

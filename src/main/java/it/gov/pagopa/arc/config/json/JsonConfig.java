@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.gov.pagopa.arc.config.json.jackson3.LocalDateTimeToOffsetDateTimeJackson3Deserializer;
 import it.gov.pagopa.arc.config.json.jackson3.OffsetDateTimeToLocalDateTimeJackson3Deserializer;
+import it.gov.pagopa.arc.utils.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -18,7 +19,6 @@ import tools.jackson.databind.json.JsonMapper;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.TimeZone;
 
 @Configuration
 @EnableSpringDataWebSupport
@@ -38,7 +38,7 @@ public class JsonConfig {
     mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
     mapper.setVisibility(PropertyAccessor.CREATOR, JsonAutoDetect.Visibility.ANY);
     mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
-    mapper.setTimeZone(TimeZone.getDefault());
+    mapper.setTimeZone(Constants.DEFAULT_TIMEZONE);
     return mapper;
   }
 
@@ -58,7 +58,7 @@ public class JsonConfig {
       .configure(tools.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
       .configure(tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
       .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
-      .defaultTimeZone(TimeZone.getDefault())
+      .defaultTimeZone(Constants.DEFAULT_TIMEZONE)
       .build();
   }
 
