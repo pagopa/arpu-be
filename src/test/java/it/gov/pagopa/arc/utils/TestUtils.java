@@ -32,6 +32,10 @@ public class TestUtils {
     public static final JsonMapper jsonMapper = new JsonConfig().objectMapperJackson3();
 
     static {
+        clearDefaultTimezone();
+    }
+
+    public static void clearDefaultTimezone() {
         TimeZone.setDefault(TimeZone.getTimeZone(Constants.ZONEID));
     }
 

@@ -80,6 +80,8 @@ class NoticesControllerImplTest {
                 IamUserInfoDTOFaker.mockInstance(), null, null);
         authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        TestUtils.clearDefaultTimezone();
     }
 
     @AfterEach
