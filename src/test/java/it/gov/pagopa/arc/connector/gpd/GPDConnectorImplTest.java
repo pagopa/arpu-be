@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.connector.gpd;
 
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticeDetailsDTO;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticePayloadDTO;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentOptionPayloadDTO;
@@ -33,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
         initializers = WireMockConfig.WireMockInitializer.class,
         classes = {
                 GPDConnectorImpl.class,
+                JsonConfig.class,
                 FeignConfig.class,
                 GPDRestClient.class,
                 FeignAutoConfiguration.class,

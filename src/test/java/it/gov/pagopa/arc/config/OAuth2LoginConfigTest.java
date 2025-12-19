@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.config;
 
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.controller.generated.OrganizationApi;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("oauth")
 @WebMvcTest(value = {ArcAuthApi.class, ArcZendeskAssistanceApi.class, OrganizationApi.class})
-@Import(OAuth2LoginConfig.class)
+@Import({OAuth2LoginConfig.class, JsonConfig.class})
 class OAuth2LoginConfigTest {
 
     @MockitoBean

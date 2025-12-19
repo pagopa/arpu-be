@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.connector.pullpayment;
 import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvalidRequestException;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvocationException;
@@ -30,6 +31,7 @@ import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPAT
         initializers = WireMockConfig.WireMockInitializer.class,
         classes = {
                 PullPaymentConnectorImpl.class,
+                JsonConfig.class,
                 FeignConfig.class,
                 PullPaymentRestClient.class,
                 FeignAutoConfiguration.class,

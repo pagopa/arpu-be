@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.gov.pagopa.arc.config.json.jackson3.LocalDateTimeToOffsetDateTimeJackson3Deserializer;
-import it.gov.pagopa.arc.config.json.jackson3.LocalDateTimeToOffsetDateTimeJackson3Serializer;
 import it.gov.pagopa.arc.config.json.jackson3.OffsetDateTimeToLocalDateTimeJackson3Deserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +47,6 @@ public class JsonConfig {
    */
   private static SimpleModule configureDateTimeModule() {
     return new JavaTimeModule()
-      .addSerializer(LocalDateTime.class, new LocalDateTimeToOffsetDateTimeSerializer())
       .addDeserializer(LocalDateTime.class, new OffsetDateTimeToLocalDateTimeDeserializer())
       .addDeserializer(OffsetDateTime.class, new LocalDateTimeToOffsetDateTimeDeserializer());
   }
@@ -69,7 +67,6 @@ public class JsonConfig {
    */
   private static JacksonModule configureJackson3DateTimeModule() {
     return new tools.jackson.databind.module.SimpleModule()
-      .addSerializer(LocalDateTime.class, new LocalDateTimeToOffsetDateTimeJackson3Serializer())
       .addDeserializer(LocalDateTime.class, new OffsetDateTimeToLocalDateTimeJackson3Deserializer())
       .addDeserializer(OffsetDateTime.class, new LocalDateTimeToOffsetDateTimeJackson3Deserializer());
   }

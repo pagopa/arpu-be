@@ -31,6 +31,10 @@ public class TestUtils {
      */
     public static final JsonMapper jsonMapper = new JsonConfig().objectMapperJackson3();
 
+    static {
+        TimeZone.setDefault(TimeZone.getTimeZone(Constants.ZONEID));
+    }
+
     public static void wait(long timeout, TimeUnit timeoutUnit) {
         try{
             Awaitility.await()
