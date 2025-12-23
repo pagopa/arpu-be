@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.fakers.connector;
 
 import it.gov.pagopa.arc.model.generated.PaymentOptionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.PaymentOptionStatus;
+import it.gov.pagopa.arc.utils.Constants;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class PaymentOptionDetailsDTOFaker {
                 .amount(1000L)
                 .description("Single Payment")
                 .isPartialPayment(false)
-                .dueDate(ZonedDateTime.parse("2024-10-30T23:59:59Z"))
+                .dueDate(ZonedDateTime.parse("2024-10-30T23:59:59Z").withZoneSameInstant(Constants.ZONEID))
                 .notificationFee(2L)
                 .status(PaymentOptionStatus.PO_UNPAID);
     }

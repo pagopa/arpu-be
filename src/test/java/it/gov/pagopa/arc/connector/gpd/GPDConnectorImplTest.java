@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.connector.gpd;
 
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticeDetailsDTO;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticePayloadDTO;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentOptionPayloadDTO;
@@ -15,7 +16,7 @@ import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticePayloadDTOFaker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.http.converter.autoconfigure.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
         initializers = WireMockConfig.WireMockInitializer.class,
         classes = {
                 GPDConnectorImpl.class,
+                JsonConfig.class,
                 FeignConfig.class,
                 GPDRestClient.class,
                 FeignAutoConfiguration.class,

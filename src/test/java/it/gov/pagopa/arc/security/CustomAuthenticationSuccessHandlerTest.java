@@ -1,10 +1,5 @@
 package it.gov.pagopa.arc.security;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.config.JWTConfiguration;
@@ -14,11 +9,6 @@ import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.service.AccessTokenBuilderService;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import it.gov.pagopa.arc.service.TokenStoreServiceImpl;
-import java.io.IOException;
-import java.time.Instant;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -29,7 +19,19 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import tools.jackson.databind.json.JsonMapper;
 import wiremock.org.apache.hc.core5.http.ContentType;
+
+import java.io.IOException;
+import java.time.Instant;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 
 class CustomAuthenticationSuccessHandlerTest {
 
@@ -44,7 +46,7 @@ class CustomAuthenticationSuccessHandlerTest {
     JWTConfiguration jwtConfiguration = JWTSampleConfiguration.getCorrectConfiguration();
     customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
         new AccessTokenBuilderService(jwtConfiguration),
-        new ObjectMapper(),
+        new JsonMapper(),
         jwtConfiguration,
         tokenStoreService,
         Set.of("PLOMRC01P30L736Y"));

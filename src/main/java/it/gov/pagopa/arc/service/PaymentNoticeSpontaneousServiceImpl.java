@@ -1,11 +1,11 @@
 package it.gov.pagopa.arc.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.model.generated.OrganizationsListDTO;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,11 +17,11 @@ public class PaymentNoticeSpontaneousServiceImpl implements PaymentNoticeSpontan
 
     private final String pathOrganizationsMock;
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
-    public PaymentNoticeSpontaneousServiceImpl(@Value("${spontaneous-mock-paths.organizationList}")String pathOrganizationsMock, ObjectMapper objectMapper) {
+    public PaymentNoticeSpontaneousServiceImpl(@Value("${spontaneous-mock-paths.organizationList}")String pathOrganizationsMock, JsonMapper jsonMapper) {
         this.pathOrganizationsMock = pathOrganizationsMock;
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
     }
 
     @Override
@@ -35,8 +35,8 @@ public class PaymentNoticeSpontaneousServiceImpl implements PaymentNoticeSpontan
                 log.info("File with path [{}] not found", pathOrganizationsMock);
                 return organizationsListDTO;
             }
-            return objectMapper.readValue(inputStream, OrganizationsListDTO.class);
-        } catch (IOException | NullPointerException e) {
+            return jsonMapper.readValue(inputStream, OrganizationsListDTO.class);
+        } catch (JacksonException | IOException | NullPointerException e) {
             log.info("Error reading the file", e);
             return organizationsListDTO;
         }

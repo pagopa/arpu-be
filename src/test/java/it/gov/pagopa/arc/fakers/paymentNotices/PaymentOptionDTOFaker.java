@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.fakers.paymentNotices;
 
 import it.gov.pagopa.arc.model.generated.InstallmentDTO;
 import it.gov.pagopa.arc.model.generated.PaymentOptionDTO;
+import it.gov.pagopa.arc.utils.Constants;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -15,7 +16,7 @@ public class PaymentOptionDTOFaker {
                 .description("Test Pull - unica opzione")
                 .numberOfInstallments(1)
                 .amount(120L)
-                .dueDate(ZonedDateTime.parse("2024-10-30T23:59:59Z"))
+                .dueDate(ZonedDateTime.parse("2024-10-30T23:59:59Z").withZoneSameInstant(Constants.ZONEID))
                 .isPartialPayment(false)
                 .installments(List.of(installment));
 

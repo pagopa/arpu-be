@@ -1,14 +1,13 @@
 package it.gov.pagopa.arc.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.model.generated.OrganizationDTO;
 import it.gov.pagopa.arc.model.generated.OrganizationsListDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -18,19 +17,14 @@ class PaymentNoticeSpontaneousServiceImplTest {
 
     private static final String USER_ID = "user_id";
 
-    private ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper = TestUtils.jsonMapper;
 
-    PaymentNoticeSpontaneousService spontaneousService;
-
-    @BeforeEach
-    void setUp() {
-        objectMapper = TestUtils.objectMapper;
-    }
+    private PaymentNoticeSpontaneousService spontaneousService;
 
     @Test
     void givenRequestWhenRetrieveOrganizationsThenReturnOrganizationsList() {
         //given
-        spontaneousService = new PaymentNoticeSpontaneousServiceImpl("mock/organizationsMock.json",objectMapper);
+        spontaneousService = new PaymentNoticeSpontaneousServiceImpl("mock/organizationsMock.json", jsonMapper);
         //when
         OrganizationsListDTO result = spontaneousService.retrieveOrganizations(USER_ID);
         //then
@@ -71,7 +65,7 @@ class PaymentNoticeSpontaneousServiceImplTest {
     @Test
     void givenMockedPathWhenRetrieveOrganizationsThenReturnExpectedResult() {
         //given
-        spontaneousService = new PaymentNoticeSpontaneousServiceImpl("wrong/path",objectMapper);
+        spontaneousService = new PaymentNoticeSpontaneousServiceImpl("wrong/path", jsonMapper);
         //when
         OrganizationsListDTO result = spontaneousService.retrieveOrganizations(USER_ID);
         //then
@@ -83,7 +77,7 @@ class PaymentNoticeSpontaneousServiceImplTest {
     @Test
     void givenNullPathWhenRetrieveOrganizationsThenReturnExpectedResult() {
         //given
-        spontaneousService = new PaymentNoticeSpontaneousServiceImpl(null,objectMapper);
+        spontaneousService = new PaymentNoticeSpontaneousServiceImpl(null, jsonMapper);
         //when
         OrganizationsListDTO result = spontaneousService.retrieveOrganizations(USER_ID);
         //then

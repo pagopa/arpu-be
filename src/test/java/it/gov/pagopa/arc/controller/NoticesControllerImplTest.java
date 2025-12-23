@@ -1,6 +1,6 @@
 package it.gov.pagopa.arc.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcNoticesApi;
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
@@ -19,16 +19,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
+import org.springframework.boot.security.oauth2.client.autoconfigure.OAuth2ClientAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -36,7 +35,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -55,11 +53,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = JwtAuthenticationFilter.class),
         excludeAutoConfiguration = {
                 SecurityAutoConfiguration.class,
-                OAuth2ClientAutoConfiguration.class,
-                OAuth2ResourceServerAutoConfiguration.class
+                OAuth2ClientAutoConfiguration.class
         })
+@Import(JsonConfig.class)
 @AutoConfigureMockMvc(addFilters = false)
-@ExtendWith(SpringExtension.class)
 class NoticesControllerImplTest {
     private static final int SIZE = 2;
     private static final String CONTINUATION_TOKEN = "continuation-token";
@@ -70,9 +67,8 @@ class NoticesControllerImplTest {
     private static final String EVENT_ID = "event_id";
 
     @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
     private MockMvc mockMvc;
+
     @MockitoBean
     private NoticesService noticesServiceMock;
     @MockitoBean
@@ -80,15 +76,19 @@ class NoticesControllerImplTest {
 
     @BeforeEach
     void setUp() {
+        TestUtils.clearDefaultTimezone();
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 IamUserInfoDTOFaker.mockInstance(), null, null);
         authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
     @AfterEach
-    public void clearContext() {
+    void clearContext() {
         SecurityContextHolder.clearContext();
     }
+
     @Test
     void givenFiscalCodeWhenCallGetNoticesListThenReturnNoticesList() throws Exception {
         //Given
@@ -101,8 +101,8 @@ class NoticesControllerImplTest {
         NoticeRequestDTO noticeRequestDTO = NoticeRequestDTOFaker.mockInstance();
         noticeRequestDTO.setContinuationToken(CONTINUATION_TOKEN);
 
-        Mockito.when(noticeRequestDTOMapper.apply(CONTINUATION_TOKEN,SIZE,true, true, ORDER_BY, ORDERING)).thenReturn(noticeRequestDTO);
-        Mockito.when(noticesServiceMock.retrieveNoticesAndToken(DUMMY_FISCAL_CODE, USER_ID, noticeRequestDTO )).thenReturn(noticesListResponseDTO);
+        Mockito.when(noticeRequestDTOMapper.apply(CONTINUATION_TOKEN, SIZE, true, true, ORDER_BY, ORDERING)).thenReturn(noticeRequestDTO);
+        Mockito.when(noticesServiceMock.retrieveNoticesAndToken(DUMMY_FISCAL_CODE, USER_ID, noticeRequestDTO)).thenReturn(noticesListResponseDTO);
         //When
         MvcResult result = mockMvc.perform(
                         get("/notices")
@@ -116,7 +116,7 @@ class NoticesControllerImplTest {
                 .andExpect(header().string("x-continuation-token", CONTINUATION_TOKEN))
                 .andReturn();
 
-        NoticesListDTO resultResponse = TestUtils.objectMapper.readValue(
+        NoticesListDTO resultResponse = TestUtils.jsonMapper.readValue(
                 result.getResponse().getContentAsString(),
                 NoticesListDTO.class);
 
@@ -140,7 +140,7 @@ class NoticesControllerImplTest {
         noticeRequestDTO.setRegisteredToMe(false);
         noticeRequestDTO.setContinuationToken(CONTINUATION_TOKEN);
 
-        Mockito.when(noticeRequestDTOMapper.apply(CONTINUATION_TOKEN,SIZE,true, false, ORDER_BY, ORDERING)).thenReturn(noticeRequestDTO);
+        Mockito.when(noticeRequestDTOMapper.apply(CONTINUATION_TOKEN, SIZE, true, false, ORDER_BY, ORDERING)).thenReturn(noticeRequestDTO);
         Mockito.when(noticesServiceMock.retrieveNoticesAndToken(DUMMY_FISCAL_CODE, USER_ID, noticeRequestDTO)).thenReturn(noticesListResponseDTO);
         //When
         MvcResult result = mockMvc.perform(
@@ -155,7 +155,7 @@ class NoticesControllerImplTest {
                 .andExpect(header().string("x-continuation-token", nullValue()))
                 .andReturn();
 
-        NoticesListDTO resultResponse = TestUtils.objectMapper.readValue(
+        NoticesListDTO resultResponse = TestUtils.jsonMapper.readValue(
                 result.getResponse().getContentAsString(),
                 NoticesListDTO.class);
 
@@ -169,14 +169,14 @@ class NoticesControllerImplTest {
         //Given
         NoticeDetailsDTO noticeDetailsDTO = NoticeDetailsDTOFaker.mockInstance();
 
-        Mockito.when(noticesServiceMock.retrieveNoticeDetails(USER_ID,DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(noticeDetailsDTO);
+        Mockito.when(noticesServiceMock.retrieveNoticeDetails(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(noticeDetailsDTO);
         //When
         MvcResult result = mockMvc.perform(
                         get("/notices/{eventId}", EVENT_ID)
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        NoticeDetailsDTO resultResponse = TestUtils.objectMapper.readValue(
+        NoticeDetailsDTO resultResponse = TestUtils.jsonMapper.readValue(
                 result.getResponse().getContentAsString(),
                 NoticeDetailsDTO.class);
 
@@ -191,7 +191,7 @@ class NoticesControllerImplTest {
         //Given
         Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf");
 
-        Mockito.when( noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
+        Mockito.when(noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
 
         //When
         MvcResult result = mockMvc.perform(
@@ -219,7 +219,7 @@ class NoticesControllerImplTest {
             }
         };
 
-        Mockito.when( noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
+        Mockito.when(noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
 
         //When
         mockMvc.perform(
@@ -241,7 +241,7 @@ class NoticesControllerImplTest {
             }
         };
 
-        Mockito.when( noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
+        Mockito.when(noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
 
         //When
         mockMvc.perform(

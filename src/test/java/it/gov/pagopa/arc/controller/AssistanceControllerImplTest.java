@@ -1,6 +1,6 @@
 package it.gov.pagopa.arc.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.model.generated.ZendeskAssistanceTokenResponse;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
+import org.springframework.boot.security.oauth2.client.autoconfigure.OAuth2ClientAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -31,16 +31,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = JwtAuthenticationFilter.class),
 excludeAutoConfiguration = {
         SecurityAutoConfiguration .class,
-        OAuth2ClientAutoConfiguration .class,
-        OAuth2ResourceServerAutoConfiguration .class
+        OAuth2ClientAutoConfiguration .class
         })
+@Import(JsonConfig.class)
 @AutoConfigureMockMvc(addFilters = false)
 class AssistanceControllerImplTest {
 
     private static final String FAKE_USER_EMAIL = "someone@email.com";
 
-    @Autowired
-    private ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
 
@@ -67,7 +65,7 @@ class AssistanceControllerImplTest {
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        ZendeskAssistanceTokenResponse resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+        ZendeskAssistanceTokenResponse resultResponse = TestUtils.jsonMapper.readValue(result.getResponse().getContentAsString(),
                 ZendeskAssistanceTokenResponse.class);
         //then
         Assertions.assertNotNull(resultResponse);

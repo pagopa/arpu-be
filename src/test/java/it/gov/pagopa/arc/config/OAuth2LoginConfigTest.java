@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.config;
 
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.controller.generated.OrganizationApi;
@@ -13,7 +14,7 @@ import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
 import it.gov.pagopa.arc.service.organization.OrganizationFacadeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("oauth")
 @WebMvcTest(value = {ArcAuthApi.class, ArcZendeskAssistanceApi.class, OrganizationApi.class})
-@Import(OAuth2LoginConfig.class)
+@Import({OAuth2LoginConfig.class, JsonConfig.class})
 class OAuth2LoginConfigTest {
 
     @MockitoBean

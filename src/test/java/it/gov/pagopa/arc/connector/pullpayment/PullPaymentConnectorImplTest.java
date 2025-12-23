@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.connector.pullpayment;
 import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvalidRequestException;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvocationException;
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.http.converter.autoconfigure.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,6 +31,7 @@ import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPAT
         initializers = WireMockConfig.WireMockInitializer.class,
         classes = {
                 PullPaymentConnectorImpl.class,
+                JsonConfig.class,
                 FeignConfig.class,
                 PullPaymentRestClient.class,
                 FeignAutoConfiguration.class,

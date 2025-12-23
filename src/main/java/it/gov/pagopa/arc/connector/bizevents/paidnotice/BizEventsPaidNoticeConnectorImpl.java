@@ -1,6 +1,5 @@
 package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import feign.Response;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
@@ -18,6 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,14 +33,14 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
     private final String apikey;
     private final BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient;
     private final BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     public BizEventsPaidNoticeConnectorImpl(@Value("${rest-client.biz-events.paid-notice.api-key}") String apikey,
-                                            BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient, BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper, ObjectMapper objectMapper) {
+                                            BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient, BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper, JsonMapper jsonMapper) {
         this.apikey = apikey;
         this.bizEventsPaidNoticeRestClient = bizEventsPaidNoticeRestClient;
         this.bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper = bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper;
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
     }
 
     @Override
@@ -126,9 +127,9 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
         }
 
         try {
-            bizEventsPaidNoticeListDTO = objectMapper.readValue(response.body().asInputStream(), BizEventsPaidNoticeListDTO.class);
+            bizEventsPaidNoticeListDTO = jsonMapper.readValue(response.body().asInputStream(), BizEventsPaidNoticeListDTO.class);
             noticeListDTO = bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper.toNoticeListDTO(bizEventsPaidNoticeListDTO);
-        } catch (IOException e) {
+        } catch (JacksonException | IOException e) {
             throw new BizEventsInvocationException("Error reading or deserializing the response body");
         }
 

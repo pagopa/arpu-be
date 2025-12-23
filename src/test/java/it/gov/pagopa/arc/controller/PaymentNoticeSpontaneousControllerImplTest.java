@@ -1,6 +1,5 @@
 package it.gov.pagopa.arc.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.spontaneous.OrganizationsListDTOFaker;
 import it.gov.pagopa.arc.model.generated.OrganizationsListDTO;
@@ -12,11 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
+import org.springframework.boot.security.oauth2.client.autoconfigure.OAuth2ClientAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -38,14 +36,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = JwtAuthenticationFilter.class),
         excludeAutoConfiguration = {
                 SecurityAutoConfiguration.class,
-                OAuth2ClientAutoConfiguration.class,
-                OAuth2ResourceServerAutoConfiguration.class
+                OAuth2ClientAutoConfiguration.class
         })
 @AutoConfigureMockMvc(addFilters = false)
 class PaymentNoticeSpontaneousControllerImplTest {
 
-    @Autowired
-    private ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
 
@@ -80,7 +75,7 @@ class PaymentNoticeSpontaneousControllerImplTest {
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        OrganizationsListDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+        OrganizationsListDTO resultResponse = TestUtils.jsonMapper.readValue(result.getResponse().getContentAsString(),
                 OrganizationsListDTO.class);
 
         //then
