@@ -105,4 +105,56 @@ class DebtPositionTypeOrgControllerTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(expectedResult, result.getBody());
     }
+
+    @Test
+    void givenOrganizationIdWhenGetMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYearThenOk() {
+        // given
+        Long brokerId = 1L;
+        Long organizationId = 1L;
+
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult =
+                podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
+
+        Mockito.when(
+                debtPositionTypeOrgFacadeServiceMock.getMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYear(
+                        brokerId,
+                        organizationId
+                )
+        ).thenReturn(expectedResult);
+
+        // when
+        ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> result =
+                debtPositionTypeOrgController.getMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYear(brokerId, organizationId);
+
+        // then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void givenOrganizationIdWhenGetPublicMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYearThenOk() {
+        // given
+        Long brokerId = 1L;
+        Long organizationId = 1L;
+
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult =
+                podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
+
+        Mockito.when(
+                debtPositionTypeOrgFacadeServiceMock.getMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYear(
+                        brokerId,
+                        organizationId
+                )
+        ).thenReturn(expectedResult);
+
+        // when
+        ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> result =
+                debtPositionTypeOrgController.getPublicMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYear(brokerId, organizationId);
+
+        // then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
 }
