@@ -12,10 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import uk.co.jemos.podam.api.PodamFactory;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -97,4 +100,44 @@ class DebtPositionTypeOrgClientTest {
 
         assertNull(result);
     }
+
+    @Test
+    void givenOrganizationIdWhenGetMostUsedSpontaneousDebtPositionTypeOrgsThenReturnList() {
+        // given
+        String accessToken = "ACCESS_TOKEN";
+        Long organizationId = 1L;
+        Long brokerId = 1L;
+        OffsetDateTime offsetDateTimeFrom = OffsetDateTime.now().minusYears(1);
+        OffsetDateTime offsetDateTimeTo= OffsetDateTime.now();
+        Pageable pageable = Pageable.ofSize(10);
+
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
+
+        Mockito.when(
+                citizenApisHolderMock
+                        .getDebtPositionTypeOrgApi(accessToken)
+        ).thenReturn(debtPositionTypeOrgApiMock);
+
+        Mockito.when(
+                debtPositionTypeOrgApiMock
+                        .getMostUsedSpontaneousDebtPositionTypeOrgs(
+                                brokerId,
+                                organizationId,
+                                offsetDateTimeFrom,
+                                offsetDateTimeTo,
+                                pageable.getPageNumber(),
+                                pageable.getPageSize(),
+                                new ArrayList<>())
+        ).thenReturn(expectedResult);
+
+        // when
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> result =
+                debtPositionTypeOrgClient
+                        .getMostUsedSpontaneousDebtPositionTypeOrgs(brokerId, organizationId, offsetDateTimeFrom, offsetDateTimeTo, pageable, accessToken);
+
+        // then
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
+
 }

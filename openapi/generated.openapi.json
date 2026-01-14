@@ -792,6 +792,84 @@
         }
       }
     },
+    "/public/brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs/most-used" : {
+      "get" : {
+        "tags" : [ "DebtPositionTypeOrg" ],
+        "summary" : "Retrieves the most used spontaneous debt position types for the current year",
+        "operationId" : "getPublicMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYear",
+        "parameters" : [ {
+          "name" : "brokerId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "organizationId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DebtPositionTypeOrgsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized - Missing or invalid token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DebtPositionTypeOrgsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden - Access denied",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DebtPositionTypeOrgsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DebtPositionTypeOrgsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/public/brokers/{brokerId}/organizations/{organizationId}/receipts/{receiptId}" : {
       "get" : {
         "tags" : [ "Receipt" ],
@@ -2024,6 +2102,84 @@
         "security" : [ {
           "BearerAuth" : [ ]
         } ]
+      }
+    },
+    "/brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs/most-used" : {
+      "get" : {
+        "tags" : [ "DebtPositionTypeOrg" ],
+        "summary" : "Retrieves the most used spontaneous debt position types for the current year",
+        "operationId" : "getMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYear",
+        "parameters" : [ {
+          "name" : "brokerId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "organizationId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DebtPositionTypeOrgsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized - Missing or invalid token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DebtPositionTypeOrgsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden - Access denied",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DebtPositionTypeOrgsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DebtPositionTypeOrgsWithSpontaneousDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/brokers/{brokerId}/receipts" : {
@@ -3447,6 +3603,9 @@
           "description" : {
             "type" : "string"
           },
+          "flagAnonymousFiscalCode" : {
+            "type" : "boolean"
+          },
           "formType" : {
             "$ref" : "#/components/schemas/FormTypeEnum"
           },
@@ -3461,7 +3620,7 @@
             "$ref" : "#/components/schemas/SpontaneousForm"
           }
         },
-        "required" : [ "code", "debtPositionTypeId", "debtPositionTypeOrgId", "description", "formType", "organizationId" ]
+        "required" : [ "code", "debtPositionTypeId", "debtPositionTypeOrgId", "description", "flagAnonymousFiscalCode", "formType", "organizationId" ]
       },
       "FormTypeEnum" : {
         "type" : "string",
@@ -3710,7 +3869,7 @@
       },
       "DebtPositionOrigin" : {
         "type" : "string",
-        "enum" : [ "ORDINARY", "ORDINARY_SIL", "SPONTANEOUS", "SPONTANEOUS_SIL", "SPONTANEOUS_MIXED", "SECONDARY_ORG", "RECEIPT_FILE", "RECEIPT_PAGOPA", "REPORTING_PAGOPA" ]
+        "enum" : [ "ORDINARY", "ORDINARY_SIL", "SPONTANEOUS", "SPONTANEOUS_SIL", "SPONTANEOUS_MIXED", "SPONTANEOUS_PSP", "SECONDARY_ORG", "RECEIPT_FILE", "RECEIPT_PAGOPA", "REPORTING_PAGOPA" ]
       },
       "ReceiptDetailExtendedDTO" : {
         "type" : "object",

@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.service.debtpositiontypeorg;
 
 import it.gov.pagopa.arc.connector.citizen.DebtPositionTypeOrgService;
 import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
+import it.gov.pagopa.arc.utils.Constants;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO;
@@ -11,10 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 import uk.co.jemos.podam.api.PodamFactory;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,4 +87,49 @@ class DebtPositionTypeOrgFacadeServiceImplTest {
         ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId));
         Assertions.assertEquals("DebtPositionTypeOrgsWithSpontaneousDetails with deptPositionTypeOrgId 1 brokerId 1 and organizationId 1 not found", ex.getMessage());
     }
+
+    @Test
+    void givenOrganizationIdWhenGetMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYearThenReturnList() {
+        // given
+        Long brokerId = 1L;
+        Long organizationId = 1L;
+
+        OffsetDateTime fixedNow =
+                OffsetDateTime.parse("2026-01-09T16:07:22.010460100+01:00");
+
+        Pageable pageable = Pageable.ofSize(10);
+
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> expected =
+                podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
+
+        try (MockedStatic<OffsetDateTime> mocked = Mockito.mockStatic(OffsetDateTime.class)) {
+
+            mocked.when(() -> OffsetDateTime.now(Constants.ZONEID))
+                    .thenReturn(fixedNow);
+
+            Mockito.when(
+                    debtPositionTypeOrgServiceMock
+                            .getMostUsedSpontaneousDebtPositionTypeOrgs(
+                                    brokerId,
+                                    organizationId,
+                                    fixedNow.minusYears(1),
+                                    fixedNow,
+                                    pageable
+                            )
+            ).thenReturn(expected);
+
+            // when
+            List<DebtPositionTypeOrgsWithSpontaneousDTO> result =
+                    debtPositionTypeOrgFacadeService
+                            .getMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYear(
+                                    brokerId, organizationId
+                            );
+
+            // then
+            assertNotNull(result);
+            assertEquals(expected, result);
+        }
+    }
+
+
 }

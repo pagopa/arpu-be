@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.exception;
 import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.exception.custom.*;
 import it.gov.pagopa.arc.utils.MemoryAppender;
+import it.gov.pagopa.arc.utils.TestUtils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.Assertions;
@@ -65,6 +66,11 @@ class ArcExceptionHandlerTest {
             //Needed for testing notice API
         }
 
+    }
+
+    @BeforeEach
+    void init() {
+        TestUtils.clearDefaultTimezone();
     }
 
     @BeforeEach
