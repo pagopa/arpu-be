@@ -6,6 +6,7 @@ import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.utils.PageUtils;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.controller.generated.ReceiptApi;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtorReceiptDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.junit.jupiter.api.AfterEach;
@@ -27,6 +28,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import uk.co.jemos.podam.api.PodamFactory;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -159,5 +161,43 @@ class ReceiptClientTest {
         FileResourceDTO response = receiptClient.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,accessToken);
 
         Assertions.assertNull(response);
+    }
+
+    @Test
+    void whenGetDebtorReceiptsThenOk(){
+        String accessToken = "accessToken";
+        String debtorFiscalCode = "debtorFiscalCode";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long debtPositionId = 3L;
+        Long paymentOptionId = 4L;
+        List<DebtorReceiptDTO> expectedResult = podamFactory.manufacturePojo(List.class,DebtorReceiptDTO.class);
+
+        Mockito.when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
+        Mockito.when(receiptApiMock.getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode))
+                .thenReturn(expectedResult);
+
+        List<DebtorReceiptDTO> result = receiptClient.getDebtorReceipts(debtorFiscalCode,brokerId,organizationId,debtPositionId,paymentOptionId,accessToken);
+
+        Assertions.assertSame(expectedResult,result);
+    }
+
+    @Test
+    void givenNotFoundWhenGetDebtorReceiptsThenNull(){
+        String accessToken = "accessToken";
+        String debtorFiscalCode = "debtorFiscalCode";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long debtPositionId = 3L;
+        Long paymentOptionId = 4L;
+
+        Mockito.when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
+        Mockito.when(receiptApiMock.getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode))
+                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+
+        List<DebtorReceiptDTO> result = receiptClient.getDebtorReceipts(debtorFiscalCode,brokerId,organizationId,debtPositionId,paymentOptionId,accessToken);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertTrue(result.isEmpty());
     }
 }

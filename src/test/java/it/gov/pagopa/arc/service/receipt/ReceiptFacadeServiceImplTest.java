@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtorReceiptDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +17,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import uk.co.jemos.podam.api.PodamFactory;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -87,6 +90,24 @@ class ReceiptFacadeServiceImplTest {
         Mockito.when(receiptServiceMock.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode)).thenReturn(expectedResult);
 
         FileResourceDTO result = receiptFacadeService.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,loggedUser);
+
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void whenGetDebtorReceiptsThenOk() {
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long debtPositionId = 3L;
+        Long paymentOptionId = 4L;
+        String debtorFiscalCode = "debtorFiscalCode";
+        IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
+        List<DebtorReceiptDTO> expectedResult = podamFactory.manufacturePojo(List.class,DebtorReceiptDTO.class);
+
+        Mockito.when(receiptServiceMock.getDebtorReceipts(debtorFiscalCode,brokerId,organizationId,debtPositionId,paymentOptionId)).thenReturn(expectedResult);
+
+        List<DebtorReceiptDTO> result = receiptFacadeService.getDebtorReceipts(debtorFiscalCode,brokerId,organizationId,debtPositionId,paymentOptionId,loggedUser);
 
         assertNotNull(result);
         assertEquals(expectedResult, result);

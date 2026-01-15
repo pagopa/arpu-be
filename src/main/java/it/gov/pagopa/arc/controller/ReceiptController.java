@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.service.receipt.ReceiptFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtorReceiptDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -77,5 +79,12 @@ public class ReceiptController implements ReceiptApi {
     public ResponseEntity<ReceiptDetailExtendedDTO> getPublicReceiptDetail(String debtorFiscalCode, Long brokerId, Long organizationId, Long receiptId) {
         log.info("User requested getPublicReceiptDetail having brokerId {} organizationId {} and receiptId {} ", brokerId, organizationId, receiptId);
         return ResponseEntity.ofNullable(receiptFacadeService.getReceiptDetail(brokerId, organizationId, receiptId, debtorFiscalCode, SecurityUtils.getPrincipal()));
+    }
+
+    @Override
+    public ResponseEntity<List<DebtorReceiptDTO>> getDebtorReceipts(Long brokerId, Long organizationId, Long debtPositionId, Long paymentOptionId, String xFiscalCode) {
+        log.info("Requested getDebtorReceipts on brokerId {} organizationId {} debtPositionId {} and paymentOptionId {}", brokerId, organizationId, debtPositionId, paymentOptionId);
+        return ResponseEntity.ok(receiptFacadeService.getDebtorReceipts(xFiscalCode,
+                brokerId, organizationId, debtPositionId, paymentOptionId, SecurityUtils.getPrincipal()));
     }
 }

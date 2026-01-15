@@ -6,6 +6,7 @@ import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.receipt.ReceiptFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtilsTest;
 import it.gov.pagopa.arc.utils.TestUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtorReceiptDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.junit.jupiter.api.AfterEach;
@@ -23,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import uk.co.jemos.podam.api.PodamFactory;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -195,6 +197,25 @@ class ReceiptControllerTest {
         Mockito.when(receiptFacadeServiceMock.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,loggedUser)).thenReturn(expectedResult);
         //when
         ResponseEntity<ReceiptDetailExtendedDTO> result = receiptController.getPublicReceiptDetail(fiscalCode, brokerId, organizationId, receiptId);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void whenGetDebtorReceiptsThenOk() {
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long debtPositionId = 3L;
+        Long paymentOptionId = 4L;
+        String debtorFiscalCode = "debtorFiscalCode";
+        List<DebtorReceiptDTO> expectedResult = podamFactory.manufacturePojo(List.class,DebtorReceiptDTO.class);
+
+        Mockito.when(receiptFacadeServiceMock.getDebtorReceipts(debtorFiscalCode,brokerId,organizationId,debtPositionId, paymentOptionId,loggedUser))
+                .thenReturn(expectedResult);
+        //when
+        ResponseEntity<List<DebtorReceiptDTO>> result = receiptController.getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode);
         //then
         assertNotNull(result);
         assertEquals(HttpStatus.OK, result.getStatusCode());
