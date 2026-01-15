@@ -5,10 +5,13 @@ import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.AuthorizationService;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtorReceiptDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReceiptFacadeServiceImpl implements ReceiptFacadeService{
@@ -32,5 +35,10 @@ public class ReceiptFacadeServiceImpl implements ReceiptFacadeService{
     @Override
     public FileResourceDTO getReceiptPdf(Long brokerId, Long organizationId, Long receiptId, String debtorFiscalCode, IamUserInfoDTO loggedUser) {
         return receiptService.getReceiptPdf(brokerId,organizationId,receiptId,AuthorizationService.getDebtorFiscalCode(debtorFiscalCode,loggedUser));
+    }
+
+    @Override
+    public List<DebtorReceiptDTO> getDebtorReceipts(String debtorFiscalCode, Long brokerId, Long organizationId, Long debtPositionId, Long paymentOptionId, IamUserInfoDTO loggedUser) {
+        return receiptService.getDebtorReceipts(AuthorizationService.getDebtorFiscalCode(debtorFiscalCode,loggedUser),brokerId,organizationId,debtPositionId,paymentOptionId);
     }
 }

@@ -4,6 +4,7 @@ import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.utils.PageUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.DebtorReceiptDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.ReceiptDetailExtendedDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -59,6 +63,16 @@ public class ReceiptClient {
         } catch (HttpClientErrorException.NotFound e) {
             log.warn("receipt with receiptId {} brokerId {} and organizationId {} not found", receiptId, brokerId, organizationId);
             return null;
+        }
+    }
+
+    public List<DebtorReceiptDTO> getDebtorReceipts(String debtorFiscalCode, Long brokerId, Long organizationId, Long debtPositionId, Long paymentOptionId, String accessToken) {
+        try {
+            return citizenApisHolder.getReceiptApi(accessToken)
+                    .getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode);
+        } catch (HttpClientErrorException.NotFound e) {
+            log.warn("DebtorReceipts with brokerId {} organizationId {} debtPositionId {} and paymentOptionId {} not found", brokerId, organizationId, debtPositionId, paymentOptionId);
+            return Collections.emptyList();
         }
     }
 }
