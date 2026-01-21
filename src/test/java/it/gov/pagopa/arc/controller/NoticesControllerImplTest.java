@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.controller.generated.ArcNoticesApi;
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.dto.mapper.NoticeRequestDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
 import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
 import it.gov.pagopa.arc.fakers.NoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.NoticeRequestDTOFaker;
@@ -73,6 +74,8 @@ class NoticesControllerImplTest {
     private NoticesService noticesServiceMock;
     @MockitoBean
     private NoticeRequestDTOMapper noticeRequestDTOMapper;
+    @MockitoBean
+    UpstreamErrorMapper upstreamErrorMapperMock;
 
     @BeforeEach
     void setUp() {

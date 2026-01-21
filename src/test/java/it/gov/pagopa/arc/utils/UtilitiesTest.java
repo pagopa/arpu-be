@@ -7,12 +7,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.MDC;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-class UtilitiesTest {
+public class UtilitiesTest {
 
     @ParameterizedTest
     @CsvSource(value = {
@@ -52,4 +53,10 @@ class UtilitiesTest {
 
     }
 
+    public static void setTraceId(String traceId) {
+        MDC.put("traceId", traceId);
+    }
+    public static void clearTraceIdContext(){
+        MDC.clear();
+    }
 }

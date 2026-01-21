@@ -3551,18 +3551,26 @@
       "ErrorDTO" : {
         "type" : "object",
         "properties" : {
-          "error" : {
-            "$ref" : "#/components/schemas/ErrorEnum"
+          "title" : {
+            "$ref" : "#/components/schemas/TitleEnum",
+            "description" : "The title describing the error"
           },
-          "error_description" : {
+          "description" : {
+            "type" : "string",
+            "description" : "Description of the error"
+          },
+          "traceId" : {
+            "type" : "string"
+          },
+          "code" : {
             "type" : "string"
           }
         },
-        "required" : [ "error" ]
+        "required" : [ "description", "title" ]
       },
-      "ErrorEnum" : {
+      "TitleEnum" : {
         "type" : "string",
-        "enum" : [ "generic_error", "receipt_not_found_error", "notice_not_found_error", "payment_notice_not_found_error", "invalid_amount", "invalid_date", "invalid_email", "invalid_request", "auth_user_unauthorized", "too_many_request", "bad_request", "not_found" ]
+        "enum" : [ "NOT_FOUND", "BAD_REQUEST", "GENERIC_ERROR", "FORBIDDEN", "CONFLICT", "TOO_MANY_REQUEST", "UNAUTHORIZED" ]
       },
       "PaymentNoticePayloadDTO" : {
         "type" : "object",

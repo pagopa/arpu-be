@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.controller;
 
+import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.spontaneous.OrganizationsListDTOFaker;
 import it.gov.pagopa.arc.model.generated.OrganizationsListDTO;
@@ -46,6 +47,8 @@ class PaymentNoticeSpontaneousControllerImplTest {
 
     @MockitoBean
     private PaymentNoticeSpontaneousService paymentNoticeSpontaneousService;
+    @MockitoBean
+    UpstreamErrorMapper upstreamErrorMapperMock;
 
     private static final String USER_ID = "user_id";
 
