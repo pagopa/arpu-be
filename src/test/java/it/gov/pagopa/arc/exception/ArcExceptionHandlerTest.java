@@ -30,6 +30,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -341,6 +342,18 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("BAD_REQUEST"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Invalid request content. fieldName: resolved message"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
+    }
+
+    @Test
+    void handleHttpMessageNotReadableException() throws Exception {
+        doThrow(new HttpMessageNotReadableException("Error", null)).when(testControllerSpy).testEndpoint(DATA, BODY);
+
+        performRequest(DATA, MediaType.APPLICATION_JSON)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Required request body is missing"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
 
