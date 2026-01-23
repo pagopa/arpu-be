@@ -32,7 +32,7 @@ public class DebtPositionFacadeServiceImpl implements DebtPositionFacadeService 
     public DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode, IamUserInfoDTO loggedUser) {
         DebtPositionDTO debtPositionDetail = debtPositionService.getDebtPositionDetail(brokerId, debtPositionId, AuthorizationService.getDebtorFiscalCode(fiscalCode,loggedUser));
         if (debtPositionDetail == null) {
-            throw new ResourceNotFoundException("DebtPosition with debtPositionId %s not found".formatted(debtPositionId));
+            throw new ResourceNotFoundException("DEBT_POSITION_NOT_FOUND","DebtPosition with debtPositionId %s not found".formatted(debtPositionId));
         }
 
         return debtPositionDetail;

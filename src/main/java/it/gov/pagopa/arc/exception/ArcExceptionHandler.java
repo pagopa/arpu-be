@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.exception;
 
+import io.micrometer.common.util.StringUtils;
 import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
 import it.gov.pagopa.arc.exception.custom.*;
 import it.gov.pagopa.arc.model.generated.ErrorDTO;
@@ -170,10 +171,14 @@ public class ArcExceptionHandler {
         String description = message;
         String code;
 
-        ErrorMessageParser.ParsedError parsed = ErrorMessageParser.parse(message);
-        code = parsed.code();
-        if (parsed.description() != null) {
-            description = parsed.description();
+        if (ex instanceof BaseBusinessException codedEx && StringUtils.isNotBlank(codedEx.getCode())) {
+            code = codedEx.getCode();
+        } else {
+            ErrorMessageParser.ParsedError parsed = ErrorMessageParser.parse(message);
+            code = parsed.code();
+            if (parsed.description() != null) {
+                description = parsed.description();
+            }
         }
 
         ErrorDTO dto = new ErrorDTO();

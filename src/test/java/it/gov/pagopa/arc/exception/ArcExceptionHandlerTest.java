@@ -402,13 +402,13 @@ class ArcExceptionHandlerTest {
 
     @Test
     void givenResourceNotFoundErrorWhenRequestThenHandleResourceNotFoundException() throws Exception {
-        doThrow(new ResourceNotFoundException("Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
+        doThrow(new ResourceNotFoundException("RESOURCE_NOT_FOUND","Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("NOT_FOUND"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Error"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("RESOURCE_NOT_FOUND"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
 }
