@@ -63,10 +63,6 @@ rest-client:
     timeout:
       connect-millis: "\${DEFAULT_REST_TIMEOUT_CONNECT_MILLIS:120000}"
       read-millis: "\${DEFAULT_REST_TIMEOUT_READ_MILLIS:120000}"
-  biz-events:
-    paid-notice:
-      baseUrl: "\${BIZ_EVENTS_PAID_NOTICE_BASE_URL:}"
-      api-key: "\${BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY:}"
   pull-payment:
     baseUrl: "\${PULL_PAYMENT_BASE_URL:}"
     api-key: "\${PULL_PAYMENT_SERVICE_API_KEY:}"

@@ -43,8 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(properties = {
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.gpd.baseUrl=gpdMock",
         "rest-client.gpd.api-key=x_api_key0",
-        "rest-client.pull-payment.baseUrl=pullPaymentMock",
-        "rest-client.biz-events.paid-notice.baseUrl=bizEventsPaidNoticeMock"
+        "rest-client.pull-payment.baseUrl=pullPaymentMock"
 })
 class GPDConnectorImplTest {
 

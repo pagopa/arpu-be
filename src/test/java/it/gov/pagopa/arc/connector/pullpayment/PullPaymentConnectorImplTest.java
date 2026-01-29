@@ -42,7 +42,6 @@ import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPAT
                 "rest-client.pull-payment.api-key=x_api_key0",
                 WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.pull-payment.baseUrl=pullPaymentMock",
                 "rest-client.pull-payment.api-key=x_api_key0",
-                "rest-client.biz-events.paid-notice.baseUrl=bizEventsPaidNoticeMock",
                 "rest-client.gpd.baseUrl=gpdMock"
         })
 class PullPaymentConnectorImplTest {
