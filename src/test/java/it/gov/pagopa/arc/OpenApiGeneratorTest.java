@@ -1,7 +1,6 @@
 package it.gov.pagopa.arc;
 
 import it.gov.pagopa.arc.config.OAuth2LoginConfig;
-import it.gov.pagopa.arc.connector.bizevents.paidnotice.BizEventsPaidNoticeRestClient;
 import it.gov.pagopa.arc.connector.gpd.GPDRestClient;
 import it.gov.pagopa.arc.connector.pullpayment.PullPaymentRestClient;
 import it.gov.pagopa.arc.service.AccessTokenBuilderService;
@@ -51,8 +50,6 @@ class OpenApiGeneratorTest {
 
     @MockitoBean
     private AccessTokenBuilderService accessTokenBuilderService;
-    @MockitoBean
-    private BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient;
     @MockitoBean
     private GPDRestClient gpdRestClient;
     @MockitoBean
