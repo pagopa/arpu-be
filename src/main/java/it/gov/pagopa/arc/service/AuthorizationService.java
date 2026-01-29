@@ -14,6 +14,6 @@ public class AuthorizationService {
         if(loggedUser!=null && StringUtils.isNotBlank(loggedUser.getFiscalCode())){
             return loggedUser.getFiscalCode();
         }
-        throw new ValidationException("Either the fiscalCode must not be null or the user must be logged");
+        throw new ValidationException("[MISSING_FISCAL_CODE] Either the fiscalCode must not be null or the user must be logged");
     }
 }

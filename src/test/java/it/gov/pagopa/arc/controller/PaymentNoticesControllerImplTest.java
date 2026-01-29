@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.controller;
 import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcPaymentNoticesApi;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
+import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
 import it.gov.pagopa.arc.fakers.PaymentNoticePayloadDTOFaker;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.PaymentNoticeDetailsDTOFaker;
@@ -65,6 +66,8 @@ class PaymentNoticesControllerImplTest {
 
     @MockitoBean
     private PaymentNoticesService paymentNoticesServiceMock;
+    @MockitoBean
+    UpstreamErrorMapper upstreamErrorMapperMock;
 
     private final IamUserInfoDTO iamUserInfoDTO = IamUserInfoDTOFaker.mockInstance();
 
@@ -206,8 +209,8 @@ class PaymentNoticesControllerImplTest {
                 ErrorDTO.class);
 
         //then
-        Assertions.assertEquals(ErrorDTO.ErrorEnum.INVALID_REQUEST, errorDTO.getError());
-        Assertions.assertTrue(errorDTO.getErrorDescription().contains("[paFullName]: paFullName is required"));
-        Assertions.assertTrue(errorDTO.getErrorDescription().contains("[description]: description is required"));
+        Assertions.assertEquals(ErrorDTO.TitleEnum.BAD_REQUEST, errorDTO.getTitle());
+        Assertions.assertTrue(errorDTO.getDescription().contains("paFullName is required"));
+        Assertions.assertTrue(errorDTO.getDescription().contains("description is required"));
     }
 }

@@ -29,7 +29,7 @@ public class DebtPositionTypeOrgFacadeServiceImpl implements DebtPositionTypeOrg
     public DebtPositionTypeOrgsWithSpontaneousDetailsDTO getDebtPositionTypeOrgsWithSpontaneousDetail(Long brokerId, Long organizationId, Long debtPositionTypeOrgId) {
         DebtPositionTypeOrgsWithSpontaneousDetailsDTO debtPositionTypeOrgsWithSpontaneousDetail = debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
         if (debtPositionTypeOrgsWithSpontaneousDetail == null){
-            throw new ResourceNotFoundException("DebtPositionTypeOrgsWithSpontaneousDetails with deptPositionTypeOrgId %d brokerId %d and organizationId %d not found".formatted(debtPositionTypeOrgId, brokerId, organizationId));
+            throw new ResourceNotFoundException("DEBT_POSITION_TYPE_ORG_NOT_FOUND", "DebtPositionTypeOrgsWithSpontaneousDetails with deptPositionTypeOrgId %d brokerId %d and organizationId %d not found".formatted(debtPositionTypeOrgId, brokerId, organizationId));
         }
 
         return debtPositionTypeOrgsWithSpontaneousDetail;

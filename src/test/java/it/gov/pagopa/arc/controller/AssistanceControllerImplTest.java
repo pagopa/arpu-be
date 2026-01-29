@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.controller;
 
 import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
+import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
 import it.gov.pagopa.arc.model.generated.ZendeskAssistanceTokenResponse;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
 import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
@@ -44,6 +45,8 @@ class AssistanceControllerImplTest {
 
     @MockitoBean
     ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
+    @MockitoBean
+    UpstreamErrorMapper upstreamErrorMapperMock;
 
     @Test
     void givenUserEmailWhenGetZendeskAssistanceTokenThenReturnZendeskAssistanceToken() throws Exception {

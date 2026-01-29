@@ -2054,23 +2054,24 @@ components:
     ErrorDTO:
       type: object
       required:
-        - error
+        - title
+        - description
       properties:
-        error:
+        title:
           type: string
+          description: The title describing the error
           enum:
-            - generic_error
-            - receipt_not_found_error
-            - notice_not_found_error
-            - payment_notice_not_found_error
-            - invalid_amount
-            - invalid_date
-            - invalid_email
-            - invalid_request
-            - auth_user_unauthorized
-            - too_many_request
-            - bad_request
-            - not_found
-        error_description:
+            - NOT_FOUND
+            - BAD_REQUEST
+            - GENERIC_ERROR
+            - FORBIDDEN
+            - CONFLICT
+            - TOO_MANY_REQUEST
+            - UNAUTHORIZED
+        description:
           type: string
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"
+          description: Description of the error
+        traceId:
+          type: string
+        code:
+          type: string
