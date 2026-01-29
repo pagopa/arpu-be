@@ -40,31 +40,6 @@ public class ArcExceptionHandler {
         this.upstreamErrorMapper = upstreamErrorMapper;
     }
 
-    @ExceptionHandler(BizEventsInvocationException.class)
-    public ResponseEntity<ErrorDTO> handleBizEventsInvocationException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.TitleEnum.GENERIC_ERROR);
-    }
-
-    @ExceptionHandler(BizEventsReceiptNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleBizEventsReceiptNotFoundException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.NOT_FOUND, ErrorDTO.TitleEnum.NOT_FOUND);
-    }
-
-    @ExceptionHandler(BizEventsInvalidAmountException.class)
-    public ResponseEntity<ErrorDTO> handleBizEventsInvalidAmountException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.TitleEnum.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(BizEventsInvalidDateException.class)
-    public ResponseEntity<ErrorDTO> handleBizEventsInvalidDateException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.TitleEnum.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(BizEventsTooManyRequestException.class)
-    public ResponseEntity<ErrorDTO> handleBizEventsTooManyRequestException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.TitleEnum.TOO_MANY_REQUEST);
-    }
-
     @ExceptionHandler(PullPaymentInvalidRequestException.class)
     public ResponseEntity<ErrorDTO> handlePullPaymentInvalidRequestException(RuntimeException ex, HttpServletRequest request){
         return handleException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.TitleEnum.BAD_REQUEST);
@@ -87,11 +62,6 @@ public class ArcExceptionHandler {
     @ExceptionHandler(ZendeskAssistanceInvalidUserEmailException.class)
     public ResponseEntity<ErrorDTO> handleZendeskAssistanceInvalidUserEmailException(RuntimeException ex, HttpServletRequest request){
         return handleException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.TitleEnum.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(BizEventsPaidNoticeNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleBizEventsNoticeNotFoundException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.NOT_FOUND, ErrorDTO.TitleEnum.NOT_FOUND);
     }
 
     @ExceptionHandler(RuntimeException.class)
