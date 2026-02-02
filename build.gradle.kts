@@ -60,6 +60,7 @@ val commonsFileUploadVersion = "1.6.0"
 val httpClientVersion = "5.5.1"
 val podamVersion = "8.0.2.RELEASE"
 val springCloudDepsVersion = "2025.1.0"
+val bouncyCastleVersion = "1.78.1"
 
 dependencyManagement {
     imports {
@@ -83,9 +84,7 @@ dependencies {
     }
     implementation("org.apache.commons:commons-lang3:${commonsLang3Version}")
     implementation("org.codehaus.janino:janino:$janinoVersion")
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign") {
-        exclude(group = "commons-fileupload", module = "commons-fileupload")
-    }
+    implementation ("org.bouncycastle:bcprov-jdk18on:$bouncyCastleVersion")
     implementation("commons-fileupload:commons-fileupload:$commonsFileUploadVersion")
     implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
     implementation("org.mapstruct:mapstruct:${mapStructVersion}")
