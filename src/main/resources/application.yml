@@ -79,9 +79,6 @@ rest-client:
 springdoc:
   writer-with-default-pretty-printer: true
 
-spontaneous-mock-paths:
-  organizationList: "mock/organizationsMock.json"
-
 management:
   info:
     build.enabled: true

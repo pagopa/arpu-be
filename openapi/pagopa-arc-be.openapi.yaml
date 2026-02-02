@@ -142,29 +142,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-  /organizations:
-    get:
-      tags:
-        - arc payment notice spontaneous
-      summary: "Retrieve organizations list"
-      operationId: getOrganizations
-      security:
-        - BearerAuth: [ ]
-      responses:
-        '200':
-          description: "Obtained organizations list"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrganizationsListDTO'
-        '401':
-          description: "Wrong or missing function key"
-        '500':
-          description: "Internal Server Error"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
   /token/assistance:
     get:
       tags:
@@ -1206,7 +1183,7 @@ paths:
   /public/brokers/{brokerId}/installments:
     get:
       tags:
-        - installment
+        - Installment
       operationId: getPublicInstallmentsByIuvOrNav
       parameters:
         - name: brokerId

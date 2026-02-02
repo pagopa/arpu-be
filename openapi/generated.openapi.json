@@ -34,9 +34,6 @@
     "name" : "Organization",
     "description" : "the Organization API"
   }, {
-    "name" : "arc payment notice spontaneous",
-    "description" : "the arc payment notice spontaneous API"
-  }, {
     "name" : "DebtPosition",
     "description" : "the DebtPosition API"
   } ],
@@ -1031,7 +1028,7 @@
     },
     "/public/brokers/{brokerId}/installments" : {
       "get" : {
-        "tags" : [ "Installment", "installment" ],
+        "tags" : [ "Installment" ],
         "operationId" : "getPublicInstallmentsByIuvOrNav",
         "parameters" : [ {
           "name" : "brokerId",
@@ -1203,48 +1200,6 @@
             }
           }
         }
-      }
-    },
-    "/organizations" : {
-      "get" : {
-        "tags" : [ "arc payment notice spontaneous" ],
-        "summary" : "Retrieve organizations list",
-        "operationId" : "getOrganizations",
-        "responses" : {
-          "200" : {
-            "description" : "Obtained organizations list",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/OrganizationsListDTO"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Wrong or missing function key",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/OrganizationsListDTO"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorDTO"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "BearerAuth" : [ ]
-        } ]
       }
     },
     "/logout" : {
@@ -3451,36 +3406,6 @@
       "InstallmentStatus" : {
         "type" : "string",
         "enum" : [ "TO_SYNC", "REPORTED", "PAID", "CANCELLED", "INVALID", "EXPIRED", "UNPAID", "UNPAYABLE", "DRAFT" ]
-      },
-      "OrganizationDTO" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string"
-          },
-          "paFullName" : {
-            "type" : "string"
-          },
-          "paTaxCode" : {
-            "type" : "string"
-          },
-          "ipaCode" : {
-            "type" : "string"
-          }
-        },
-        "required" : [ "id", "ipaCode", "paFullName", "paTaxCode" ]
-      },
-      "OrganizationsListDTO" : {
-        "type" : "object",
-        "properties" : {
-          "organizations" : {
-            "type" : "array",
-            "description" : "Array structure containing the organizations",
-            "items" : {
-              "$ref" : "#/components/schemas/OrganizationDTO"
-            }
-          }
-        }
       },
       "DebtorReceiptDTO" : {
         "type" : "object",
