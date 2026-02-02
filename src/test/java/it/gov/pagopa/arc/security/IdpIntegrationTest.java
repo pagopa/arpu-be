@@ -61,10 +61,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
         "spring.application.name=app",
         "spring.application.version=1",
-        "rest-client.pull-payment.baseUrl=pullPaymentMock",
-        "rest-client.pull-payment.api-key=x_api_key0",
-        "rest-client.gpd.baseUrl=gpdMock",
-        "rest-client.gpd.api-key=x_api_key0",
         "white-list-cf-users=PLOMRC01P30L736Y",
         "spring.cache.type=simple",
         "spontaneous-mock-paths.organizationList=mock/organizationsMock.json"

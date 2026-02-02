@@ -40,20 +40,6 @@ public class ArcExceptionHandler {
         this.upstreamErrorMapper = upstreamErrorMapper;
     }
 
-    @ExceptionHandler(PullPaymentInvalidRequestException.class)
-    public ResponseEntity<ErrorDTO> handlePullPaymentInvalidRequestException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.TitleEnum.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PullPaymentInvocationException.class)
-    public ResponseEntity<ErrorDTO> handlePullPaymentInvocationException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.TitleEnum.GENERIC_ERROR);
-    }
-    @ExceptionHandler(PullPaymentTooManyRequestException.class)
-    public ResponseEntity<ErrorDTO> handlePullPaymentTooManyRequestException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.TitleEnum.TOO_MANY_REQUEST);
-    }
-
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<ErrorDTO> handlePullInvalidTokenException(RuntimeException ex, HttpServletRequest request){
         return handleException(ex, request, HttpStatus.UNAUTHORIZED, ErrorDTO.TitleEnum.UNAUTHORIZED);
@@ -67,26 +53,6 @@ public class ArcExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorDTO> handleGenericRuntimeException(RuntimeException ex, HttpServletRequest request){
         return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.TitleEnum.GENERIC_ERROR);
-    }
-
-    @ExceptionHandler(GPDInvalidRequestException.class)
-    public ResponseEntity<ErrorDTO> handleGPDInvalidRequestException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.TitleEnum.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(GPDPaymentNoticeDetailsNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleGPDNotFoundException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.NOT_FOUND, ErrorDTO.TitleEnum.NOT_FOUND);
-    }
-
-    @ExceptionHandler(GPDInvocationException.class)
-    public ResponseEntity<ErrorDTO> handleGPDInvocationException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.TitleEnum.GENERIC_ERROR);
-    }
-
-    @ExceptionHandler(GPDTooManyRequestException.class)
-    public ResponseEntity<ErrorDTO> handleGPDTooManyRequestException(RuntimeException ex, HttpServletRequest request){
-        return handleException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.TitleEnum.TOO_MANY_REQUEST);
     }
 
     @ExceptionHandler({HttpClientErrorException.class})

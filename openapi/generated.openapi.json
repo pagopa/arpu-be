@@ -28,9 +28,6 @@
     "name" : "Receipt",
     "description" : "the Receipt API"
   }, {
-    "name" : "arc payment notices",
-    "description" : "the arc payment notices API"
-  }, {
     "name" : "DebtPositionTypeOrg",
     "description" : "the DebtPositionTypeOrg API"
   }, {
@@ -130,171 +127,6 @@
             }
           }
         }
-      }
-    },
-    "/payment-notices" : {
-      "get" : {
-        "tags" : [ "arc payment notices" ],
-        "summary" : "Retrieve payment notices from arc",
-        "operationId" : "getPaymentNotices",
-        "parameters" : [ {
-          "name" : "dueDate",
-          "in" : "query",
-          "description" : "Optional date to filter paymentNotices (if provided use the format yyyy-MM-dd)",
-          "required" : false,
-          "schema" : {
-            "type" : "string",
-            "format" : "date"
-          }
-        }, {
-          "name" : "size",
-          "in" : "query",
-          "description" : "Number of elements on one page. Default = 50",
-          "required" : false,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32",
-            "default" : 50,
-            "maximum" : 100,
-            "minimum" : 1
-          }
-        }, {
-          "name" : "page",
-          "in" : "query",
-          "description" : "Page number. Page value starts from 0",
-          "required" : false,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int32",
-            "default" : 0,
-            "minimum" : 0
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentNoticesListDTO"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Invalid Request",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorDTO"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Wrong or missing function key",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentNoticesListDTO"
-                }
-              }
-            }
-          },
-          "429" : {
-            "description" : "Too many Requests",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentNoticesListDTO"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorDTO"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "BearerAuth" : [ ]
-        } ]
-      },
-      "post" : {
-        "tags" : [ "arc payment notices" ],
-        "summary" : "Generate payment notice from arc",
-        "operationId" : "postGeneratePaymentNotice",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/PaymentNoticePayloadDTO"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Invalid Request",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorDTO"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Wrong or missing function key",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
-                }
-              }
-            }
-          },
-          "429" : {
-            "description" : "Too many Requests",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorDTO"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "BearerAuth" : [ ]
-        } ]
       }
     },
     "/brokers/{brokerId}/spontaneous/debt-positions" : {
@@ -1371,95 +1203,6 @@
             }
           }
         }
-      }
-    },
-    "/payment-notices/{iupd}" : {
-      "get" : {
-        "tags" : [ "arc payment notices" ],
-        "summary" : "Retrieve payment notices details from arc",
-        "operationId" : "getPaymentNoticesDetails",
-        "parameters" : [ {
-          "name" : "iupd",
-          "in" : "path",
-          "description" : "A unique iupd that identifies a payment notice",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "paTaxCode",
-          "in" : "query",
-          "description" : "Fiscal code of EC",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Invalid Request",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorDTO"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Wrong or missing function key",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Payment notice not found",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorDTO"
-                }
-              }
-            }
-          },
-          "429" : {
-            "description" : "Too many Requests",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentNoticeDetailsDTO"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorDTO"
-                }
-              }
-            }
-          }
-        },
-        "security" : [ {
-          "BearerAuth" : [ ]
-        } ]
       }
     },
     "/organizations" : {
@@ -3177,79 +2920,27 @@
         "type" : "string",
         "enum" : [ "F", "G" ]
       },
-      "PaymentNoticeDetailsDTO" : {
+      "TokenResponse" : {
         "type" : "object",
         "properties" : {
-          "iupd" : {
-            "type" : "string",
-            "description" : "Unique ID of the Debt Position (for positions originating from ACA the IUPD starts with ACA_)"
+          "accessToken" : {
+            "type" : "string"
           },
-          "paTaxCode" : {
-            "type" : "string",
-            "description" : "Tax code of the Creditor Body"
+          "tokenType" : {
+            "type" : "string"
           },
-          "paFullName" : {
-            "type" : "string",
-            "description" : "Company name of the Creditor Body"
-          },
-          "status" : {
-            "$ref" : "#/components/schemas/PaymentNoticeDetailsStatus"
-          },
-          "paymentOptions" : {
-            "type" : "array",
-            "description" : "Array structure containing any payment options (there always exists at least 1)",
-            "items" : {
-              "$ref" : "#/components/schemas/PaymentOptionDetailsDTO"
-            }
-          }
-        }
-      },
-      "PaymentNoticeDetailsStatus" : {
-        "type" : "string",
-        "enum" : [ "DRAFT", "PUBLISHED", "VALID", "INVALID", "EXPIRED", "PARTIALLY_PAID", "PAID", "REPORTED" ]
-      },
-      "PaymentOptionDetailsDTO" : {
-        "type" : "object",
-        "properties" : {
-          "nav" : {
-            "type" : "string",
-            "description" : "Notice Code"
-          },
-          "iuv" : {
-            "type" : "string",
-            "description" : "Unique identifier"
-          },
-          "amount" : {
+          "expiresIn" : {
             "type" : "integer",
-            "format" : "int64",
-            "description" : "Payment Option Amount"
+            "format" : "int32"
           },
-          "description" : {
-            "type" : "string",
-            "description" : "Description of the OP (e.g. \"SISA - 741T, 942T - Checks without authorization or funding\")"
+          "refreshToken" : {
+            "type" : "string"
           },
-          "isPartialPayment" : {
-            "type" : "boolean",
-            "description" : "Indicates, if set to true, the current PO is a installment"
-          },
-          "dueDate" : {
-            "type" : "string",
-            "format" : "date-time",
-            "example" : "2024-05-31T13:07:25Z"
-          },
-          "notificationFee" : {
-            "type" : "integer",
-            "format" : "int64",
-            "description" : "corresponds to the SEND notification costs"
-          },
-          "status" : {
-            "$ref" : "#/components/schemas/PaymentOptionStatus"
+          "idToken" : {
+            "type" : "string"
           }
-        }
-      },
-      "PaymentOptionStatus" : {
-        "type" : "string",
-        "enum" : [ "TO_SYNC", "REPORTED", "PAID", "PARTIALLY_PAID", "CANCELLED", "INVALID", "EXPIRED", "UNPAID", "UNPAYABLE", "DRAFT" ]
+        },
+        "required" : [ "accessToken", "expiresIn", "tokenType" ]
       },
       "ErrorDTO" : {
         "type" : "object",
@@ -3274,53 +2965,6 @@
       "TitleEnum" : {
         "type" : "string",
         "enum" : [ "NOT_FOUND", "BAD_REQUEST", "GENERIC_ERROR", "FORBIDDEN", "CONFLICT", "TOO_MANY_REQUEST", "UNAUTHORIZED" ]
-      },
-      "PaymentNoticePayloadDTO" : {
-        "type" : "object",
-        "properties" : {
-          "paTaxCode" : {
-            "type" : "string",
-            "description" : "The fiscal code of EC",
-            "minLength" : 1
-          },
-          "paFullName" : {
-            "type" : "string",
-            "description" : "The name of EC",
-            "minLength" : 1
-          },
-          "amount" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "description" : {
-            "type" : "string",
-            "maxLength" : 140,
-            "minLength" : 0
-          }
-        },
-        "required" : [ "amount", "description", "paFullName", "paTaxCode" ]
-      },
-      "TokenResponse" : {
-        "type" : "object",
-        "properties" : {
-          "accessToken" : {
-            "type" : "string"
-          },
-          "tokenType" : {
-            "type" : "string"
-          },
-          "expiresIn" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "refreshToken" : {
-            "type" : "string"
-          },
-          "idToken" : {
-            "type" : "string"
-          }
-        },
-        "required" : [ "accessToken", "expiresIn", "tokenType" ]
       },
       "ZendeskAssistanceTokenResponse" : {
         "type" : "object",
@@ -3808,216 +3452,6 @@
         "type" : "string",
         "enum" : [ "TO_SYNC", "REPORTED", "PAID", "CANCELLED", "INVALID", "EXPIRED", "UNPAID", "UNPAYABLE", "DRAFT" ]
       },
-      "InstallmentDTO" : {
-        "type" : "object",
-        "properties" : {
-          "installmentId" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "paymentOptionId" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "status" : {
-            "$ref" : "#/components/schemas/InstallmentStatus"
-          },
-          "syncStatus" : {
-            "$ref" : "#/components/schemas/InstallmentSyncStatus"
-          },
-          "iupdPagopa" : {
-            "type" : "string"
-          },
-          "generateNotice" : {
-            "type" : "boolean"
-          },
-          "iud" : {
-            "type" : "string"
-          },
-          "iuv" : {
-            "type" : "string"
-          },
-          "iur" : {
-            "type" : "string"
-          },
-          "iuf" : {
-            "type" : "string"
-          },
-          "nav" : {
-            "type" : "string"
-          },
-          "iun" : {
-            "type" : "string"
-          },
-          "dueDate" : {
-            "type" : "string",
-            "format" : "date"
-          },
-          "switchToExpired" : {
-            "type" : "boolean"
-          },
-          "notificationFeeCents" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "amountCents" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "remittanceInformation" : {
-            "type" : "string"
-          },
-          "balance" : {
-            "type" : "string"
-          },
-          "legacyPaymentMetadata" : {
-            "type" : "string"
-          },
-          "debtor" : {
-            "$ref" : "#/components/schemas/PersonDTO"
-          },
-          "transfers" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/TransferDTO"
-            }
-          },
-          "notificationDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "ingestionFlowFileId" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "ingestionFlowFileLineNumber" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "ingestionFlowFileAction" : {
-            "$ref" : "#/components/schemas/Action"
-          },
-          "sourceFlowName" : {
-            "type" : "string"
-          },
-          "receiptId" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "creationDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "updateDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "updateOperatorExternalId" : {
-            "type" : "string"
-          },
-          "updateTraceId" : {
-            "type" : "string"
-          },
-          "originalRemittanceInformation" : {
-            "type" : "string"
-          }
-        },
-        "required" : [ "amountCents", "debtor", "remittanceInformation" ]
-      },
-      "PaymentNoticeDTO" : {
-        "type" : "object",
-        "properties" : {
-          "iupd" : {
-            "type" : "string",
-            "description" : "Unique ID of the Debt Position (for positions originating from ACA the IUPD starts with ACA_)"
-          },
-          "paTaxCode" : {
-            "type" : "string",
-            "description" : "Tax code of the Creditor Body"
-          },
-          "paFullName" : {
-            "type" : "string",
-            "description" : "Company name of the Creditor Body"
-          },
-          "status" : {
-            "$ref" : "#/components/schemas/PaymentNoticeStatus"
-          },
-          "paymentOptions" : {
-            "type" : "array",
-            "description" : "Array structure containing any payment options (there always exists at least 1)",
-            "items" : {
-              "$ref" : "#/components/schemas/PaymentOptionDTO"
-            }
-          }
-        },
-        "required" : [ "iupd", "paFullName", "paTaxCode", "paymentOptions", "status" ]
-      },
-      "PaymentNoticeStatus" : {
-        "type" : "string",
-        "enum" : [ "VALID", "PARTIALLY_PAID" ]
-      },
-      "PaymentNoticesListDTO" : {
-        "type" : "object",
-        "properties" : {
-          "paymentNotices" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/PaymentNoticeDTO"
-            }
-          }
-        }
-      },
-      "PaymentOptionDTO" : {
-        "type" : "object",
-        "properties" : {
-          "paymentOptionId" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "debtPositionId" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "totalAmountCents" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "status" : {
-            "$ref" : "#/components/schemas/PaymentOptionStatus"
-          },
-          "description" : {
-            "type" : "string"
-          },
-          "paymentOptionType" : {
-            "$ref" : "#/components/schemas/PaymentOptionType"
-          },
-          "paymentOptionIndex" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "creationDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "updateDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "updateOperatorExternalId" : {
-            "type" : "string"
-          },
-          "updateTraceId" : {
-            "type" : "string"
-          },
-          "installments" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/InstallmentDTO"
-            }
-          }
-        },
-        "required" : [ "installments", "paymentOptionType", "totalAmountCents" ]
-      },
       "OrganizationDTO" : {
         "type" : "object",
         "properties" : {
@@ -4191,6 +3625,122 @@
         "type" : "string",
         "enum" : [ "TO_SYNC", "REPORTED", "PAID", "PARTIALLY_PAID", "CANCELLED", "EXPIRED", "UNPAID", "DRAFT" ]
       },
+      "InstallmentDTO" : {
+        "type" : "object",
+        "properties" : {
+          "installmentId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "paymentOptionId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/InstallmentStatus"
+          },
+          "syncStatus" : {
+            "$ref" : "#/components/schemas/InstallmentSyncStatus"
+          },
+          "iupdPagopa" : {
+            "type" : "string"
+          },
+          "generateNotice" : {
+            "type" : "boolean"
+          },
+          "iud" : {
+            "type" : "string"
+          },
+          "iuv" : {
+            "type" : "string"
+          },
+          "iur" : {
+            "type" : "string"
+          },
+          "iuf" : {
+            "type" : "string"
+          },
+          "nav" : {
+            "type" : "string"
+          },
+          "iun" : {
+            "type" : "string"
+          },
+          "dueDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "switchToExpired" : {
+            "type" : "boolean"
+          },
+          "notificationFeeCents" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "amountCents" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "remittanceInformation" : {
+            "type" : "string"
+          },
+          "balance" : {
+            "type" : "string"
+          },
+          "legacyPaymentMetadata" : {
+            "type" : "string"
+          },
+          "debtor" : {
+            "$ref" : "#/components/schemas/PersonDTO"
+          },
+          "transfers" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/TransferDTO"
+            }
+          },
+          "notificationDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "ingestionFlowFileId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "ingestionFlowFileLineNumber" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "ingestionFlowFileAction" : {
+            "$ref" : "#/components/schemas/Action"
+          },
+          "sourceFlowName" : {
+            "type" : "string"
+          },
+          "receiptId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "creationDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updateDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updateOperatorExternalId" : {
+            "type" : "string"
+          },
+          "updateTraceId" : {
+            "type" : "string"
+          },
+          "originalRemittanceInformation" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "amountCents", "debtor", "remittanceInformation" ]
+      },
       "InstallmentSyncStatus" : {
         "type" : "object",
         "properties" : {
@@ -4205,6 +3755,61 @@
           }
         },
         "required" : [ "syncStatusFrom", "syncStatusTo" ]
+      },
+      "PaymentOptionDTO" : {
+        "type" : "object",
+        "properties" : {
+          "paymentOptionId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "debtPositionId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalAmountCents" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/PaymentOptionStatus"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "paymentOptionType" : {
+            "$ref" : "#/components/schemas/PaymentOptionType"
+          },
+          "paymentOptionIndex" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "creationDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updateDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updateOperatorExternalId" : {
+            "type" : "string"
+          },
+          "updateTraceId" : {
+            "type" : "string"
+          },
+          "installments" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/InstallmentDTO"
+            }
+          }
+        },
+        "required" : [ "installments", "paymentOptionType", "totalAmountCents" ]
+      },
+      "PaymentOptionStatus" : {
+        "type" : "string",
+        "enum" : [ "TO_SYNC", "REPORTED", "PAID", "PARTIALLY_PAID", "CANCELLED", "INVALID", "EXPIRED", "UNPAID", "UNPAYABLE", "DRAFT" ]
       },
       "PaymentOptionType" : {
         "type" : "string",
