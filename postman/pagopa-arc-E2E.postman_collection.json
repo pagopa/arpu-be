@@ -1,13 +1,50 @@
 {
   "info": {
-    "_postman_id": "7eb50a7c-85f5-45bd-a880-bf5a714a87e7",
+    "_postman_id": "a33318c4-1007-4706-a924-5d7d3d3ac2ba",
     "name": "ARpu collection e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "26204012"
   },
   "item": [
     {
-      "name": "0. Health",
+      "name": "0. Setup",
+      "item": [
+        {
+          "name": "getAccessToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let jsonResponse = pm.response.json();\r",
+                  "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseurlArcInternal}}/auth/testuser",
+              "host": [
+                "{{baseurlArcInternal}}"
+              ],
+              "path": [
+                "auth",
+                "testuser"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1. Health",
       "item": [
         {
           "name": "Status",
@@ -50,327 +87,8 @@
       ]
     },
     {
-      "name": "3. Spontaneous",
+      "name": "2. auth",
       "item": [
-        {
-          "name": "setup Copy",
-          "item": [
-            {
-              "name": "getAccessToken",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "let jsonResponse = pm.response.json();\r",
-                      "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArcInternal}}/auth/testuser",
-                  "host": [
-                    "{{baseurlArcInternal}}"
-                  ],
-                  "path": [
-                    "auth",
-                    "testuser"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Organizations list",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "let jsonResponse = pm.response.json();\r",
-                  "\r",
-                  "if(jsonResponse.organizations.length === 0){\r",
-                  "    retryRequest(postman,pm,setTimeout);\r",
-                  "}else{\r",
-                  "    pm.test(\"[Get organizations list], expected httpStatus: 200\", () => {\r",
-                  "        pm.response.to.have.status(200);\r",
-                  "    })\r",
-                  "\r",
-                  "    pm.test(\"[Get organizations list] - When you get organizations list , ARC return a organizations list\", () => {\r",
-                  "        pm.expect(jsonResponse.organizations).to.be.an('array').that.is.not.empty;\r",
-                  "        pm.expect(jsonResponse.organizations.length).to.eq(6);\r",
-                  "\r",
-                  "        pm.expect(jsonResponse.organizations[0].paFullName).to.eq(\"Comune di Milano\");\r",
-                  "\r",
-                  "        pm.expect(jsonResponse.organizations[1].paFullName).to.eq(\"INPS - Istituto Nazionale della Previdenza Sociale\");\r",
-                  "\r",
-                  "        pm.expect(jsonResponse.organizations[2].paFullName).to.eq(\"Ministero dell'Interno\");\r",
-                  "\r",
-                  "        pm.expect(jsonResponse.organizations[3].paFullName).to.eq(\"Comune di Roma\");\r",
-                  "\r",
-                  "        pm.expect(jsonResponse.organizations[4].paFullName).to.eq(\"Agenzia delle Entrate\");\r",
-                  "\r",
-                  "        pm.expect(jsonResponse.organizations[5].paFullName).to.eq(\"Ente di Test\")\r",
-                  "    })\r",
-                  "}"
-                ],
-                "type": "text/javascript",
-                "packages": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseurlArc}}/organizations",
-              "host": [
-                "{{baseurlArc}}"
-              ],
-              "path": [
-                "organizations"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "4. zendesk assistance",
-      "item": [
-        {
-          "name": "setup",
-          "item": [
-            {
-              "name": "getAccessToken",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "let jsonResponse = pm.response.json();\r",
-                      "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArcInternal}}/auth/testuser",
-                  "host": [
-                    "{{baseurlArcInternal}}"
-                  ],
-                  "path": [
-                    "auth",
-                    "testuser"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Happy Case",
-          "item": [
-            {
-              "name": "GET JWT token for zendesk assistance",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"[GET JWT token for zendesk assistance], expected httpStatus: 200\", () => {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "});\r",
-                      "\r",
-                      "pm.test(\"[GET JWT token for zendesk assistance], expected jwt token and return_to\", () =>{\r",
-                      "    let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(null)\r",
-                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(\"\")\r",
-                      "    \r",
-                      "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
-                      "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
-                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://pagamenti.assistenza.pagopa.it/hc/it/requests/new\")\r",
-                      "\r",
-                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(null)\r",
-                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(\"\")\r",
-                      "    pm.expect(jsonResponse.actionUrl).to.eq(\"https://pagopa.zendesk.com/access/jwt\")\r",
-                      "})\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{accessToken}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/token/assistance?userEmail=someone@email.com",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "token",
-                    "assistance"
-                  ],
-                  "query": [
-                    {
-                      "key": "userEmail",
-                      "value": "someone@email.com"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Unhappy Case",
-          "item": [
-            {
-              "name": "INVALID USER EMAIL",
-              "item": [
-                {
-                  "name": "INVALID USER EMAIL ERROR",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] - When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception , expected httpStatus: 400\", () => {\r",
-                          "    pm.response.to.have.status(400);\r",
-                          "})\r",
-                          "\r",
-                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] -When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
-                          "    let response = pm.response.json();\r",
-                          "    pm.expect(response.error).to.eq(\"invalid_request\");\r",
-                          "    pm.expect(response.error_description).to.eq(\"getZendeskAssistanceToken.userEmail: must be a well-formed email address\");\r",
-                          "})\r",
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "auth": {
-                      "type": "bearer",
-                      "bearer": [
-                        {
-                          "key": "token",
-                          "value": "{{accessToken}}",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/token/assistance?userEmail=someone",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "token",
-                        "assistance"
-                      ],
-                      "query": [
-                        {
-                          "key": "userEmail",
-                          "value": "someone"
-                        }
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "5. auth",
-      "item": [
-        {
-          "name": "setup",
-          "item": [
-            {
-              "name": "getAccessToken",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "let jsonResponse = pm.response.json();\r",
-                      "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArcInternal}}/auth/testuser",
-                  "host": [
-                    "{{baseurlArcInternal}}"
-                  ],
-                  "path": [
-                    "auth",
-                    "testuser"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
         {
           "name": "Unhappy Case",
           "item": [
@@ -983,6 +701,145 @@
                       ],
                       "path": [
                         "logout"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. zendesk assistance",
+      "item": [
+        {
+          "name": "Happy Case",
+          "item": [
+            {
+              "name": "GET JWT token for zendesk assistance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected httpStatus: 200\", () => {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected jwt token and return_to\", () =>{\r",
+                      "    let jsonResponse = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(\"\")\r",
+                      "    \r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
+                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://pagamenti.assistenza.pagopa.it/hc/it/requests/new\")\r",
+                      "\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(\"\")\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.eq(\"https://pagopa.zendesk.com/access/jwt\")\r",
+                      "})\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{accessToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/token/assistance?userEmail=someone@email.com",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "token",
+                    "assistance"
+                  ],
+                  "query": [
+                    {
+                      "key": "userEmail",
+                      "value": "someone@email.com"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Unhappy Case",
+          "item": [
+            {
+              "name": "INVALID USER EMAIL",
+              "item": [
+                {
+                  "name": "INVALID USER EMAIL ERROR",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] - When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception , expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] -When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.title).to.eq(\"BAD_REQUEST\");\r",
+                          "})\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/assistance?userEmail=someone",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "assistance"
+                      ],
+                      "query": [
+                        {
+                          "key": "userEmail",
+                          "value": "someone"
+                        }
                       ]
                     }
                   },
