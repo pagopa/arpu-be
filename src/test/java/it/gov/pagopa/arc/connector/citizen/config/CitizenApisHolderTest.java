@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.connector.citizen.config;
 
 import it.gov.pagopa.arc.connector.BaseApiHolderTest;
+import it.gov.pagopa.pu.citizen.dto.generated.InstallmentStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class CitizenApisHolderTest extends BaseApiHolderTest {
@@ -93,7 +95,7 @@ class CitizenApisHolderTest extends BaseApiHolderTest {
     void whenGetInstallmentApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
         assertAuthenticationShouldBeSetInThreadSafeMode(
                 accessToken -> citizenApisHolder.getInstallmentApi(accessToken)
-                        .getInstallmentsByIuvOrNav(1L,"iuvOrNav","debtorFiscalCode","orgFiscalCode"),
+                        .getInstallmentsByIuvOrNav(1L,"iuvOrNav","debtorFiscalCode","orgFiscalCode", List.of(InstallmentStatus.PAID)),
                 new ParameterizedTypeReference<>() {},
                 citizenApisHolder::unload);
     }

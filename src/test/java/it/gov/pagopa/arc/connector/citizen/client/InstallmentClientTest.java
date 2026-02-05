@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.controller.generated.InstallmentApi;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.InstallmentStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,11 +50,12 @@ class InstallmentClientTest {
         String debtorFiscalCode = "debtorFiscalCode";
         String orgFiscalCode = "orgFiscalCode";
         List<InstallmentDebtorExtendedDTO> expectedResult = podamFactory.manufacturePojo(List.class,InstallmentDebtorExtendedDTO.class);
+        List<InstallmentStatus> statuses = List.of(InstallmentStatus.PAID);
 
         Mockito.when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
-        Mockito.when(installmentApiMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode)).thenReturn(expectedResult);
+        Mockito.when(installmentApiMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses)).thenReturn(expectedResult);
 
-        List<InstallmentDebtorExtendedDTO> response = installmentClient.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode,accessToken);
+        List<InstallmentDebtorExtendedDTO> response = installmentClient.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses, accessToken);
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(expectedResult,response);
@@ -66,12 +68,13 @@ class InstallmentClientTest {
         String iuvOrNav = "iuvOrNav";
         String debtorFiscalCode = "debtorFiscalCode";
         String orgFiscalCode = "orgFiscalCode";
+        List<InstallmentStatus> statuses = List.of(InstallmentStatus.PAID);
 
         Mockito.when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
-        Mockito.when(installmentApiMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode))
+        Mockito.when(installmentApiMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
-        List<InstallmentDebtorExtendedDTO> response = installmentClient.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode,accessToken);
+        List<InstallmentDebtorExtendedDTO> response = installmentClient.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses, accessToken);
 
         Assertions.assertNotNull(response);
         Assertions.assertTrue(response.isEmpty());

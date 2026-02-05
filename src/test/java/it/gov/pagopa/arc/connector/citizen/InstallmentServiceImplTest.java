@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.connector.citizen.client.InstallmentClient;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.InstallmentStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,13 +50,14 @@ class InstallmentServiceImplTest {
         String iuvOrNav = "iuvOrNav";
         String debtorFiscalCode = "debtorFiscalCode";
         String orgFiscalCode = "orgFiscalCode";
+        List<InstallmentStatus> statuses = List.of(InstallmentStatus.PAID);
         List<InstallmentDebtorExtendedDTO> expectedResult = podamFactory.manufacturePojo(List.class,InstallmentDebtorExtendedDTO.class);
 
         Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
-        Mockito.when(installmentClientMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode,accessToken))
+        Mockito.when(installmentClientMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses, accessToken))
                 .thenReturn(expectedResult);
 
-        List<InstallmentDebtorExtendedDTO> result = installmentService.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode);
+        List<InstallmentDebtorExtendedDTO> result = installmentService.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses);
 
         assertNotNull(result);
         assertEquals(expectedResult, result);
