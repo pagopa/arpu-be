@@ -1363,10 +1363,10 @@ components:
     ErrorDTO:
       type: object
       required:
-        - title
-        - description
+        - category
+        - message
       properties:
-        title:
+        category:
           type: string
           description: The title describing the error
           enum:
@@ -1377,7 +1377,7 @@ components:
             - CONFLICT
             - TOO_MANY_REQUEST
             - UNAUTHORIZED
-        description:
+        message:
           type: string
           description: Description of the error
         traceId:

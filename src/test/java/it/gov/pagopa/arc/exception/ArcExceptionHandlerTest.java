@@ -3,7 +3,9 @@ package it.gov.pagopa.arc.exception;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
-import it.gov.pagopa.arc.exception.custom.*;
+import it.gov.pagopa.arc.exception.custom.InvalidTokenException;
+import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
+import it.gov.pagopa.arc.exception.custom.ZendeskAssistanceInvalidUserEmailException;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.arc.utils.UtilitiesTest;
 import jakarta.validation.ConstraintViolationException;
@@ -69,7 +71,6 @@ import static org.mockito.Mockito.when;
 class ArcExceptionHandlerTest {
 
     public static final String DATA = "data";
-    public static final String HEADER = "header";
     private static final String TRACE_ID = "TRACEID";
     public static final TestRequestBody BODY = new TestRequestBody("bodyData", null, "abc", LocalDateTime.now());
 
@@ -143,8 +144,8 @@ class ArcExceptionHandlerTest {
 
          performRequest(DATA, MediaType.APPLICATION_JSON)
             .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("UNAUTHORIZED"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("UNAUTHORIZED"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
@@ -155,8 +156,8 @@ class ArcExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("BAD_REQUEST"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
@@ -167,8 +168,8 @@ class ArcExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
             .andExpect(MockMvcResultMatchers.status().is(500))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("GENERIC_ERROR"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Error"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("GENERIC_ERROR"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
@@ -183,9 +184,9 @@ class ArcExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("BAD_REQUEST"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Invalid request content. fieldName: resolved message"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid request content. fieldName: resolved message"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
 
@@ -195,9 +196,9 @@ class ArcExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("BAD_REQUEST"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Required request body is missing"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required request body is missing"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
 
@@ -226,9 +227,9 @@ class ArcExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("BAD_REQUEST"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("INVALID_IBAN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("eltjhreigjpo"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("eltjhreigjpo"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
 
@@ -238,8 +239,8 @@ class ArcExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("BAD_REQUEST"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
@@ -250,8 +251,8 @@ class ArcExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("NOT_FOUND"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("NOT_FOUND"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("RESOURCE_NOT_FOUND"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
     }
