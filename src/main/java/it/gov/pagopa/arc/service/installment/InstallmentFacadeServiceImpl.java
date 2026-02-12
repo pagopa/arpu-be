@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.AuthorizationService;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.InstallmentStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public class InstallmentFacadeServiceImpl implements InstallmentFacadeService {
     }
 
     @Override
-    public List<InstallmentDebtorExtendedDTO> getPublicInstallmentsByIuvOrNav(Long brokerId, String iuvOrNav, String debtorFiscalCode, String orgFiscalCode) {
-        return installmentService.getInstallmentsByIuvOrNav(brokerId, iuvOrNav, debtorFiscalCode, orgFiscalCode);
+    public List<InstallmentDebtorExtendedDTO> getPublicInstallmentsByIuvOrNav(Long brokerId, String iuvOrNav, String debtorFiscalCode, String orgFiscalCode, List<InstallmentStatus> statuses) {
+        return installmentService.getInstallmentsByIuvOrNav(brokerId, iuvOrNav, debtorFiscalCode, orgFiscalCode, statuses);
     }
 
     @Override

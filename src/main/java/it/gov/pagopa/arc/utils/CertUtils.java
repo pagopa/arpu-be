@@ -1,5 +1,7 @@
 package it.gov.pagopa.arc.utils;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +14,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 
 public class CertUtils {
 

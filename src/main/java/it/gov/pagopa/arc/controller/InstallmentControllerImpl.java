@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.service.installment.InstallmentFacadeService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.InstallmentStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,9 +23,9 @@ public class InstallmentControllerImpl implements InstallmentApi {
     }
 
     @Override
-    public ResponseEntity<List<InstallmentDebtorExtendedDTO>> getPublicInstallmentsByIuvOrNav(Long brokerId, String iuvOrNav, String debtorFiscalCode, String orgFiscalCode) {
+    public ResponseEntity<List<InstallmentDebtorExtendedDTO>> getPublicInstallmentsByIuvOrNav(Long brokerId, String iuvOrNav, String debtorFiscalCode, String orgFiscalCode, List<InstallmentStatus> statuses) {
         log.info("Requested getPublicInstallmentsByIuvOrNav on brokerId {} iuvOrNav {}", brokerId, iuvOrNav);
-        return ResponseEntity.ok(installmentFacadeService.getPublicInstallmentsByIuvOrNav(brokerId, iuvOrNav, debtorFiscalCode, orgFiscalCode));
+        return ResponseEntity.ok(installmentFacadeService.getPublicInstallmentsByIuvOrNav(brokerId, iuvOrNav, debtorFiscalCode, orgFiscalCode, statuses));
     }
 
 

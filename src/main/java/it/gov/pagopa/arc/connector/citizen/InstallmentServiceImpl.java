@@ -4,6 +4,7 @@ import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.InstallmentClient;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.InstallmentStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public class InstallmentServiceImpl implements InstallmentService {
     }
 
     @Override
-    public List<InstallmentDebtorExtendedDTO> getInstallmentsByIuvOrNav(Long brokerId, String iuvOrNav, String debtorFiscalCode, String orgFiscalCode) {
-        return installmentClient.getInstallmentsByIuvOrNav(brokerId,iuvOrNav, debtorFiscalCode,orgFiscalCode,authnService.getAccessToken());
+    public List<InstallmentDebtorExtendedDTO> getInstallmentsByIuvOrNav(Long brokerId, String iuvOrNav, String debtorFiscalCode, String orgFiscalCode, List<InstallmentStatus> statuses) {
+        return installmentClient.getInstallmentsByIuvOrNav(brokerId,iuvOrNav, debtorFiscalCode,orgFiscalCode, statuses, authnService.getAccessToken());
     }
 
     @Override
