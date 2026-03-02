@@ -50,43 +50,28 @@ class BrokerControllerImplTest {
     @Test
     void whenGetPublicBrokerInfoThenOk() {
         Long brokerId = 1L;
-
-        BrokerInfoDTO expectedResult = podamFactory.manufacturePojo(BrokerInfoDTO.class);
-
-        Mockito.when(brokerFacadeServiceMock.getBrokerInfo(brokerId, null))
-                .thenReturn(expectedResult);
-
-        ResponseEntity<BrokerInfoDTO> response = brokerController.getPublicBrokerInfo(brokerId, null);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(expectedResult, response.getBody());
-    }
-
-    @Test
-    void givenExternalIdWhenGetPublicBrokerInfoThenOk() {
         String externalId = "externalId";
-
         BrokerInfoDTO expectedResult = podamFactory.manufacturePojo(BrokerInfoDTO.class);
 
-        Mockito.when(brokerFacadeServiceMock.getBrokerInfo(null, externalId))
+        Mockito.when(brokerFacadeServiceMock.getBrokerInfo(brokerId, externalId))
                 .thenReturn(expectedResult);
 
-        ResponseEntity<BrokerInfoDTO> response = brokerController.getPublicBrokerInfo(null,externalId);
+        ResponseEntity<BrokerInfoDTO> response = brokerController.getPublicBrokerInfo(brokerId, externalId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(expectedResult, response.getBody());
     }
+
 
     @Test
     void givenNoBrokerWhenGetPublicBrokerInfoThenNotFound() {
         Long brokerId = 1L;
-
-        Mockito.when(brokerFacadeServiceMock.getBrokerInfo(brokerId, null))
+        String externalId = "externalId";
+        Mockito.when(brokerFacadeServiceMock.getBrokerInfo(brokerId, externalId))
                 .thenReturn(null);
 
-        ResponseEntity<BrokerInfoDTO> response = brokerController.getPublicBrokerInfo(brokerId, null);
+        ResponseEntity<BrokerInfoDTO> response = brokerController.getPublicBrokerInfo(brokerId, externalId);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
