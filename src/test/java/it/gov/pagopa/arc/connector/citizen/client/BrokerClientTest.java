@@ -51,6 +51,21 @@ class BrokerClientTest {
     }
 
     @Test
+    void givenExternalIdWhenGetBrokerInfoThenOk(){
+        String accessToken = "accessToken";
+        String externalId = "externalId";
+        BrokerInfoDTO expectedResource = new BrokerInfoDTO();
+
+        Mockito.when(citizenApisHolderMock.getBrokerApi(accessToken)).thenReturn(brokerApiMock);
+        Mockito.when(brokerApiMock.getBrokerInfo(null, externalId)).thenReturn(expectedResource);
+
+        BrokerInfoDTO response = brokerClient.getBrokerInfo(null,externalId, accessToken);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(expectedResource,response);
+    }
+
+    @Test
     void givenNotFoundWhenGetBrokerInfoThenNull(){
         String accessToken = "accessToken";
         Long brokerId = 1L;
