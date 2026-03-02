@@ -13,7 +13,7 @@ public class BrokerFacadeServiceImpl implements BrokerFacadeService {
     }
 
     @Override
-    public BrokerInfoDTO getBrokerInfo(Long brokerId) {
-        return brokerService.getBrokerInfo(brokerId);
+    public BrokerInfoDTO getBrokerInfo(Long brokerId, String externalId) {
+        return brokerService.getBrokerInfo(brokerId, externalId);
     }
 }

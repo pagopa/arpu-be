@@ -355,17 +355,24 @@
         } ]
       }
     },
-    "/public/brokers/{brokerId}" : {
+    "/public/brokers" : {
       "get" : {
         "tags" : [ "Broker" ],
         "operationId" : "getPublicBrokerInfo",
         "parameters" : [ {
           "name" : "brokerId",
-          "in" : "path",
-          "required" : true,
+          "in" : "query",
+          "required" : false,
           "schema" : {
             "type" : "integer",
             "format" : "int64"
+          }
+        }, {
+          "name" : "externalId",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
           }
         } ],
         "responses" : {
@@ -2954,6 +2961,13 @@
       "BrokerInfoDTO" : {
         "type" : "object",
         "properties" : {
+          "brokerId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "externalId" : {
+            "type" : "string"
+          },
           "brokerName" : {
             "type" : "string"
           },
@@ -2967,7 +2981,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "brokerFiscalCode", "brokerName" ]
+        "required" : [ "brokerFiscalCode", "brokerId", "brokerName" ]
       },
       "OrganizationsWithSpontaneousDTO" : {
         "type" : "object",

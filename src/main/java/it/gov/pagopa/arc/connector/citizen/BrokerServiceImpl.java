@@ -16,7 +16,7 @@ public class BrokerServiceImpl implements BrokerService{
     }
 
     @Override
-    public BrokerInfoDTO getBrokerInfo(Long brokerId) {
-        return brokerClient.getBrokerInfo(brokerId, authnService.getAccessToken());
+    public BrokerInfoDTO getBrokerInfo(Long brokerId, String externalId) {
+        return brokerClient.getBrokerInfo(brokerId,externalId, authnService.getAccessToken());
     }
 }

@@ -43,12 +43,13 @@ class BrokerServiceImplTest {
     void whenGetBrokerInfoThenInvokeClient() {
         String accessToken = "accessToken";
         Long brokerId = 1L;
+        String externalId = "externalId";
         BrokerInfoDTO expectedResult = podamFactory.manufacturePojo(BrokerInfoDTO.class);
 
         Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
-        Mockito.when(brokerClientMock.getBrokerInfo(brokerId,accessToken)).thenReturn(expectedResult);
+        Mockito.when(brokerClientMock.getBrokerInfo(brokerId, externalId, accessToken)).thenReturn(expectedResult);
 
-        BrokerInfoDTO result = brokerService.getBrokerInfo(brokerId);
+        BrokerInfoDTO result = brokerService.getBrokerInfo(brokerId, externalId);
 
         assertNotNull(result);
         assertEquals(expectedResult, result);
