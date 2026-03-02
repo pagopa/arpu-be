@@ -49,4 +49,17 @@ class BrokerFacadeServiceImplTest {
         assertNotNull(result);
         assertEquals(expectedResult, result);
     }
+
+    @Test
+    void givenExternalIdWhenGetBrokerInfoThenOk() {
+        String externalId = "externalId";
+        BrokerInfoDTO expectedResult = podamFactory.manufacturePojo(BrokerInfoDTO.class);
+
+        Mockito.when(brokerServiceMock.getBrokerInfo(null, externalId)).thenReturn(expectedResult);
+
+        BrokerInfoDTO result = brokerFacadeService.getBrokerInfo(null, externalId);
+
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
 }

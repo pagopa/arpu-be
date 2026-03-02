@@ -64,6 +64,22 @@ class BrokerControllerImplTest {
     }
 
     @Test
+    void givenExternalIdWhenGetPublicBrokerInfoThenOk() {
+        String externalId = "externalId";
+
+        BrokerInfoDTO expectedResult = podamFactory.manufacturePojo(BrokerInfoDTO.class);
+
+        Mockito.when(brokerFacadeServiceMock.getBrokerInfo(null, externalId))
+                .thenReturn(expectedResult);
+
+        ResponseEntity<BrokerInfoDTO> response = brokerController.getPublicBrokerInfo(null,externalId);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(expectedResult, response.getBody());
+    }
+
+    @Test
     void givenNoBrokerWhenGetPublicBrokerInfoThenNotFound() {
         Long brokerId = 1L;
 
