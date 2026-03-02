@@ -42,9 +42,9 @@ class BrokerClientTest {
         BrokerInfoDTO expectedResource = new BrokerInfoDTO();
 
         Mockito.when(citizenApisHolderMock.getBrokerApi(accessToken)).thenReturn(brokerApiMock);
-        Mockito.when(brokerApiMock.getBrokerInfo(brokerId)).thenReturn(expectedResource);
+        Mockito.when(brokerApiMock.getBrokerInfo(brokerId, null)).thenReturn(expectedResource);
 
-        BrokerInfoDTO response = brokerClient.getBrokerInfo(brokerId,accessToken);
+        BrokerInfoDTO response = brokerClient.getBrokerInfo(brokerId, null, accessToken);
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(expectedResource,response);
@@ -56,10 +56,10 @@ class BrokerClientTest {
         Long brokerId = 1L;
 
         Mockito.when(citizenApisHolderMock.getBrokerApi(accessToken)).thenReturn(brokerApiMock);
-        Mockito.when(brokerApiMock.getBrokerInfo(brokerId))
+        Mockito.when(brokerApiMock.getBrokerInfo(brokerId, null))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
-        BrokerInfoDTO response = brokerClient.getBrokerInfo(brokerId,accessToken);
+        BrokerInfoDTO response = brokerClient.getBrokerInfo(brokerId, null, accessToken);
 
         Assertions.assertNull(response);
     }

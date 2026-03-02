@@ -1018,18 +1018,23 @@ paths:
           description: Not Found
         "500":
           description: Internal server error
-  /public/brokers/{brokerId}:
+  /public/brokers:
     get:
       tags:
         - Broker
       operationId: getPublicBrokerInfo
       parameters:
         - name: brokerId
-          in: path
-          required: true
+          in: query
+          required: false
           schema:
             type: integer
             format: int64
+        - name: externalId
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: OK

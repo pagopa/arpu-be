@@ -86,7 +86,7 @@ class CitizenApisHolderTest extends BaseApiHolderTest {
     void whenGetBrokerApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
         assertAuthenticationShouldBeSetInThreadSafeMode(
                 accessToken -> citizenApisHolder.getBrokerApi(accessToken)
-                        .getBrokerInfo(1L),
+                        .getBrokerInfo(1L, null),
                 new ParameterizedTypeReference<>() {},
                 citizenApisHolder::unload);
     }

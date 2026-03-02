@@ -42,9 +42,9 @@ class BrokerFacadeServiceImplTest {
         Long brokerId = 1L;
         BrokerInfoDTO expectedResult = podamFactory.manufacturePojo(BrokerInfoDTO.class);
 
-        Mockito.when(brokerServiceMock.getBrokerInfo(brokerId)).thenReturn(expectedResult);
+        Mockito.when(brokerServiceMock.getBrokerInfo(brokerId, null)).thenReturn(expectedResult);
 
-        BrokerInfoDTO result = brokerFacadeService.getBrokerInfo(brokerId);
+        BrokerInfoDTO result = brokerFacadeService.getBrokerInfo(brokerId, null);
 
         assertNotNull(result);
         assertEquals(expectedResult, result);

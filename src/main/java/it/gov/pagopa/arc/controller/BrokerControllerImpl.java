@@ -18,8 +18,8 @@ public class BrokerControllerImpl implements BrokerApi {
     }
 
     @Override
-    public ResponseEntity<BrokerInfoDTO> getPublicBrokerInfo(Long brokerId) {
-        log.info("Requested getPublicBrokerInfo on brokerId {}", brokerId);
-        return ResponseEntity.ofNullable(brokerFacadeService.getBrokerInfo(brokerId));
+    public ResponseEntity<BrokerInfoDTO> getPublicBrokerInfo(Long brokerId, String externalId) {
+        log.info("Requested getPublicBrokerInfo on brokerId {} or externalId {}", brokerId, externalId);
+        return ResponseEntity.ofNullable(brokerFacadeService.getBrokerInfo(brokerId, externalId));
     }
 }
