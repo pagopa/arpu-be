@@ -2838,7 +2838,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "amountCents", "debtor", "remittanceInformation" ]
+        "required" : [ "debtor", "remittanceInformation" ]
       },
       "PaymentOptionRequestDTO" : {
         "type" : "object",
@@ -2854,7 +2854,7 @@
             }
           }
         },
-        "required" : [ "installments", "totalAmountCents" ]
+        "required" : [ "installments" ]
       },
       "PersonDTO" : {
         "type" : "object",
