@@ -2979,9 +2979,18 @@
           },
           "config" : {
             "type" : "string"
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "zipCode" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
           }
         },
-        "required" : [ "brokerFiscalCode", "brokerId", "brokerName" ]
+        "required" : [ "brokerFiscalCode", "brokerId", "brokerName", "externalId" ]
       },
       "OrganizationsWithSpontaneousDTO" : {
         "type" : "object",
