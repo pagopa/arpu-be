@@ -58,6 +58,7 @@ val micrometerVersion = "1.6.3"
 val commonsLang3Version = "3.20.0"
 val commonsFileUploadVersion = "1.6.0"
 val httpClientVersion = "5.6"
+val httpCoreVersion = "5.4.1"
 val podamVersion = "8.0.2.RELEASE"
 val bouncycastleVersion = "1.83"
 
@@ -83,7 +84,8 @@ dependencies {
     implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation("org.apache.httpcomponents.client5:httpclient5:$httpClientVersion")
+    implementation("org.apache.httpcomponents.client5:httpclient5:${httpClientVersion}")
+    implementation("org.apache.httpcomponents.core5:httpcore5:${httpCoreVersion}")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion") {
         exclude(group = "org.apache.commons", module = "commons-lang3")
     }
