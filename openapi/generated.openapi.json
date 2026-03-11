@@ -355,17 +355,24 @@
         } ]
       }
     },
-    "/public/brokers/{brokerId}" : {
+    "/public/brokers" : {
       "get" : {
         "tags" : [ "Broker" ],
         "operationId" : "getPublicBrokerInfo",
         "parameters" : [ {
           "name" : "brokerId",
-          "in" : "path",
-          "required" : true,
+          "in" : "query",
+          "required" : false,
           "schema" : {
             "type" : "integer",
             "format" : "int64"
+          }
+        }, {
+          "name" : "externalId",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
           }
         } ],
         "responses" : {
@@ -2831,7 +2838,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "amountCents", "debtor", "remittanceInformation" ]
+        "required" : [ "debtor", "remittanceInformation" ]
       },
       "PaymentOptionRequestDTO" : {
         "type" : "object",
@@ -2847,7 +2854,7 @@
             }
           }
         },
-        "required" : [ "installments", "totalAmountCents" ]
+        "required" : [ "installments" ]
       },
       "PersonDTO" : {
         "type" : "object",
@@ -2954,6 +2961,13 @@
       "BrokerInfoDTO" : {
         "type" : "object",
         "properties" : {
+          "brokerId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "externalId" : {
+            "type" : "string"
+          },
           "brokerName" : {
             "type" : "string"
           },
@@ -2965,9 +2979,18 @@
           },
           "config" : {
             "type" : "string"
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "zipCode" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
           }
         },
-        "required" : [ "brokerFiscalCode", "brokerName" ]
+        "required" : [ "brokerFiscalCode", "brokerId", "brokerName", "externalId" ]
       },
       "OrganizationsWithSpontaneousDTO" : {
         "type" : "object",
@@ -3285,11 +3308,22 @@
           "sourceParams" : {
             "type" : "array",
             "items" : {
-              "type" : "string"
+              "$ref" : "#/components/schemas/SpontaneousFormItemDTO"
             }
           }
         },
         "required" : [ "association", "detailLink", "htmlRender", "indexable", "insertable", "insertableOrder", "listable", "listableOrder", "maxOccurences", "minOccurences", "name", "renderable", "renderableOrder", "searchable", "searchableOrder" ]
+      },
+      "SpontaneousFormItemDTO" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
+          }
+        }
       },
       "SpontaneousFormStructure" : {
         "type" : "object",
@@ -3312,7 +3346,7 @@
           "submitFields" : {
             "type" : "array",
             "items" : {
-              "type" : "string"
+              "$ref" : "#/components/schemas/SpontaneousFormItemDTO"
             }
           }
         }

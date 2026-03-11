@@ -16,11 +16,11 @@ public class BrokerClient {
         this.apisHolder = apisHolder;
     }
 
-    public BrokerInfoDTO getBrokerInfo(Long brokerId, String accessToken){
+    public BrokerInfoDTO getBrokerInfo(Long brokerId, String externalId, String accessToken){
         try{
-            return apisHolder.getBrokerApi(accessToken).getBrokerInfo(brokerId);
+            return apisHolder.getBrokerApi(accessToken).getBrokerInfo(brokerId, externalId);
         }catch (HttpClientErrorException.NotFound e){
-            log.warn("Broker with brokerId {} not found", brokerId);
+            log.warn("Broker with brokerId {} or externalId {} not found", brokerId, externalId);
             return null;
         }
 
