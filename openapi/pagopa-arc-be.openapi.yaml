@@ -485,9 +485,9 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: iuv
+        - name: nav
           in: query
-          required: false
+          required: true
           schema:
             type: string
         - name: iud
@@ -542,9 +542,9 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: iuv
+        - name: nav
           in: query
-          required: false
+          required: true
           schema:
             type: string
         - name: iud

@@ -8,7 +8,7 @@ public interface DebtPositionService {
   FileResourceDTO getUnpaidPaymentNoticeZip(Long brokerId, Long debtPositionId, String fiscalCode);
   DebtPositionResponseDTO createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body);
   DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode);
-  FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud);
+  FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String nav, String iud);
   PagedDebtorDebtPositionDTO getPagedDebtorDebtPosition(String fiscalCode, Long brokerId, String orgName, String orgFiscalCode, Pageable pageable);
   DebtorUnpaidDebtPositionOverviewDTO getDebtorUnpaidDebtPositionOverview(Long brokerId, Long debtPositionId, String xFiscalCode, Long organizationId);
 }

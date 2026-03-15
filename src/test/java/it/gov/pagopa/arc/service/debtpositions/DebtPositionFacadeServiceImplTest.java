@@ -106,14 +106,14 @@ class DebtPositionFacadeServiceImplTest {
         Long brokerId = 1L;
         Long organizationId = 2L;
         Long installmentId = 3L;
-        String iuv = "iuv";
+        String nav = "nav";
         String iud = "iud";
         IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
         FileResourceDTO expectedResult = podamFactory.manufacturePojo(FileResourceDTO.class);
 
-        Mockito.when(debtPositionServiceMock.getPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,iuv,iud)).thenReturn(expectedResult);
+        Mockito.when(debtPositionServiceMock.getPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,nav,iud)).thenReturn(expectedResult);
 
-        FileResourceDTO result = debtPositionFacadeService.getPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,iuv,iud, loggedUser);
+        FileResourceDTO result = debtPositionFacadeService.getPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,nav,iud, loggedUser);
 
         assertNotNull(result);
         assertEquals(expectedResult, result);

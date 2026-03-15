@@ -146,7 +146,7 @@ class DebtPositionClientTest {
       Long brokerId = 1L;
       Long organizationId = 2L;
       Long installmentId = 3L;
-      String iuv = "iuv";
+      String nav = "nav";
       String iud = "iud";
       ByteArrayResource expectedResource = new ByteArrayResource("PDF-DATA".getBytes());
       String expectedFileName = "filename";
@@ -156,9 +156,9 @@ class DebtPositionClientTest {
       ResponseEntity<Resource> responseEntity = new ResponseEntity<>(expectedResource, headers, HttpStatus.OK);
 
       Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-      Mockito.when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, iuv, iud)).thenReturn(responseEntity);
+      Mockito.when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, nav, iud)).thenReturn(responseEntity);
 
-      FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud, accessToken);
+      FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, nav, iud, accessToken);
 
       Assertions.assertNotNull(response);
       Assertions.assertEquals(expectedResource,response.getResource());
@@ -172,14 +172,14 @@ class DebtPositionClientTest {
       Long brokerId = 1L;
       Long organizationId = 2L;
       Long installmentId = 3L;
-      String iuv = "iuv";
+      String nav = "nav";
       String iud = "iud";
 
       Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-      Mockito.when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, iuv, iud))
+      Mockito.when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, nav, iud))
               .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
-      FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud, accessToken);
+      FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, nav, iud, accessToken);
 
       Assertions.assertNull(response);
     }

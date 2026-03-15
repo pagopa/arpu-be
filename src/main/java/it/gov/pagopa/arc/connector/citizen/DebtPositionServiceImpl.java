@@ -33,8 +33,8 @@ public class DebtPositionServiceImpl implements DebtPositionService{
     }
 
     @Override
-    public FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud) {
-        return debtPositionClient.getPaymentNotice(fiscalCode,brokerId, organizationId, installmentId, iuv, iud, authnService.getAccessToken());
+    public FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String nav, String iud) {
+        return debtPositionClient.getPaymentNotice(fiscalCode,brokerId, organizationId, installmentId, nav, iud, authnService.getAccessToken());
     }
 
     @Override

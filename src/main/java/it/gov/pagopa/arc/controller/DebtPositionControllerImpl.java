@@ -57,19 +57,19 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
   }
 
   @Override
-  public ResponseEntity<Resource> getPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, Long installmentId, String iuv, String iud) {
+  public ResponseEntity<Resource> getPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, String nav, Long installmentId, String iud) {
       log.info("getPaymentNotice was requested with brokerId {} and organizationId {}", brokerId, organizationId);
-      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, iuv, iud);
+      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, nav, iud);
   }
 
   @Override
-  public ResponseEntity<Resource> getPublicPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud) {
+  public ResponseEntity<Resource> getPublicPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, String nav, Long installmentId, String iud) {
       log.info("getPublicPaymentNotice was requested with brokerId {} and organizationId {}", brokerId, organizationId);
-      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, iuv, iud);
+      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, nav, iud);
   }
 
-    private ResponseEntity<Resource> getResourceForPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, Long installmentId, String iuv, String iud) {
-        FileResourceDTO paymentNoticeFileResource = debtPositionFacadeService.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud,SecurityUtils.getPrincipal());
+    private ResponseEntity<Resource> getResourceForPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, Long installmentId, String nav, String iud) {
+        FileResourceDTO paymentNoticeFileResource = debtPositionFacadeService.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, nav, iud,SecurityUtils.getPrincipal());
         if (paymentNoticeFileResource != null && paymentNoticeFileResource.getResource()!=null){
             HttpHeaders headers = new HttpHeaders();
             headers.setContentDisposition(ContentDisposition.attachment()
