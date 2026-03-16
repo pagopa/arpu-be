@@ -50,10 +50,10 @@ public class DebtPositionClient {
 
   }
 
-  public FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String nav, String iud, String accessToken) {
+  public FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, String nav, String accessToken) {
         try{
             ResponseEntity<Resource> resourceResponseEntity = apisHolder.getDebtPositionApi(accessToken)
-                .getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, nav, iud);
+                .getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, nav);
             return FileResourceDTO.builder()
                 .resource(resourceResponseEntity.getBody())
                 .fileName(resourceResponseEntity.getHeaders().getContentDisposition().getFilename())

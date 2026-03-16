@@ -57,19 +57,19 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
   }
 
   @Override
-  public ResponseEntity<Resource> getPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, String nav, Long installmentId, String iud) {
-      log.info("getPaymentNotice was requested with brokerId {} and organizationId {}", brokerId, organizationId);
-      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, nav, iud);
+  public ResponseEntity<Resource> getPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, String nav) {
+      log.info("getPaymentNotice was requested with brokerId {}, organizationId {} and nav {}", brokerId, organizationId, nav);
+      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, nav);
   }
 
   @Override
-  public ResponseEntity<Resource> getPublicPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, String nav, Long installmentId, String iud) {
-      log.info("getPublicPaymentNotice was requested with brokerId {} and organizationId {}", brokerId, organizationId);
-      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, installmentId, nav, iud);
+  public ResponseEntity<Resource> getPublicPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, String nav) {
+      log.info("getPublicPaymentNotice was requested with brokerId {}, organizationId {} and nav {}", brokerId, organizationId, nav);
+      return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, nav);
   }
 
-    private ResponseEntity<Resource> getResourceForPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, Long installmentId, String nav, String iud) {
-        FileResourceDTO paymentNoticeFileResource = debtPositionFacadeService.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, nav, iud,SecurityUtils.getPrincipal());
+    private ResponseEntity<Resource> getResourceForPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, String nav) {
+        FileResourceDTO paymentNoticeFileResource = debtPositionFacadeService.getPaymentNotice(fiscalCode, brokerId, organizationId, nav,SecurityUtils.getPrincipal());
         if (paymentNoticeFileResource != null && paymentNoticeFileResource.getResource()!=null){
             HttpHeaders headers = new HttpHeaders();
             headers.setContentDisposition(ContentDisposition.attachment()

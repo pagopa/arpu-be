@@ -947,21 +947,6 @@
           "schema" : {
             "type" : "string"
           }
-        }, {
-          "name" : "installmentId",
-          "in" : "query",
-          "required" : false,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
-          }
-        }, {
-          "name" : "iud",
-          "in" : "query",
-          "required" : false,
-          "schema" : {
-            "type" : "string"
-          }
         } ],
         "responses" : {
           "200" : {
@@ -1962,21 +1947,6 @@
         }, {
           "name" : "X-fiscal-code",
           "in" : "header",
-          "required" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "installmentId",
-          "in" : "query",
-          "required" : false,
-          "schema" : {
-            "type" : "integer",
-            "format" : "int64"
-          }
-        }, {
-          "name" : "iud",
-          "in" : "query",
           "required" : false,
           "schema" : {
             "type" : "string"
