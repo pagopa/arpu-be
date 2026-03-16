@@ -133,7 +133,7 @@ class DebtPositionControllerImplTest {
         Mockito.when(debtPositionFacadeServiceMock.getPaymentNotice(fiscalCode,brokerId,organizationId,nav,loggedUser))
                 .thenReturn(resource);
 
-        ResponseEntity<Resource> response = debtPositionController.getPaymentNotice(brokerId,organizationId,fiscalCode,nav);
+        ResponseEntity<Resource> response = debtPositionController.getPaymentNotice(brokerId,organizationId,nav,fiscalCode);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -151,7 +151,7 @@ class DebtPositionControllerImplTest {
         Mockito.when(debtPositionFacadeServiceMock.getPaymentNotice(fiscalCode,brokerId,organizationId,nav, loggedUser))
                 .thenReturn(null);
 
-        ResponseEntity<Resource> response = debtPositionController.getPaymentNotice(brokerId,organizationId,fiscalCode,nav);
+        ResponseEntity<Resource> response = debtPositionController.getPaymentNotice(brokerId,organizationId,nav,fiscalCode);
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());

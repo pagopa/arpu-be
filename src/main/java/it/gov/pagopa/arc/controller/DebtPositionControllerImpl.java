@@ -57,7 +57,7 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
   }
 
   @Override
-  public ResponseEntity<Resource> getPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, String nav) {
+  public ResponseEntity<Resource> getPaymentNotice(Long brokerId, Long organizationId, String nav, String fiscalCode) {
       log.info("getPaymentNotice was requested with brokerId {}, organizationId {} and nav {}", brokerId, organizationId, nav);
       return getResourceForPaymentNotice(brokerId, organizationId, fiscalCode, nav);
   }
