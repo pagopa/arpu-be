@@ -11,8 +11,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.gov.pagopa.arc.config.json.jackson3.LocalDateTimeToOffsetDateTimeJackson3Deserializer;
 import it.gov.pagopa.arc.config.json.jackson3.OffsetDateTimeToLocalDateTimeJackson3Deserializer;
 import it.gov.pagopa.arc.utils.Constants;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import tools.jackson.databind.JacksonModule;
 import tools.jackson.databind.json.JsonMapper;
@@ -52,6 +54,7 @@ public class JsonConfig {
   }
 
   @Bean
+  @Scope(BeanDefinition.SCOPE_PROTOTYPE)
   public JsonMapper.Builder objectMapperJackson3Builder() {
     return JsonMapper.builder()
       .addModule(configureJackson3DateTimeModule())
