@@ -46,6 +46,7 @@ See [log configured pattern](/src/main/resources/logback-spring.xml).
 ### 🌍 External
 * External OAuth2 Authorization Server;
 * ZenDesk.
+* [Google reCaptcha openAPI](openapi/external/google-recaptcha.openapi.yaml): To handle Google reCaptcha integration;
 
 ## 🔧 Configuration
 
@@ -115,11 +116,16 @@ See [application.yml](src/main/resources/application.yml) for each configurable 
 | ASSISTANCE_ZENDESK_PRODUCT_ID            | External ZenDesk product id                                   |         |
 | ASSISTANCE_ZENDESK_ORGANIZATION          | External ZenDesk organization                                 |         |
 | JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY | External ZenDesk private key                                  |         |
+| GOOGLE_RECAPTCHA_SERVER_BASE_URL         | Google reCaptcha service URL                                  |         |
+| GOOGLE_RECAPTCHA_MAX_ATTEMPTS            | Google reCaptcha API max attempts                             | 3       |
+| GOOGLE_RECAPTCHA_WAIT_TIME_MILLIS        | Google reCaptcha retry waiting time (milliseconds)            | 500     |
+| GOOGLE_RECAPTCHA_PRINT_BODY_WHEN_ERROR   | To print body when an error occurs                            | true    |
 
 #### 💼 Business logic
-| ENV               | DESCRIPTION              | DEFAULT |
-|-------------------|--------------------------|---------|
-| WHITE_LIST_USERS  | CF list of enabled users |         |
+| ENV                               | DESCRIPTION                                  | DEFAULT |
+|-----------------------------------|----------------------------------------------|---------|
+| WHITE_LIST_USERS                  | CF list of enabled users                     |         |
+| GOOGLE_RECAPTCHA_PROTECTED_PATHS  | List of APIs protected with Google reCaptcha |         |
 
 #### 🔑 keys
 | ENV                              | DESCRIPTION                                                                                                                                                                                                                                                            | DEFAULT              |
@@ -129,6 +135,8 @@ See [application.yml](src/main/resources/application.yml) for each configurable 
 | JWT_TOKEN_PRIVATE_KEY            | JWT private key                                                                                                                                                                                                                                                        |                      |
 | JWT_TOKEN_PUBLIC_KEY             | JWT public key                                                                                                                                                                                                                                                         |                      |
 | ACCESS_ORGANIZATION_MODE_ENABLED | If true, it will expect the presence of the access organization inside the ID Token. Thus, it will register te relation between the operator and the relation with the provided roles. If disabled, the admin should register the associations using the provided API. | true                 |
+| GOOGLE_RECAPTCHA_SECRET          | Google reCaptcha secret                                                                                                                                                                                                                                                |                      |
+| GOOGLE_RECAPTCHA_ENABLED         | If true, the paths configured in GOOGLE_RECAPTCHA_PROTECTED_PATHS will expect the header "X-recaptcha-token" to be populated with the Google reCaptcha token                                                                                                       | false                |
 
 ## 🛠️ Getting Started
 

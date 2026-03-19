@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.config;
 
 import it.gov.pagopa.arc.config.json.JsonConfig;
+import it.gov.pagopa.arc.connector.external.googlerecaptcha.GoogleRecaptchaService;
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.controller.generated.OrganizationApi;
@@ -55,6 +56,8 @@ class OAuth2LoginConfigTest {
     OrganizationFacadeService organizationFacadeServiceMock;
     @MockitoBean
     UpstreamErrorMapper upstreamErrorMapperMock;
+    @MockitoBean
+    GoogleRecaptchaService googleRecaptchaServiceMock;
 
     @Autowired
     private MockMvc mockMvc;

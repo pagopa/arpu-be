@@ -1,0 +1,55 @@
+openapi: 3.0.1
+info:
+  title: google-recaptcha
+  description: Api and Models
+  version: 0.0.1
+servers:
+  - url: "http://localhost:8080"
+    description: Generated server url
+paths:
+  /siteverify:
+    post:
+      tags:
+        - google recaptcha
+      summary: "Provide the authentication endpoint"
+      operationId: siteVerify
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/SiteVerifyRequestDTO"
+      responses:
+        '200':
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteVerifyResponseDTO'
+components:
+  schemas:
+    SiteVerifyRequestDTO:
+      type: object
+      required:
+        - secret
+        - response
+      properties:
+        secret:
+          type: string
+        response:
+          type: string
+        remoteip:
+          type: string
+    SiteVerifyResponseDTO:
+      type: object
+      properties:
+        success:
+          type: boolean
+        challenge_ts:
+          type: string
+          format: date-time
+        hostname:
+          type: string
+        error-codes:
+          type: array
+          items:
+            type: string

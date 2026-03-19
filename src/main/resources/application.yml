@@ -75,9 +75,22 @@ rest-client:
     max-attempts: "\${P4PA_CITIZEN_MAX_ATTEMPTS:3}" # It's counting also the first attempt
     wait-time-millis: "\${P4PA_CITIZEN_WAIT_TIME_MILLIS:500}"
     print-body-when-error: "\${P4PA_CITIZEN_PRINT_BODY_WHEN_ERROR:true}"
+  google-recaptcha:
+    base-url: "\${GOOGLE_RECAPTCHA_SERVER_BASE_URL:}"
+    max-attempts: "\${GOOGLE_RECAPTCHA_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${GOOGLE_RECAPTCHA_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${GOOGLE_RECAPTCHA_PRINT_BODY_WHEN_ERROR:true}"
+    recaptcha:
+      secret: "\${GOOGLE_RECAPTCHA_SECRET:}"
 
 springdoc:
   writer-with-default-pretty-printer: true
+
+google-recaptcha:
+  enabled: "\${GOOGLE_RECAPTCHA_ENABLED:false}"
+  protected-paths: "\${GOOGLE_RECAPTCHA_PROTECTED_PATHS:
+    /public/brokers/*/spontaneous/debt-positions,
+    /public/brokers/*/organizations/*/debt-positions/notice}"
 
 management:
   info:

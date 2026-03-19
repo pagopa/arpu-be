@@ -168,7 +168,8 @@ tasks.register("dependenciesBuild") {
     dependsOn(
         "openApiGenerate",
         "openApiGenerateP4PAAUTH",
-        "openApiGenerateP4PACITIZEN"
+        "openApiGenerateP4PACITIZEN",
+        "openApiGenerateGOOGLERECAPTCHA"
     )
 }
 
@@ -298,6 +299,36 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     importMappings.set(
         mapOf(
             "Resource" to "org.springframework.core.io.Resource"
+        )
+    )
+    library.set("resttemplate")
+}
+
+tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerateGOOGLERECAPTCHA") {
+    group = "openapi"
+    description = "openapi"
+
+    generatorName.set("java")
+    inputSpec.set("$rootDir/openapi/external/google-recaptcha.openapi.yaml")
+    outputDir.set("$projectDir/build/generated")
+    apiPackage.set("it.gov.pagopa.google.recaptcha.controller.generated")
+    modelPackage.set("it.gov.pagopa.google.recaptcha.dto.generated")
+    configOptions.set(
+        mapOf(
+            "swaggerAnnotations" to "false",
+            "openApiNullable" to "false",
+            "dateLibrary" to "java8",
+            "serializableModel" to "true",
+            "useSpringBoot3" to "true",
+            "useJakartaEe" to "true",
+            "useOneOfInterfaces" to "true",
+            "useBeanValidation" to "true",
+            "serializationLibrary" to "jackson",
+            "generateSupportingFiles" to "true",
+            "generateConstructorWithAllArgs" to "true",
+            "generatedConstructorWithRequiredArgs" to "true",
+            "enumPropertyNaming" to "original",
+            "additionalModelTypeAnnotations" to "@lombok.experimental.SuperBuilder(toBuilder = true)"
         )
     )
     library.set("resttemplate")
