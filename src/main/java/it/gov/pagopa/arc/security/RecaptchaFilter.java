@@ -23,6 +23,7 @@ import java.util.List;
 public class RecaptchaFilter extends OncePerRequestFilter {
     private final List<String> recaptchaProtectedPaths;
     public static final String X_RECAPTCHA_TOKEN = "X-recaptcha-token";
+    public static final String MISSING_RECAPTCHA_HEADER_ERROR_CODE = "MISSING_RECAPTCHA_HEADER";
     private final GoogleRecaptchaService googleRecaptchaService;
     private final ObjectMapper objectMapper;
 
@@ -62,6 +63,7 @@ public class RecaptchaFilter extends OncePerRequestFilter {
                 ErrorDTO.builder()
                         .category(ErrorDTO.CategoryEnum.UNAUTHORIZED)
                         .message("Invalid or missing reCAPTCHA token")
+                        .code(MISSING_RECAPTCHA_HEADER_ERROR_CODE)
                         .build()));
     }
 }

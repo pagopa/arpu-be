@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import static it.gov.pagopa.arc.security.RecaptchaFilter.MISSING_RECAPTCHA_HEADER_ERROR_CODE;
 import static it.gov.pagopa.arc.security.RecaptchaFilter.X_RECAPTCHA_TOKEN;
 
 @ExtendWith(MockitoExtension.class)
@@ -91,6 +92,7 @@ class RecaptchaFilterTest {
 
     ErrorDTO errorDTO = objectMapper.readValue(response.getContentAsString(),ErrorDTO.class);
     Assertions.assertEquals(ErrorDTO.CategoryEnum.UNAUTHORIZED,errorDTO.getCategory());
+    Assertions.assertEquals(MISSING_RECAPTCHA_HEADER_ERROR_CODE,errorDTO.getCode());
     Assertions.assertEquals("Invalid or missing reCAPTCHA token",errorDTO.getMessage());
   }
 
