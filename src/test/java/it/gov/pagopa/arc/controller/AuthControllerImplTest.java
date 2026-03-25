@@ -9,6 +9,7 @@ import it.gov.pagopa.arc.model.generated.ErrorDTO;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.model.generated.UserInfo;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
+import it.gov.pagopa.arc.security.RecaptchaFilter;
 import it.gov.pagopa.arc.service.AuthService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {
     ArcAuthApi.class
 },  excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-    classes = JwtAuthenticationFilter.class),
+    classes = {JwtAuthenticationFilter.class, RecaptchaFilter.class}),
         excludeAutoConfiguration = {
           SecurityAutoConfiguration.class,
           OAuth2ClientAutoConfiguration.class
