@@ -60,6 +60,10 @@ public class ArcExceptionHandler {
 
     @ExceptionHandler({HttpClientErrorException.class})
     public ResponseEntity<ErrorDTO> handleHttpClientErrorException(HttpClientErrorException ex, HttpServletRequest request) {
+        if (ex.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
+            return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.CategoryEnum.GENERIC_ERROR);
+        }
+
         logException(ex, request, ex.getStatusCode());
 
         ErrorDTO.CategoryEnum category = transcodeStatus(ex.getStatusCode());
