@@ -42,6 +42,7 @@
       "post" : {
         "tags" : [ "DebtPosition" ],
         "summary" : "Create spontaneous debt positions for anonymous user",
+        "description" : "unauthenticated requests require the header `X-recaptcha-token` when reCAPTCHA is enabled.",
         "operationId" : "createPublicSpontaneousDebtPosition",
         "parameters" : [ {
           "name" : "brokerId",
@@ -916,6 +917,7 @@
     "/public/brokers/{brokerId}/organizations/{organizationId}/debt-positions/notice" : {
       "get" : {
         "tags" : [ "DebtPosition" ],
+        "description" : "unauthenticated requests require the header `X-recaptcha-token` when reCAPTCHA is enabled.",
         "operationId" : "getPublicPaymentNotice",
         "parameters" : [ {
           "name" : "X-fiscal-code",

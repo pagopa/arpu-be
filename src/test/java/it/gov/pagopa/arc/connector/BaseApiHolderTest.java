@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 public abstract class BaseApiHolderTest {
@@ -115,5 +116,39 @@ public abstract class BaseApiHolderTest {
 
     Mockito.verify(restTemplateMock, Mockito.times(useCases.size()))
       .exchange(Mockito.any(), Mockito.<ParameterizedTypeReference<?>>any());
+  }
+
+  protected <T> void assertUnauthenticatedApiInvocation(
+          Supplier<T> apiInvoke,
+          ParameterizedTypeReference<T> apiReturnedType) {
+
+    T expectedResult = buildExpectedResult(apiReturnedType);
+    Mockito.doReturn(ResponseEntity.ok(expectedResult))
+            .when(restTemplateMock)
+            .exchange(Mockito.argThat(req ->
+                            !req.getHeaders().containsHeader(HttpHeaders.AUTHORIZATION)),
+                    Mockito.eq(apiReturnedType)
+            );
+
+    T result = apiInvoke.get();
+
+    Assertions.assertSame(expectedResult, result);
+    Mockito.verify(restTemplateMock)
+            .exchange(Mockito.any(), Mockito.<ParameterizedTypeReference<?>>any());
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> T buildExpectedResult(ParameterizedTypeReference<T> apiReturnedType) {
+    try {
+      return String.class.equals(apiReturnedType.getType()) ? (T) "RESULT"
+              : Integer.class.equals(apiReturnedType.getType()) ? (T) Integer.valueOf(0)
+              : Long.class.equals(apiReturnedType.getType()) ? (T) Long.valueOf(0L)
+              : Boolean.class.equals(apiReturnedType.getType()) ? (T) Boolean.TRUE
+              : apiReturnedType.getType().getTypeName().startsWith(List.class.getName()) ? (T) List.of()
+              : Void.class.equals(apiReturnedType.getType()) ? (T) voidMock
+              : (T) Mockito.mock(Class.forName(apiReturnedType.getType().getTypeName()));
+    } catch (ClassNotFoundException e) {
+      throw new IllegalStateException(e);
+    }
   }
 }

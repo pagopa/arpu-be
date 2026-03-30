@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
 import it.gov.pagopa.arc.model.generated.ZendeskAssistanceTokenResponse;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
+import it.gov.pagopa.arc.security.RecaptchaFilter;
 import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
 import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {
         ArcZendeskAssistanceApi.class},
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-        classes = JwtAuthenticationFilter.class),
+        classes = {JwtAuthenticationFilter.class, RecaptchaFilter.class}),
 excludeAutoConfiguration = {
         SecurityAutoConfiguration .class,
         OAuth2ClientAutoConfiguration .class
