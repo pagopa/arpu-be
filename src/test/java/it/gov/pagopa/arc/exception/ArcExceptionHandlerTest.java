@@ -234,6 +234,25 @@ class ArcExceptionHandlerTest {
     }
 
     @Test
+    void givenHttpClientErrorExceptionWith401WhenRequestThenReturnInternalServerError() throws Exception {
+        HttpClientErrorException ex = HttpClientErrorException.create(
+                HttpStatus.UNAUTHORIZED,
+                "Unauthorized",
+                HttpHeaders.EMPTY,
+                "Unauthorized".getBytes(StandardCharsets.UTF_8),
+                StandardCharsets.UTF_8
+        );
+
+        doThrow(ex).when(testControllerSpy).testEndpoint(DATA, BODY);
+
+        performRequest(DATA, MediaType.APPLICATION_JSON)
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(TRACE_ID));
+    }
+
+    @Test
     void givenValidationErrorWhenRequestThenHandleValidationException() throws Exception {
         doThrow(new ValidationException("Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
 
