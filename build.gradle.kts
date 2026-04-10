@@ -184,7 +184,7 @@ springBoot {
 
 openApiGenerate {
     generatorName.set("spring")
-    inputSpec.set("$rootDir/openapi/pagopa-arc-be.openapi.yaml")
+    inputSpec.set("$rootDir/openapi/pagopa-arpu-be.openapi.yaml")
     outputDir.set("$projectDir/build/generated")
     apiPackage.set("it.gov.pagopa.arc.controller.generated")
     modelPackage.set("it.gov.pagopa.arc.model.generated")

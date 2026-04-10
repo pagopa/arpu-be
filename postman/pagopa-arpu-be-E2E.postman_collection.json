@@ -1,9 +1,10 @@
 {
   "info": {
-    "_postman_id": "a33318c4-1007-4706-a924-5d7d3d3ac2ba",
+    "_postman_id": "ed0e43e4-e148-4474-8e31-41bff225de1e",
     "name": "ARpu collection e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "26204012"
+    "_exporter_id": "15747968",
+    "_collection_link": "https://go.postman.co/collection/15747968-ed0e43e4-e148-4474-8e31-41bff225de1e?source=collection_link"
   },
   "item": [
     {
@@ -803,7 +804,7 @@
                           "\r",
                           "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] -When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
                           "    let response = pm.response.json();\r",
-                          "    pm.expect(response.title).to.eq(\"BAD_REQUEST\");\r",
+                          "    pm.expect(response.category).to.eq(\"BAD_REQUEST\");\r",
                           "})\r",
                           ""
                         ],
