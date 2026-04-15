@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.connector.citizen;
 import it.gov.pagopa.arc.connector.auth.service.AuthnService;
 import it.gov.pagopa.arc.connector.citizen.client.OrganizationClient;
 import it.gov.pagopa.arc.utils.TestUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.OrganizationLogoDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,8 @@ import uk.co.jemos.podam.api.PodamFactory;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 class OrganizationServiceImplTest {
@@ -53,6 +55,23 @@ class OrganizationServiceImplTest {
         Mockito.when(organizationClientMock.getOrganizationsWithSpontaneousDTO(accessToken, brokerId)).thenReturn(expectedResult);
         //when
         List<OrganizationsWithSpontaneousDTO> result = organizationService.getOrganizationsWithSpontaneousDTO(brokerId);
+        //then
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void whenGetOrganizationLogoThenInvokeClient() {
+        //given
+        String accessToken = "accessToken";
+        Long brokerId = 1L;
+        String orgFiscalCode = "orgFiscalCode";
+        OrganizationLogoDTO expectedResult = podamFactory.manufacturePojo(OrganizationLogoDTO.class);
+
+        Mockito.when(authnServiceMock.getAccessToken()).thenReturn(accessToken);
+        Mockito.when(organizationClientMock.getOrganizationLogo(brokerId, orgFiscalCode, accessToken)).thenReturn(expectedResult);
+        //when
+        OrganizationLogoDTO result = organizationService.getOrganizationLogo(brokerId,orgFiscalCode);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);

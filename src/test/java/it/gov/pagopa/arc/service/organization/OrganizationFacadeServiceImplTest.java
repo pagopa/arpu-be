@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.service.organization;
 
 import it.gov.pagopa.arc.connector.citizen.OrganizationService;
 import it.gov.pagopa.arc.utils.TestUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.OrganizationLogoDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +50,22 @@ class OrganizationFacadeServiceImplTest {
         Mockito.when(organizationServiceMock.getOrganizationsWithSpontaneousDTO(brokerId)).thenReturn(expectedResult);
         //when
         List<OrganizationsWithSpontaneousDTO> result = organizationFacadeService.getOrganizationsWithSpontaneousDTO(brokerId);
+        //then
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void whenGetOrganizationLogoThenOk() {
+        //given
+        Long brokerId = 1L;
+        String orgFiscalCode = "orgFiscalCode";
+
+        OrganizationLogoDTO expectedResult = podamFactory.manufacturePojo(OrganizationLogoDTO.class);
+
+        Mockito.when(organizationServiceMock.getOrganizationLogo(brokerId, orgFiscalCode)).thenReturn(expectedResult);
+        //when
+        OrganizationLogoDTO result = organizationFacadeService.getOrganizationLogo(brokerId, orgFiscalCode);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);
