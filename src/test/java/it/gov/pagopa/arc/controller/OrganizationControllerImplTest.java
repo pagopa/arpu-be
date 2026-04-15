@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.controller;
 import it.gov.pagopa.arc.controller.generated.OrganizationApi;
 import it.gov.pagopa.arc.service.organization.OrganizationFacadeService;
 import it.gov.pagopa.arc.utils.TestUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.OrganizationLogoDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,5 +68,36 @@ class OrganizationControllerImplTest {
         assertNotNull(result);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void whenGetPublicOrganizationLogoThenOk() {
+        //given
+        Long brokerId = 1L;
+        String orgFiscalCode = "orgFiscalCode";
+
+        OrganizationLogoDTO expectedResult = podamFactory.manufacturePojo(OrganizationLogoDTO.class);
+        Mockito.when(organizationFacadeServiceMock.getOrganizationLogo(brokerId,orgFiscalCode)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<OrganizationLogoDTO> result = organizationApi.getPublicOrganizationLogo(brokerId, orgFiscalCode);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void givenNoOrganizationLogoDTOWhenGetPublicOrganizationLogoThenNotFound() {
+        //given
+        Long brokerId = 1L;
+        String orgFiscalCode = "orgFiscalCode";
+
+        Mockito.when(organizationFacadeServiceMock.getOrganizationLogo(brokerId,orgFiscalCode)).thenReturn(null);
+        //when
+        ResponseEntity<OrganizationLogoDTO> result = organizationApi.getPublicOrganizationLogo(brokerId, orgFiscalCode);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+        assertNull(result.getBody());
     }
 }

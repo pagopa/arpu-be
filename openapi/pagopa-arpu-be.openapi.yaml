@@ -1262,6 +1262,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /public/brokers/{brokerId}/organizations/{orgFiscalCode}/logo:
+    get:
+      tags:
+        - Organization
+      operationId: getPublicOrganizationLogo
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orgFiscalCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "OrganizationLogoDTO"
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found - Organization not found
+        '500':
+          description: Internal Server Error
 components:
   headers:
     X-recaptcha-token:
