@@ -2830,7 +2830,7 @@
             "type" : "boolean"
           }
         },
-        "required" : [ "amountCents", "remittanceInformation" ]
+        "required" : [ "allCCP", "amountCents", "remittanceInformation" ]
       },
       "DebtPositionRequestDTO" : {
         "type" : "object",
