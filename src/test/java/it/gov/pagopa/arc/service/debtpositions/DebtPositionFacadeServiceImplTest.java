@@ -75,12 +75,12 @@ class DebtPositionFacadeServiceImplTest {
         String fiscalCode = "fiscalCode";
         Long brokerId = 1L;
         Long debtPositionId = 2L;
-        DebtPositionDTO expectedResult = podamFactory.manufacturePojo(DebtPositionDTO.class);
+        DebtPositionExtendedDTO expectedResult = podamFactory.manufacturePojo(DebtPositionExtendedDTO.class);
 
         IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
         Mockito.when(debtPositionServiceMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(expectedResult);
         //when
-        DebtPositionDTO result = debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, loggedUser);
+        DebtPositionExtendedDTO result = debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, loggedUser);
         //then
         assertNotNull(result);
         assertEquals(expectedResult, result);

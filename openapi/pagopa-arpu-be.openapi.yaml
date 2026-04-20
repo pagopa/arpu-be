@@ -736,7 +736,7 @@ paths:
           content:
             application/json:
               schema:
-                type: 'DebtPositionDTO'
+                type: 'DebtPositionExtendedDTO'
         '401':
           description: Unauthorized - Missing or invalid token
         '403':

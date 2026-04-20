@@ -109,11 +109,11 @@ class DebtPositionControllerImplTest {
         Long brokerId = 1L;
         Long debtPositionId = 2L;
 
-        DebtPositionDTO expectedResult = podamFactory.manufacturePojo(DebtPositionDTO.class);
+        DebtPositionExtendedDTO expectedResult = podamFactory.manufacturePojo(DebtPositionExtendedDTO.class);
 
         Mockito.when(debtPositionFacadeServiceMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, loggedUser)).thenReturn(expectedResult);
         //when
-        ResponseEntity<DebtPositionDTO> response = debtPositionController.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode);
+        ResponseEntity<DebtPositionExtendedDTO> response = debtPositionController.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode);
         //then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
