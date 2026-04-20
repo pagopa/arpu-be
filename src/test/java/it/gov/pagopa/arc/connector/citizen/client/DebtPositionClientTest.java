@@ -111,12 +111,12 @@ class DebtPositionClientTest {
         Long brokerId = 1L;
         Long debtPositionId = 2L;
 
-        DebtPositionDTO expectedResult = new DebtPositionDTO();
+        DebtPositionExtendedDTO expectedResult = new DebtPositionExtendedDTO();
 
         Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
         Mockito.when(debtPositionApiMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(expectedResult);
         //when
-        DebtPositionDTO result = debtPositionClient.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, accessToken);
+        DebtPositionExtendedDTO result = debtPositionClient.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, accessToken);
         //then
         assertNotNull(result);
         assertSame(expectedResult, result);
@@ -134,7 +134,7 @@ class DebtPositionClientTest {
         Mockito.when(debtPositionApiMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
         //when
-        DebtPositionDTO result = debtPositionClient.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, accessToken);
+        DebtPositionExtendedDTO result = debtPositionClient.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, accessToken);
         //then
         assertNull(result);
     }

@@ -28,7 +28,7 @@ public class DebtPositionServiceImpl implements DebtPositionService{
     }
 
     @Override
-    public DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode) {
+    public DebtPositionExtendedDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode) {
         return debtPositionClient.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, authnService.getAccessToken());
     }
 
