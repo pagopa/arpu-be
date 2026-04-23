@@ -40,7 +40,7 @@ public class DebtPositionClient {
         return apisHolder.getDebtPositionApi(accessToken).createSpontaneousDebtPosition(brokerId, body);
   }
 
-  public DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode, String accessToken){
+  public DebtPositionExtendedDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode, String accessToken){
         try{
             return apisHolder.getDebtPositionApi(accessToken).getDebtPositionDetail(brokerId, debtPositionId, fiscalCode);
         }catch (HttpClientErrorException.NotFound e){

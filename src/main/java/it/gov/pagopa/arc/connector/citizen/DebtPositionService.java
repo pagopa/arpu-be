@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 public interface DebtPositionService {
   FileResourceDTO getUnpaidPaymentNoticeZip(Long brokerId, Long debtPositionId, String fiscalCode);
   DebtPositionResponseDTO createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body);
-  DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode);
+  DebtPositionExtendedDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode);
   FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, String nav);
   PagedDebtorDebtPositionDTO getPagedDebtorDebtPosition(String fiscalCode, Long brokerId, String orgName, String orgFiscalCode, Pageable pageable);
   DebtorUnpaidDebtPositionOverviewDTO getDebtorUnpaidDebtPositionOverview(Long brokerId, Long debtPositionId, String xFiscalCode, Long organizationId);

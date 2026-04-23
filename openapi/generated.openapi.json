@@ -1020,6 +1020,70 @@
         }
       }
     },
+    "/public/brokers/{brokerId}/organizations/{orgFiscalCode}/logo" : {
+      "get" : {
+        "tags" : [ "Organization" ],
+        "operationId" : "getPublicOrganizationLogo",
+        "parameters" : [ {
+          "name" : "brokerId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "orgFiscalCode",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrganizationLogoDTO"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden - Access denied",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrganizationLogoDTO"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found - Organization not found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrganizationLogoDTO"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrganizationLogoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/public/brokers/{brokerId}/installments" : {
       "get" : {
         "tags" : [ "Installment" ],
@@ -2159,7 +2223,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/DebtPositionDTO"
+                  "$ref" : "#/components/schemas/DebtPositionExtendedDTO"
                 }
               }
             }
@@ -2169,7 +2233,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/DebtPositionDTO"
+                  "$ref" : "#/components/schemas/DebtPositionExtendedDTO"
                 }
               }
             }
@@ -2179,7 +2243,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/DebtPositionDTO"
+                  "$ref" : "#/components/schemas/DebtPositionExtendedDTO"
                 }
               }
             }
@@ -2189,7 +2253,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/DebtPositionDTO"
+                  "$ref" : "#/components/schemas/DebtPositionExtendedDTO"
                 }
               }
             }
@@ -2199,7 +2263,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/DebtPositionDTO"
+                  "$ref" : "#/components/schemas/DebtPositionExtendedDTO"
                 }
               }
             }
@@ -2761,9 +2825,12 @@
           },
           "remittanceInformation" : {
             "type" : "string"
+          },
+          "allCCP" : {
+            "type" : "boolean"
           }
         },
-        "required" : [ "amountCents", "remittanceInformation" ]
+        "required" : [ "allCCP", "amountCents", "remittanceInformation" ]
       },
       "DebtPositionRequestDTO" : {
         "type" : "object",
@@ -3412,6 +3479,14 @@
         "type" : "string",
         "enum" : [ "RECEIPT_PAGOPA", "RECEIPT_FILE", "PAYMENTS_REPORTING" ]
       },
+      "OrganizationLogoDTO" : {
+        "type" : "object",
+        "properties" : {
+          "orgLogo" : {
+            "type" : "string"
+          }
+        }
+      },
       "InstallmentDebtorExtendedDTO" : {
         "type" : "object",
         "properties" : {
@@ -3458,6 +3533,9 @@
           },
           "orgName" : {
             "type" : "string"
+          },
+          "allCCP" : {
+            "type" : "boolean"
           }
         },
         "required" : [ "amountCents", "debtPositionTypeOrgDescription", "debtor", "installmentId", "organizationId", "remittanceInformation", "status" ]
@@ -3545,7 +3623,7 @@
         "type" : "string",
         "enum" : [ "I", "M", "A" ]
       },
-      "DebtPositionDTO" : {
+      "DebtPositionExtendedDTO" : {
         "type" : "object",
         "properties" : {
           "debtPositionId" : {
@@ -3559,10 +3637,10 @@
             "type" : "string"
           },
           "status" : {
-            "$ref" : "#/components/schemas/DebtPositionStatus"
+            "type" : "string"
           },
           "debtPositionOrigin" : {
-            "$ref" : "#/components/schemas/DebtPositionOrigin"
+            "type" : "string"
           },
           "organizationId" : {
             "type" : "integer",
@@ -3599,17 +3677,12 @@
           "paymentOptions" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/PaymentOptionDTO"
+              "$ref" : "#/components/schemas/PaymentOptionExtendedDTO"
             }
           }
-        },
-        "required" : [ "debtPositionOrigin", "debtPositionTypeOrgId", "flagPuPagoPaPayment", "organizationId", "paymentOptions" ]
+        }
       },
-      "DebtPositionStatus" : {
-        "type" : "string",
-        "enum" : [ "TO_SYNC", "REPORTED", "PAID", "PARTIALLY_PAID", "CANCELLED", "EXPIRED", "UNPAID", "DRAFT" ]
-      },
-      "InstallmentDTO" : {
+      "InstallmentExtendedDTO" : {
         "type" : "object",
         "properties" : {
           "installmentId" : {
@@ -3721,6 +3794,9 @@
           },
           "originalRemittanceInformation" : {
             "type" : "string"
+          },
+          "allCCP" : {
+            "type" : "boolean"
           }
         },
         "required" : [ "amountCents", "debtor", "remittanceInformation" ]
@@ -3740,64 +3816,16 @@
         },
         "required" : [ "syncStatusFrom", "syncStatusTo" ]
       },
-      "PaymentOptionDTO" : {
+      "PaymentOptionExtendedDTO" : {
         "type" : "object",
         "properties" : {
-          "paymentOptionId" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "debtPositionId" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "totalAmountCents" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "status" : {
-            "$ref" : "#/components/schemas/PaymentOptionStatus"
-          },
-          "description" : {
-            "type" : "string"
-          },
-          "paymentOptionType" : {
-            "$ref" : "#/components/schemas/PaymentOptionType"
-          },
-          "paymentOptionIndex" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "creationDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "updateDate" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "updateOperatorExternalId" : {
-            "type" : "string"
-          },
-          "updateTraceId" : {
-            "type" : "string"
-          },
           "installments" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/InstallmentDTO"
+              "$ref" : "#/components/schemas/InstallmentExtendedDTO"
             }
           }
-        },
-        "required" : [ "installments", "paymentOptionType", "totalAmountCents" ]
-      },
-      "PaymentOptionStatus" : {
-        "type" : "string",
-        "enum" : [ "TO_SYNC", "REPORTED", "PAID", "PARTIALLY_PAID", "CANCELLED", "INVALID", "EXPIRED", "UNPAID", "UNPAYABLE", "DRAFT" ]
-      },
-      "PaymentOptionType" : {
-        "type" : "string",
-        "enum" : [ "SINGLE_INSTALLMENT", "INSTALLMENTS", "DOWN_PAYMENT", "REDUCED_SINGLE_INSTALLMENT" ]
+        }
       },
       "TransferDTO" : {
         "type" : "object",
@@ -3867,6 +3895,10 @@
           }
         },
         "required" : [ "amountCents", "category", "orgFiscalCode", "orgName", "remittanceInformation", "transferIndex" ]
+      },
+      "DebtPositionStatus" : {
+        "type" : "string",
+        "enum" : [ "TO_SYNC", "REPORTED", "PAID", "PARTIALLY_PAID", "CANCELLED", "EXPIRED", "UNPAID", "DRAFT" ]
       },
       "DebtorPaymentOptionDTO" : {
         "type" : "object",
@@ -3955,6 +3987,14 @@
         },
         "required" : [ "content", "number", "size", "totalElements", "totalPages" ]
       },
+      "PaymentOptionStatus" : {
+        "type" : "string",
+        "enum" : [ "TO_SYNC", "REPORTED", "PAID", "PARTIALLY_PAID", "CANCELLED", "INVALID", "EXPIRED", "UNPAID", "UNPAYABLE", "DRAFT" ]
+      },
+      "PaymentOptionType" : {
+        "type" : "string",
+        "enum" : [ "SINGLE_INSTALLMENT", "INSTALLMENTS", "DOWN_PAYMENT", "REDUCED_SINGLE_INSTALLMENT" ]
+      },
       "DebtorUnpaidDebtPositionInstallmentsDTO" : {
         "type" : "object",
         "properties" : {
@@ -3996,6 +4036,9 @@
           },
           "orgName" : {
             "type" : "string"
+          },
+          "allCCP" : {
+            "type" : "boolean"
           }
         }
       },
@@ -4033,9 +4076,12 @@
           "paymentDateTime" : {
             "type" : "string",
             "format" : "date-time"
+          },
+          "allCCP" : {
+            "type" : "boolean"
           }
         },
-        "required" : [ "installmentId", "remittanceInformation", "status" ]
+        "required" : [ "allCCP", "installmentId", "remittanceInformation", "status" ]
       },
       "DebtorPaymentOptionOverviewDTO" : {
         "type" : "object",

@@ -51,7 +51,7 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
   }
 
   @Override
-  public ResponseEntity<DebtPositionDTO> getDebtPositionDetail(Long brokerId, Long debtPositionId, String xFiscalCode) {
+  public ResponseEntity<DebtPositionExtendedDTO> getDebtPositionDetail(Long brokerId, Long debtPositionId, String xFiscalCode) {
     log.info("getDebtPositionDetail was requested with brokerId {} and debtPositionId {}", brokerId,debtPositionId);
     return ResponseEntity.ok(debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, xFiscalCode, SecurityUtils.getPrincipal()));
   }
