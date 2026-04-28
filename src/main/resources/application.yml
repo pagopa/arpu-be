@@ -84,6 +84,7 @@ rest-client:
       secret: "\${GOOGLE_RECAPTCHA_SECRET:}"
 
 springdoc:
+  api-docs.version: openapi_3_0
   writer-with-default-pretty-printer: true
 
 google-recaptcha:
