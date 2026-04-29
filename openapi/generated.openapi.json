@@ -3078,6 +3078,10 @@
           "city" : {
             "type" : "string",
             "nullable" : true
+          },
+          "favicon" : {
+            "type" : "string",
+            "nullable" : true
           }
         }
       },
@@ -3507,6 +3511,7 @@
       },
       "DebtPositionOrigin" : {
         "type" : "string",
+        "nullable" : true,
         "enum" : [ "ORDINARY", "ORDINARY_SIL", "SPONTANEOUS", "SPONTANEOUS_SIL", "SPONTANEOUS_MIXED", "SPONTANEOUS_PSP", "SECONDARY_ORG", "RECEIPT_FILE", "RECEIPT_PAGOPA", "REPORTING_PAGOPA" ]
       },
       "ReceiptDetailExtendedDTO" : {
@@ -3762,12 +3767,10 @@
             "nullable" : true
           },
           "status" : {
-            "type" : "string",
-            "nullable" : true
+            "$ref" : "#/components/schemas/DebtPositionStatus"
           },
           "debtPositionOrigin" : {
-            "type" : "string",
-            "nullable" : true
+            "$ref" : "#/components/schemas/DebtPositionOrigin"
           },
           "organizationId" : {
             "type" : "integer",
@@ -3818,6 +3821,11 @@
             }
           }
         }
+      },
+      "DebtPositionStatus" : {
+        "type" : "string",
+        "nullable" : true,
+        "enum" : [ "TO_SYNC", "REPORTED", "PAID", "PARTIALLY_PAID", "CANCELLED", "EXPIRED", "UNPAID", "DRAFT" ]
       },
       "InstallmentExtendedDTO" : {
         "required" : [ "amountCents", "debtor", "remittanceInformation" ],
@@ -4075,11 +4083,6 @@
             "nullable" : true
           }
         }
-      },
-      "DebtPositionStatus" : {
-        "type" : "string",
-        "nullable" : true,
-        "enum" : [ "TO_SYNC", "REPORTED", "PAID", "PARTIALLY_PAID", "CANCELLED", "EXPIRED", "UNPAID", "DRAFT" ]
       },
       "DebtorPaymentOptionDTO" : {
         "required" : [ "paymentOptionId", "paymentOptionType", "status" ],

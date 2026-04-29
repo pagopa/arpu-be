@@ -238,7 +238,7 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     description = "openapi"
 
     generatorName.set("java")
-    remoteInputSpec.set("https://raw.githubusercontent.com/pagopa/p4pa-auth/refs/heads/$targetEnv/openapi/p4pa-auth.openapi.yaml")
+    remoteInputSpec.set("https://raw.githubusercontent.com/pagopa/p4pa-doc/refs/heads/main/openapi/$targetEnv/internal/p4pa-auth.openapi.yaml")
     outputDir.set("$projectDir/build/generated")
     apiPackage.set("it.gov.pagopa.pu.auth.controller.generated")
     modelPackage.set("it.gov.pagopa.pu.auth.dto.generated")
@@ -269,7 +269,7 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
     description = "openapi"
 
     generatorName.set("java")
-    remoteInputSpec.set("https://raw.githubusercontent.com/pagopa/p4pa-citizen/refs/heads/$targetEnv/openapi/generated.openapi.json")
+    remoteInputSpec.set("https://raw.githubusercontent.com/pagopa/p4pa-doc/refs/heads/main/openapi/$targetEnv/internal/p4pa-citizen.generated.openapi.json")
     outputDir.set("$projectDir/build/generated")
     apiPackage.set("it.gov.pagopa.pu.citizen.controller.generated")
     modelPackage.set("it.gov.pagopa.pu.citizen.dto.generated")
