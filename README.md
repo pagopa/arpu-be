@@ -2,6 +2,8 @@
 
 This application represent the BFF of **Area Riservata Piattaforma Unitaria** product.
 
+See [p4pa-doc](https://github.com/pagopa/p4pa-doc) for further documentation.
+
 ## 🧱 Role
 
 * To expose data towards ARpu FE.
