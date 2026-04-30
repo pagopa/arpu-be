@@ -1,0 +1,1025 @@
+{
+  "info": {
+    "_postman_id": "ed0e43e4-e148-4474-8e31-41bff225de1e",
+    "name": "ARpu collection e2e",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15747968",
+    "_collection_link": "https://go.postman.co/collection/15747968-ed0e43e4-e148-4474-8e31-41bff225de1e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "0. Setup",
+      "item": [
+        {
+          "name": "getAccessToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let jsonResponse = pm.response.json();\r",
+                  "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseurlArcInternal}}/auth/testuser",
+              "host": [
+                "{{baseurlArcInternal}}"
+              ],
+              "path": [
+                "auth",
+                "testuser"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1. Health",
+      "item": [
+        {
+          "name": "Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "  pm.test(\"[GET Actuator Health Liveness], expected httpStatus: 200\", () => {\r",
+                  "        pm.response.to.have.status(200);\r",
+                  "    })\r",
+                  "\r",
+                  "    pm.test(\"[GET Actuator Health Liveness] - When Actuator Health Liveness is called, the status is returned\", () => {\r",
+                  "        let jsonResponse = pm.response.json();\r",
+                  "\r",
+                  "        pm.expect(jsonResponse.status).to.eq(\"UP\");\r",
+                  "    })"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrlCittadini}}/arc-health/v1",
+              "host": [
+                "{{baseUrlCittadini}}"
+              ],
+              "path": [
+                "arc-health",
+                "v1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. auth",
+      "item": [
+        {
+          "name": "Unhappy Case",
+          "item": [
+            {
+              "name": "Not Found",
+              "item": [
+                {
+                  "name": "resource not found",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request not found resourse, expected httpStatus: 404\", () => {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions4",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions4"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Invalid State",
+              "item": [
+                {
+                  "name": "invalid state",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request cannot procced because state is wrong, expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.environment.set(\"state\", \"1234567890\");\r",
+                          "pm.environment.set(\"code\", \"1234567890\");"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/oneidentity?code={{code}}&state={{state}}",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "oneidentity"
+                      ],
+                      "query": [
+                        {
+                          "key": "code",
+                          "value": "{{code}}"
+                        },
+                        {
+                          "key": "state",
+                          "value": "{{state}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Invalid Code",
+              "item": [
+                {
+                  "name": "set state",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var redirectUrl = pm.response.headers.get('Location');\r",
+                          "var parser = require('postman-collection').Url.parse;\r",
+                          "\r",
+                          "console.log(parser(redirectUrl));\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains state in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"state\").value).not.equal(null);\r",
+                          "    pm.environment.set(\"state\", parser(redirectUrl).query.find(a=>a.key===\"state\").value);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": false
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/login/oneidentity",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "login",
+                        "oneidentity"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "invalid code",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.environment.set(\"code\", \"1234567890\");"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/oneidentity?code={{code}}&state={{state}}",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "oneidentity"
+                      ],
+                      "query": [
+                        {
+                          "key": "code",
+                          "value": "{{code}}"
+                        },
+                        {
+                          "key": "state",
+                          "value": "{{state}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Unauthorized",
+              "item": [
+                {
+                  "name": "user info unauthorized",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 401\", () => {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0eXAiOiJCZWFyZXIiLCJpc3MiOiJhcHBsaWNhdGlvbi1hdWRpZW5jZSIsImp0aSI6ImFhZmUzMGRiLTVlNDktNDc2ZS04YzhjLWU3OWJmNDk5YzJlNiIsImlhdCI6MTcyMzIxNzM4NCwiZXhwIjoxNzIzMjIwOTg0fQ.LFI0YFjS7bjv3VYGDTR3GgdPFbbUKrza2H8eeh7g6OtzBhcor0U0B_M_8LI98s-eob3TpWM9wq8zTwnvZtz_tmI37FU83RJF513Mrhi5YBYR8MI78XMSmRH7xRPIzlIAruCYbcv6JVs5daf7UKLjWGZWr3cXH7-TzWoA2OAE2MhzzI23R8b8pXDXrRearR5blyhEM1Wk4TRz3RZSksajGRQQ_gwO0K_8pT3zpk-hsZfWZ2iGwjWdKsTBwSmhYL68Qns2ic5McvM_gC5_xW3hrzqTP27NQJnkRjdT03uIFXkZSrLRBbgzPs286k4DiFaWMrASWofv35AQvqalUIXwmQ",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/auth/user",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "user info without access token",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 401\", () => {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/auth/user",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Happy Case",
+          "item": [
+            {
+              "name": "Case 1",
+              "item": [
+                {
+                  "name": "login endpoint",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var redirectUrl = pm.response.headers.get('Location');\r",
+                          "var parser = require('postman-collection').Url.parse;\r",
+                          "\r",
+                          "console.log(parser(redirectUrl));\r",
+                          "\r",
+                          "pm.test(\"Request login endpoint to the configured IDP, expected httpStatus: 302\", () => {\r",
+                          "    pm.response.to.have.status(302);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirct is using HTTPS, expected HTTPS protcol\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).protocol).to.eql('https');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains response_type in query params, expected 'code' url\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"response_type\").value).to.eql('code');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains client_id in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"client_id\").value).not.equal(null);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains scope in query params, expected value 'openid'\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"scope\").value).to.eql('openid');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains state in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"state\").value).not.equal(null);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains redirect_uri in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"redirect_uri\").value).not.equal(null);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains nonce in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"nonce\").value).not.equal(null);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": false
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/login/oneidentity",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "login",
+                        "oneidentity"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Case 2",
+              "item": [
+                {
+                  "name": "user info",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"[Get User Info - Case 2], expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"[Get User Info - Case 2] - When you get user info\", () => {\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"userId\");\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"fiscalCode\");\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"familyName\");\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"name\");\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"email\");\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/auth/user",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "case 3",
+              "item": [
+                {
+                  "name": "logout",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Logout - Case 3], expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "var path = pm.environment.get(\"baseurlArcInternal\");\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "        url:  path + '/auth/testuser',\r",
+                          "        method: 'GET',\r",
+                          "        header: {\r",
+                          "            'Accept': 'application/json',\r",
+                          "            'Content-Type': 'application/json'\r",
+                          "        }\r",
+                          "    }, function (err, res) {\r",
+                          "        if (res.code === 200) {\r",
+                          "            let response = res.json();\r",
+                          "            pm.environment.set('token', response.accessToken);\r",
+                          "\r",
+                          "            console.log('Token set: ' + response.accessToken);\r",
+                          "        }\r",
+                          "        else {\r",
+                          "            console.log(res);\r",
+                          "            throw new Error('Login failed with status: ' + res.status + ' (Code: ' + res.code + ')');\r",
+                          "        }\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/logout",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "logout"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "user info",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"[Get User Info - Case 3], expected httpStatus: 401\", () => {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/auth/user",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "logout bad request",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Logout - Case 3], expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/logout",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "logout"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. zendesk assistance",
+      "item": [
+        {
+          "name": "Happy Case",
+          "item": [
+            {
+              "name": "GET JWT token for zendesk assistance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected httpStatus: 200\", () => {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected jwt token and return_to\", () =>{\r",
+                      "    let jsonResponse = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(\"\")\r",
+                      "    \r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
+                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://pagamenti.assistenza.pagopa.it/hc/it/requests/new\")\r",
+                      "\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(\"\")\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.eq(\"https://pagopa.zendesk.com/access/jwt\")\r",
+                      "})\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{accessToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/token/assistance?userEmail=someone@email.com",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "token",
+                    "assistance"
+                  ],
+                  "query": [
+                    {
+                      "key": "userEmail",
+                      "value": "someone@email.com"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Unhappy Case",
+          "item": [
+            {
+              "name": "INVALID USER EMAIL",
+              "item": [
+                {
+                  "name": "INVALID USER EMAIL ERROR",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] - When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception , expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] -When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.category).to.eq(\"BAD_REQUEST\");\r",
+                          "})\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/assistance?userEmail=someone",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "assistance"
+                      ],
+                      "query": [
+                        {
+                          "key": "userEmail",
+                          "value": "someone"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          "retryRequest = (postman, pm, setTimeout, waitingMillis = 500, maxAttempts = 10) => {\r",
+          "    if(!postman || !pm || !setTimeout){\r",
+          "        throw new Error(\"Invalid invoke to retryRequest function! Some required parameters are undefined: postman=\" + postman + \", pm=\" + pm + \", setTimeout=\" + setTimeout)\r",
+          "    }\r",
+          " \r",
+          "    const retryVariableName = \"retry_\" + pm.info.requestId\r",
+          "    const attempt = (pm.variables.get(retryVariableName) ?? 0) + 1;\r",
+          "    if(attempt < maxAttempts) {\r",
+          "        console.info(pm.info.requestName + \" not ready, retrying [attempt \" + attempt + \"/\" + maxAttempts + \"] after \" + waitingMillis + \" ms\");\r",
+          "        pm.variables.set(retryVariableName, attempt)\r",
+          "        pm.execution.setNextRequest(pm.info.requestId);\r",
+          "        return setTimeout(()=>{}, waitingMillis);\r",
+          "    } else {\r",
+          "        pm.test(pm.info.requestName + \" not ready\", () => pm.expect.fail(attempt + \" attempts\"));\r",
+          "    }\r",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "iupd",
+      "value": ""
+    },
+    {
+      "key": "iuv",
+      "value": ""
+    },
+    {
+      "key": "amount",
+      "value": ""
+    },
+    {
+      "key": "transactionId",
+      "value": ""
+    },
+    {
+      "key": "transactionDate",
+      "value": ""
+    },
+    {
+      "key": "amountEur",
+      "value": ""
+    },
+    {
+      "key": "amountCents",
+      "value": ""
+    },
+    {
+      "key": "fee",
+      "value": ""
+    },
+    {
+      "key": "totalAmount",
+      "value": ""
+    },
+    {
+      "key": "iuvFirstInstallment",
+      "value": ""
+    },
+    {
+      "key": "iuvSecondInstallment",
+      "value": ""
+    },
+    {
+      "key": "iuvThirdInstallment",
+      "value": ""
+    },
+    {
+      "key": "amountFirstInstallment",
+      "value": ""
+    },
+    {
+      "key": "amountSecondInstallment",
+      "value": ""
+    },
+    {
+      "key": "amountThirdInstallment",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "timestamp",
+      "value": ""
+    },
+    {
+      "key": "userid",
+      "value": ""
+    },
+    {
+      "key": "expires_in",
+      "value": ""
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "eventId",
+      "value": ""
+    },
+    {
+      "key": "idPA",
+      "value": ""
+    },
+    {
+      "key": "companyName",
+      "value": ""
+    },
+    {
+      "key": "officeName",
+      "value": ""
+    },
+    {
+      "key": "eventId2",
+      "value": ""
+    },
+    {
+      "key": "amountCents2",
+      "value": ""
+    },
+    {
+      "key": "noticeDate",
+      "value": ""
+    },
+    {
+      "key": "debtorPositionCreated",
+      "value": ""
+    },
+    {
+      "key": "receivedIupd",
+      "value": ""
+    },
+    {
+      "key": "dueDate",
+      "value": ""
+    }
+  ]
+}

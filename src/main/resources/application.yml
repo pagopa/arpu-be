@@ -1,3 +1,6 @@
+server:
+  http: "\${SERVER_PORT:8080}"
+
 spring:
   application:
     name: ${artifactId}
@@ -20,19 +23,19 @@ spring:
         registration:
           oneidentity:
             provider: oneidentity
-            client-id: \${AUTH_CLIENT_ID:}
-            client-secret: \${AUTH_CLIENT_SECRET:}
+            client-id: "\${AUTH_CLIENT_ID:}"
+            client-secret: "\${AUTH_CLIENT_SECRET:}"
             authorization-grant-type: authorization_code
-            redirect-uri: \${AUTH_CLIENT_REDIRECT_URI:}
+            redirect-uri: "\${AUTH_CLIENT_REDIRECT_URI:}"
             scope: openid
         provider:
           oneidentity:
-            issuer-uri: \${AUTH_ISSUER_URI:}
-            authorization-uri: \${AUTH_CLIENT_AUTHORIZATION_URI:}
-            token-uri: \${AUTH_CLIENT_TOKEN_URI:}
+            issuer-uri: "\${AUTH_ISSUER_URI:}"
+            authorization-uri: "\${AUTH_CLIENT_AUTHORIZATION_URI:}"
+            token-uri: "\${AUTH_CLIENT_TOKEN_URI:}"
             user-name-attribute: sub
-            jwk-set-uri: \${AUTH_CLIENT_JWK_URI:}
-white-list-cf-users: \${WHITE_LIST_USERS:}
+            jwk-set-uri: "\${AUTH_CLIENT_JWK_URI:}"
+white-list-cf-users: "\${WHITE_LIST_USERS:}"
 
 jwt:
   audience: "\${JWT_TOKEN_AUDIENCE:application-audience}"
@@ -44,47 +47,104 @@ jwt:
 
 zendesk-assistance:
   tokenType: JWT
-  return-to: \${HELP_CENTER_URL:}
-  action-url: \${ZENDESK_ACTION_URL:}
+  return-to: "\${HELP_CENTER_URL:}"
+  action-url: "\${ZENDESK_ACTION_URL:}"
   assistance-token:
-    product-id: \${ASSISTANCE_ZENDESK_PRODUCT_ID:}
-    organization: \${ASSISTANCE_ZENDESK_ORGANIZATION:}
-    private-key: \${JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY:}
+    product-id: "\${ASSISTANCE_ZENDESK_PRODUCT_ID:}"
+    organization: "\${ASSISTANCE_ZENDESK_ORGANIZATION:}"
+    private-key: "\${JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY:}"
 
 rest-client:
-  biz-events:
-    paid-notice:
-      baseUrl: \${BIZ_EVENTS_PAID_NOTICE_BASE_URL:}
-      api-key: \${BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY:}
-  pull-payment:
-    baseUrl: \${PULL_PAYMENT_BASE_URL:}
-    api-key: \${PULL_PAYMENT_SERVICE_API_KEY:}
-  gpd:
-    baseUrl: \${GPD_SERVICE_BASE_URL:}
-    api-key: \${GPD_SERVICE_API_KEY:}
+  defaults:
+    connection-pool:
+      size: "\${DEFAULT_REST_CONNECTION_POOL_SIZE:10}"
+      size-per-route: "\${DEFAULT_REST_CONNECTION_POOL_SIZE_PER_ROUTE:5}"
+      time-to-live-minutes: "\${DEFAULT_REST_CONNECTION_POOL_TIME_TO_LIVE_MINUTES:10}"
+    timeout:
+      connect-millis: "\${DEFAULT_REST_TIMEOUT_CONNECT_MILLIS:120000}"
+      read-millis: "\${DEFAULT_REST_TIMEOUT_READ_MILLIS:120000}"
+  auth:
+    base-url: "\${P4PA_AUTH_SERVER_BASE_URL:}/payhub"
+    max-attempts: "\${P4PA_AUTH_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${P4PA_AUTH_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${P4PA_AUTH_PRINT_BODY_WHEN_ERROR:true}"
+    post-token:
+      client_secret: "\${P4PA_AUTH_CLIENT_SECRET:clientsecret}"
+  citizen:
+    base-url: "\${P4PA_CITIZEN_SERVER_BASE_URL:}"
+    max-attempts: "\${P4PA_CITIZEN_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${P4PA_CITIZEN_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${P4PA_CITIZEN_PRINT_BODY_WHEN_ERROR:true}"
+  google-recaptcha:
+    base-url: "\${GOOGLE_RECAPTCHA_SERVER_BASE_URL:}"
+    max-attempts: "\${GOOGLE_RECAPTCHA_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${GOOGLE_RECAPTCHA_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${GOOGLE_RECAPTCHA_PRINT_BODY_WHEN_ERROR:true}"
+    recaptcha:
+      secret: "\${GOOGLE_RECAPTCHA_SECRET:}"
 
-spontaneous-mock-paths:
-  organizationList: "mock/organizationsMock.json"
+springdoc:
+  api-docs.version: openapi_3_0
+  writer-with-default-pretty-printer: true
 
-logging:
-  level:
-    it.gov.pagopa.arc.connector: \${LOGGING_LEVEL_ARC_CONNECTOR:DEBUG}
-    org:
-      springframework:
-        security: INFO
-        web: INFO
-        session:
-          web:
-            http:
-              SessionRepositoryFilter: INFO
+google-recaptcha:
+  enabled: "\${GOOGLE_RECAPTCHA_ENABLED:false}"
+  protected-paths: "\${GOOGLE_RECAPTCHA_PROTECTED_PATHS:
+    /public/brokers/*/spontaneous/debt-positions,
+    /public/brokers/*/organizations/*/debt-positions/notice}"
 
 management:
+  info:
+    build.enabled: true
+    java.enabled: true
+    git.enabled: true
+  otlp.metrics.export.enabled: "\${TRACING_EXPORT:false}"
+  tracing:
+    sampling.probability: "\${TRACING_SAMPLING_PROBABILITY:1.0}"
+  observations:
+    http.server:
+      filter.order: -100
+  endpoints:
+    jmx:
+      exposure.include: "*"
+    web:
+      exposure:
+        include: health, info, prometheus, metrics
+      base-path: /actuator
   endpoint:
     health:
       probes.enabled: true
+      logging.slow-indicator-threshold: "\${HEALTH_ACTUATOR_LOGGER_TIMEOUT_DURATION:PT1S}"
+      show-details: "\${HEALTH_ACTUATOR_SHOW_DETAILS:when-authorized}"
       group:
         readiness.include: "*"
-        liveness.include: livenessState,diskSpace,redis
-  endpoints:
-    web:
-      exposure.include: health
+        liveness.include: livenessState,diskSpace,ping
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${artifactId}
+    export:
+      prometheus:
+        enabled: true
+        step: 1m
+        descriptions: true
+    enable:
+      jvm: true
+      process: true
+      system: true
+      http: true
+      logback: true
+
+logging:
+  level:
+    root: "\${LOG_LEVEL_ROOT:INFO}"
+    it.gov.pagopa: "\${LOG_LEVEL_PAGOPA:INFO}"
+    org.springframework: "\${LOG_LEVEL_SPRING:INFO}"
+    org.springframework.boot.availability: "\${LOG_LEVEL_SPRING_BOOT_AVAILABILITY:DEBUG}"
+    it.gov.pagopa.arc.exception.ControllerExceptionHandler: "\${LOGGING_LEVEL_API_REQUEST_EXCEPTION:INFO}"
+    it.gov.pagopa.arc.connector: "\${LOGGING_LEVEL_ARC_CONNECTOR:INFO}"
+    org.springdoc.core.utils.SpringDocAnnotationsUtils: "\${LOG_LEVEL_SPRING_DOC:ERROR}"
+    PERFORMANCE_LOG: "\${LOG_LEVEL_PERFORMANCE_LOG:INFO}"
+    PERFORMANCE_LOG.API_REQUEST: "\${LOG_LEVEL_PERFORMANCE_LOG_API_REQUEST:\${logging.level.PERFORMANCE_LOG}}"
+    PERFORMANCE_LOG.REST_INVOKE: "\${LOG_LEVEL_PERFORMANCE_LOG_REST_INVOKE:\${logging.level.PERFORMANCE_LOG}}"

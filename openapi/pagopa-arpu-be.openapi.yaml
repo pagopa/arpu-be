@@ -1,0 +1,1407 @@
+openapi: 3.0.1
+info:
+  title: pagopa-arpu-be
+  description: Api and Models
+  version: 0.0.1
+servers:
+  - url: "http://localhost:8080"
+    description: Generated server url
+paths:
+  /login/oneidentity:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide the authentication endpoint"
+      operationId: getAuthenticationEndpoint
+      responses:
+        '302':
+          description: "Redirect to the authentication endpoint"
+          headers:
+            Location:
+              description: >
+                The URL to redirect to, including the following query parameters:
+                - response_type: The type of response, e.g., "code".
+                - scope: The scope of the access request, e.g., "openid profile email".
+                - client_id: The client ID, e.g., "abc4hdRkqt3".
+                - state: An opaque value used to maintain state between the request and callback, e.g., "abc4hdRkqt3".
+                - redirect_uri: The URI to redirect to after authorization, e.g., "https://client.example.org/cb".
+              schema:
+                type: string
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /token/oneidentity:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide authorization endpoint for exchanging code for token"
+      operationId: getAuthenticationToken
+      parameters:
+        - name: code
+          in: query
+          description: "The value used for exchanging code for token"
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          description: "The value of the state this value is handled by the security component"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /logout:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide the logout endpoint"
+      operationId: getLogoutEndpoint
+      security:
+        - BearerAuth: [ ]
+      responses:
+        '200':
+          description: "User successfully logged out"
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /auth/user:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide information regarding authenticated user"
+      operationId: getUserInfo
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '400':
+          description: "Request cannot be processed, required parameters are not present"
+        '401':
+          description: "Unauthorized"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /auth/testuser:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide access token for the sample user"
+      operationId: getAuthTokenTestUser
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /token/assistance:
+    get:
+      tags:
+        - arc zendesk assistance
+      summary: "Retrieve jwt token for the zendesk assistance"
+      operationId: getZendeskAssistanceToken
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: userEmail
+          in: query
+          description: Required user mail for the assistance
+          required: true
+          schema:
+            type: string
+            format: email
+            example: "someone@example.com"
+      responses:
+        '200':
+          description: "Obtained token for zendesk assistance"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZendeskAssistanceTokenResponse'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: "Wrong or missing function key"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /brokers/{brokerId}/spontaneous/organizations:
+    get:
+      tags:
+        - Organization
+      summary: "Retrieves the list of organizations with at least one dpto with flagSpontaneous and flagActive set to true"
+      operationId: getOrganizationsWithSpontaneous
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: "OrganizationsWithSpontaneousDTO"
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /public/brokers/{brokerId}/spontaneous/organizations:
+    get:
+      tags:
+        - Organization
+      summary: "Retrieves the list of organizations with at least one dpto with flagSpontaneous and flagActive set to true for anonymous user"
+      operationId: getPublicOrganizationsWithSpontaneous
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: "OrganizationsWithSpontaneousDTO"
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the list of debtPositionTypeOrg with flagSpontaneous and flagActive set to true"
+      operationId: getDebtPositionTypeOrgsWithSpontaneous
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: "DebtPositionTypeOrgsWithSpontaneousDTO"
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs/most-used:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the most used spontaneous debt position types for the current year"
+      operationId: getMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYear
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: 'DebtPositionTypeOrgsWithSpontaneousDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /public/brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs/most-used:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the most used spontaneous debt position types for the current year"
+      operationId: getPublicMostUsedSpontaneousDebtPositionTypeOrgsForCurrentYear
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: 'DebtPositionTypeOrgsWithSpontaneousDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /public/brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the list of debtPositionTypeOrg with flagSpontaneous and flagActive set to true for anonymous user"
+      operationId: getPublicDebtPositionTypeOrgsWithSpontaneous
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: "DebtPositionTypeOrgsWithSpontaneousDTO"
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/debt-positions/{debtPositionId}/notice/zip:
+    get:
+      tags:
+        - DebtPosition
+      summary: "Retrieve and generate a ZIP file containing the payment notices of a specific DebtPosition"
+      operationId: getUnpaidPaymentNoticeZip
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: debtPositionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ZIP file containing the payment notices
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: No Content - No installments found
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /public/brokers/{brokerId}/debt-positions/{debtPositionId}/notice/zip:
+    get:
+      tags:
+        - DebtPosition
+      summary: "Retrieve and generate a ZIP file containing the payment notices of a specific DebtPosition for anonymous user"
+      operationId: getPublicUnpaidPaymentNoticeZip
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: debtPositionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ZIP file containing the payment notices
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: No Content - No installments found
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/organizations/{organizationId}/debt-positions/notice:
+    get:
+      tags:
+        - DebtPosition
+      operationId: getPaymentNotice
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: nav
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Invalid request
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        "500":
+          description: Internal server error
+  /public/brokers/{brokerId}/organizations/{organizationId}/debt-positions/notice:
+    get:
+      tags:
+        - DebtPosition
+      operationId: getPublicPaymentNotice
+      description: "unauthenticated requests require the header `X-recaptcha-token` when reCAPTCHA is enabled."
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: nav
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Invalid request
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        "500":
+          description: Internal server error
+  /brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs/{debtPositionTypeOrgId}:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the detail of debtPositionTypeOrg with flagSpontaneous and flagActive set to true"
+      operationId: getDebtPositionTypeOrgsWithSpontaneousDetail
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: debtPositionTypeOrgId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "DebtPositionTypeOrgsWithSpontaneousDetailsDTO"
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /public/brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs/{debtPositionTypeOrgId}:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the detail of debtPositionTypeOrg with flagSpontaneous and flagActive set to true for anonymous user"
+      operationId: getPublicDebtPositionTypeOrgsWithSpontaneousDetail
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: debtPositionTypeOrgId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "DebtPositionTypeOrgsWithSpontaneousDetailsDTO"
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/spontaneous/debt-positions:
+    post:
+      tags:
+        - DebtPosition
+      summary: "Create spontaneous debt positions"
+      operationId: createSpontaneousDebtPosition
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type:  "DebtPositionRequestDTO"
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: "DebtPositionResponseDTO"
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+        '500':
+          description: Internal server error
+  /public/brokers/{brokerId}/spontaneous/debt-positions:
+    post:
+      tags:
+        - DebtPosition
+      summary: "Create spontaneous debt positions for anonymous user"
+      operationId: createPublicSpontaneousDebtPosition
+      description: "unauthenticated requests require the header `X-recaptcha-token` when reCAPTCHA is enabled."
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type:  "DebtPositionRequestDTO"
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: "DebtPositionResponseDTO"
+        '400':
+          description: Invalid request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+        '500':
+          description: Internal server error
+  /brokers/{brokerId}/debt-positions/{debtPositionId}:
+    get:
+      tags:
+        - DebtPosition
+      summary: "Retrieve a specific DebtPosition"
+      operationId: getDebtPositionDetail
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: debtPositionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: 'DebtPositionExtendedDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found - DebtPosition not found
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/receipts:
+    get:
+      tags:
+        - Receipt
+      operationId: getPagedDebtorReceipts
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: orgName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: noticeNumberOrIuv
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: paymentDateTimeFrom
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: paymentDateTimeTo
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: 'PagedDebtorReceiptsDTO'
+        "400":
+          description: Invalid request
+        "409":
+          description: Debt position already exists
+        "500":
+          description: Internal server error
+      x-spring-paginated: true
+  /brokers/{brokerId}/organization/{organizationId}/debt-position/{debtPositionId}/payment-option/{paymentOptionId}/receipts:
+    get:
+      tags:
+        - Receipt
+      operationId: getDebtorReceipts
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: debtPositionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: paymentOptionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: 'DebtorReceiptDTO'
+        "400":
+          description: Invalid request
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+  /brokers/{brokerId}/organizations/{organizationId}/receipts/{receiptId}:
+    get:
+      tags:
+        - Receipt
+      summary: "Retrieve a specific receipt"
+      operationId: getReceiptDetail
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The unique identifier of the receipt
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: 'ReceiptDetailExtendedDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found - Receipt not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /brokers/{brokerId}/organizations/{organizationId}/receipts/{receiptId}/pdf:
+    get:
+      tags:
+        - Receipt
+      operationId: getReceiptPdf
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The unique identifier of the receipt
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: No Content
+        "400":
+          description: Invalid request
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        "500":
+          description: Internal server error
+  /public/brokers/{brokerId}/organizations/{organizationId}/receipts/{receiptId}/pdf:
+    get:
+      tags:
+        - Receipt
+      operationId: getPublicReceiptPdf
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The unique identifier of the receipt
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: No Content
+        "400":
+          description: Invalid request
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        "500":
+          description: Internal server error
+  /public/brokers:
+    get:
+      tags:
+        - Broker
+      operationId: getPublicBrokerInfo
+      parameters:
+        - name: brokerId
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: externalId
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+               type: 'BrokerInfoDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/debt-positions/unpaid:
+    get:
+      tags:
+        - DebtPosition
+      operationId: getPagedUnpaidDebtPositions
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orgName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: orgFiscalCode
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: 'PagedDebtorDebtPositionDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+      x-spring-paginated: true
+  /brokers/{brokerId}/debt-positions/debtor/unpaid/{debtPositionId}/overview:
+    get:
+      tags:
+        - DebtPosition
+      operationId: getDebtorUnpaidDebtPositionOverview
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: debtPositionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: organizationId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: 'DebtorUnpaidDebtPositionOverviewDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /brokers/{brokerId}/debt-positions/debtor/unpaid/{debtPositionId}/{paymentOptionId}/installments:
+    get:
+      tags:
+        - Installment
+      operationId: getDebtorUnpaidDebtPositionInstallments
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: debtPositionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: paymentOptionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: organizationId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: "DebtorUnpaidDebtPositionInstallmentsDTO"
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '500':
+          description: Internal Server Error
+  /public/brokers/{brokerId}/installments:
+    get:
+      tags:
+        - Installment
+      operationId: getPublicInstallmentsByIuvOrNav
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: iuvOrNav
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: X-fiscal-code
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: orgFiscalCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: statuses
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: 'InstallmentStatus'
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: 'InstallmentDebtorExtendedDTO'
+        "400":
+          description: Invalid request
+        "500":
+          description: Internal server error
+  /public/brokers/{brokerId}/organizations/{organizationId}/receipts/{receiptId}:
+    get:
+      tags:
+        - Receipt
+      summary: "Retrieve a specific receipt"
+      operationId: getPublicReceiptDetail
+      parameters:
+        - name: X-fiscal-code
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The unique identifier of the receipt
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: 'ReceiptDetailExtendedDTO'
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found - Receipt not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /public/brokers/{brokerId}/organizations/{orgFiscalCode}/logo:
+    get:
+      tags:
+        - Organization
+      operationId: getPublicOrganizationLogo
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: orgFiscalCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "OrganizationLogoDTO"
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found - Organization not found
+        '500':
+          description: Internal Server Error
+components:
+  headers:
+    X-recaptcha-token:
+      description: |
+        reCAPTCHA token required for unauthenticated requests
+      schema:
+        type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    TokenResponse:
+      type: object
+      required:
+        - accessToken
+        - tokenType
+        - expiresIn
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+          default: Bearer
+        expiresIn:
+          type: integer
+        refreshToken:
+          type: string
+        idToken:
+          type: string
+    UserInfo:
+      type: object
+      required:
+        - userId
+        - fiscalCode
+      properties:
+        userId:
+          type: string
+        fiscalCode:
+          type: string
+        familyName:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+    ZendeskAssistanceTokenResponse:
+      type: object
+      required:
+        - assistanceToken
+        - returnTo
+        - actionUrl
+      properties:
+        assistanceToken:
+          type: string
+        returnTo:
+          type: string
+          description: URL of the Help Center to return
+        actionUrl:
+          type: string
+    ZonedDateTime:
+      type: string
+      format: zoned-date-time
+      example: "2024-05-31T13:07:25Z"
+    OrganizationsListDTO:
+      type: object
+      properties:
+        organizations:
+          description: Array structure containing the organizations
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationDTO'
+    OrganizationDTO:
+      type: object
+      required:
+        - id
+        - paFullName
+        - paTaxCode
+        - ipaCode
+      properties:
+        id:
+          type: string
+        paFullName:
+          type: string
+        paTaxCode:
+          type: string
+        ipaCode:
+          type: string
+    ErrorDTO:
+      type: object
+      required:
+        - category
+        - message
+      properties:
+        category:
+          type: string
+          description: The title describing the error
+          enum:
+            - NOT_FOUND
+            - BAD_REQUEST
+            - GENERIC_ERROR
+            - FORBIDDEN
+            - CONFLICT
+            - TOO_MANY_REQUEST
+            - UNAUTHORIZED
+        message:
+          type: string
+          description: Description of the error
+        traceId:
+          type: string
+        code:
+          type: string

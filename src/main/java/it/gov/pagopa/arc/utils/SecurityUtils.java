@@ -3,6 +3,8 @@ package it.gov.pagopa.arc.utils;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.net.URI;
+
 public final class SecurityUtils {
 
   private SecurityUtils(){}
@@ -10,12 +12,13 @@ public final class SecurityUtils {
   public static IamUserInfoDTO getPrincipal() {
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    try{
-      return (IamUserInfoDTO) principal;
-    }catch (ClassCastException e){
-      throw new IllegalStateException("Invalid principal type: expected IamUserInfoDTO but got " + principal.getClass().getName());
+    if(principal instanceof IamUserInfoDTO loggedUser){
+        return loggedUser;
+    }else if(principal instanceof String){
+        return null;
+    }else{
+        throw new IllegalStateException("Invalid principal type: expected IamUserInfoDTO but got " + principal.getClass().getName());
     }
-
   }
 
   public static String getUserFiscalCode() {
@@ -38,5 +41,10 @@ public final class SecurityUtils {
     return principal.getUserId();
   }
 
+  public static String removePiiFromURI(URI uri){
+    return uri != null
+            ? uri.toString().replaceAll("=[^&]*", "=***")
+            : null;
+  }
 
 }

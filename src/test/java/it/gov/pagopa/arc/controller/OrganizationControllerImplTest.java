@@ -1,0 +1,103 @@
+package it.gov.pagopa.arc.controller;
+
+import it.gov.pagopa.arc.controller.generated.OrganizationApi;
+import it.gov.pagopa.arc.service.organization.OrganizationFacadeService;
+import it.gov.pagopa.arc.utils.TestUtils;
+import it.gov.pagopa.pu.citizen.dto.generated.OrganizationLogoDTO;
+import it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import uk.co.jemos.podam.api.PodamFactory;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
+class OrganizationControllerImplTest {
+
+    @Mock
+    private OrganizationFacadeService organizationFacadeServiceMock;
+
+    private final PodamFactory podamFactory = TestUtils.getPodamFactory();
+
+    private OrganizationApi organizationApi;
+
+    @BeforeEach
+    void setUp() {
+        organizationApi = new OrganizationControllerImpl(organizationFacadeServiceMock);
+    }
+
+    @AfterEach
+    void verifyNoMoreInteractions() {
+        Mockito.verifyNoMoreInteractions(
+                organizationFacadeServiceMock
+        );
+    }
+
+    @Test
+    void givenBrokerIdWhenGetOrganizationsWithSpontaneousThenOk() {
+        //given
+        Long brokerId = 1L;
+        List<OrganizationsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, OrganizationsWithSpontaneousDTO.class);
+        Mockito.when(organizationFacadeServiceMock.getOrganizationsWithSpontaneousDTO(brokerId)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<List<OrganizationsWithSpontaneousDTO>> result = organizationApi.getOrganizationsWithSpontaneous(brokerId);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void givenBrokerIdWhenGetPublicOrganizationsWithSpontaneousThenOk() {
+        //given
+        Long brokerId = 1L;
+        List<OrganizationsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, OrganizationsWithSpontaneousDTO.class);
+        Mockito.when(organizationFacadeServiceMock.getOrganizationsWithSpontaneousDTO(brokerId)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<List<OrganizationsWithSpontaneousDTO>> result = organizationApi.getPublicOrganizationsWithSpontaneous(brokerId);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void whenGetPublicOrganizationLogoThenOk() {
+        //given
+        Long brokerId = 1L;
+        String orgFiscalCode = "orgFiscalCode";
+
+        OrganizationLogoDTO expectedResult = podamFactory.manufacturePojo(OrganizationLogoDTO.class);
+        Mockito.when(organizationFacadeServiceMock.getOrganizationLogo(brokerId,orgFiscalCode)).thenReturn(expectedResult);
+        //when
+        ResponseEntity<OrganizationLogoDTO> result = organizationApi.getPublicOrganizationLogo(brokerId, orgFiscalCode);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(expectedResult, result.getBody());
+    }
+
+    @Test
+    void givenNoOrganizationLogoDTOWhenGetPublicOrganizationLogoThenNotFound() {
+        //given
+        Long brokerId = 1L;
+        String orgFiscalCode = "orgFiscalCode";
+
+        Mockito.when(organizationFacadeServiceMock.getOrganizationLogo(brokerId,orgFiscalCode)).thenReturn(null);
+        //when
+        ResponseEntity<OrganizationLogoDTO> result = organizationApi.getPublicOrganizationLogo(brokerId, orgFiscalCode);
+        //then
+        assertNotNull(result);
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+        assertNull(result.getBody());
+    }
+}
