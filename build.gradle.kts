@@ -64,6 +64,9 @@ val bouncycastleVersion = "1.84"
 
 val springCloudDepsVersion = "2025.1.1"
 
+// fix CVE
+val nettyVersion= "4.2.13.Final"
+
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudDepsVersion")
@@ -94,6 +97,9 @@ dependencies {
     // validation token jwt
     implementation("com.auth0:java-jwt:${javaJwtVersion}")
     implementation("com.auth0:jwks-rsa:${jwksRsaVersion}")
+
+    // Fix CVE
+    implementation("io.netty:netty-codec-dns:${nettyVersion}") // CVE-2026-42579
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
