@@ -12,7 +12,7 @@ See [p4pa-doc](https://github.com/pagopa/p4pa-doc) for further documentation.
 See [OpenAPI](openapi/generated.openapi.json), exposed through the following path:
 * `/swagger-ui/index.html`
 
-See [Postman collection](/postman/pagopa-arc-E2E.postman_collection.json) and [Postman Environment](https://pagopa.atlassian.net/wiki/spaces/SPAC/pages/1063813158/ARp+-+Environment+collection+postman).
+See [Postman collection](/postman/pagopa-arpu-be-E2E.postman_collection.json) and [Postman Environment](https://pagopa.atlassian.net/wiki/spaces/SPAC/pages/1063813158/ARp+-+Environment+collection+postman).
 
 ### 📌 Common HTTP status returned:
 * `401`: Invalid access token provided, thus a new login is required;
@@ -62,16 +62,16 @@ See [application.yml](src/main/resources/application.yml) for each configurable 
 | SERVER_PORT       | Application server listening port                                               | 8080                  |
 
 #### ✏️ Logging
-| ENV                                   | DESCRIPTION                                                                                                                                                                     | DEFAULT |
-|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
-| LOG_LEVEL_ROOT                        | Base level                                                                                                                                                                      | INFO    |
-| LOG_LEVEL_PAGOPA                      | Base level of custom classes                                                                                                                                                    | INFO    |
-| LOG_LEVEL_SPRING                      | Level applied to Spring framework                                                                                                                                               | INFO    |
-| LOG_LEVEL_SPRING_BOOT_AVAILABILITY    | To print availability events                                                                                                                                                    | DEBUG   |
-| LOGGING_LEVEL_API_REQUEST_EXCEPTION   | Level applied to APIs exception                                                                                                                                                 | INFO    |
-| LOG_LEVEL_PERFORMANCE_LOG             | Level applied to [PerformanceLog](https://pagopa.atlassian.net/wiki/spaces/SPAC/pages/1540096383/Logging#2.2.-Log-di-performance)                                               | INFO    |
-| LOG_LEVEL_PERFORMANCE_LOG_API_REQUEST | Level applied to [API Performance Log](https://pagopa.atlassian.net/wiki/spaces/SPAC/pages/1540096383/Logging#2.2.2.1.-Log-di-perfomance-per-le-API)                            | INFO    |
-| LOG_LEVEL_PERFORMANCE_LOG_REST_INVOKE | Level applied to [REST invoke Performance Log](https://pagopa.atlassian.net/wiki/spaces/SPAC/pages/1540096383/Logging#2.2.2.2.-Log-di-performance-per-i-servizi-REST-integrati) | INFO    |
+| ENV                                   | DESCRIPTION                                                                                                                                            | DEFAULT |
+|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| LOG_LEVEL_ROOT                        | Base level                                                                                                                                             | INFO    |
+| LOG_LEVEL_PAGOPA                      | Base level of custom classes                                                                                                                           | INFO    |
+| LOG_LEVEL_SPRING                      | Level applied to Spring framework                                                                                                                      | INFO    |
+| LOG_LEVEL_SPRING_BOOT_AVAILABILITY    | To print availability events                                                                                                                           | DEBUG   |
+| LOGGING_LEVEL_API_REQUEST_EXCEPTION   | Level applied to APIs exception                                                                                                                        | INFO    |
+| LOG_LEVEL_PERFORMANCE_LOG             | Level applied to [PerformanceLog](https://raw.githubusercontent.com/pagopa/p4pa-doc/refs/heads/main/reference/technical-docs/Logging.pdf)              | INFO    |
+| LOG_LEVEL_PERFORMANCE_LOG_API_REQUEST | Level applied to [API Performance Log](https://raw.githubusercontent.com/pagopa/p4pa-doc/refs/heads/main/reference/technical-docs/Logging.pdf)         | INFO    |
+| LOG_LEVEL_PERFORMANCE_LOG_REST_INVOKE | Level applied to [REST invoke Performance Log](https://raw.githubusercontent.com/pagopa/p4pa-doc/refs/heads/main/reference/technical-docs/Logging.pdf) | INFO    |
 
 #### 🔁 Integrations
 
