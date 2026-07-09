@@ -15,6 +15,7 @@ import uk.co.jemos.podam.api.PodamFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthnClientTest {
@@ -52,8 +53,10 @@ class AuthnClientTest {
         String clientSecret = "clientSecret";
 
         AccessToken expectedResult = podamFactory.manufacturePojo(AccessToken.class);
-        Mockito.when(authApisHolderMock.getAuthnApi(null)).thenReturn(authnApiMock);
-        Mockito.when(authnApiMock.postToken(clientId, grantType, scope, subjectToken, subjectIssuer, subjectTokenType, clientSecret )).thenReturn(expectedResult);
+        when(authApisHolderMock.getAuthnApi(null))
+                .thenReturn(authnApiMock);
+        when(authnApiMock.postToken(clientId, grantType, scope, subjectToken, subjectIssuer, subjectTokenType, clientSecret, null))
+                .thenReturn(expectedResult);
 
         //when
         AccessToken result = authnClient.postToken(clientId, grantType, scope, subjectToken, subjectIssuer, subjectTokenType, clientSecret);
