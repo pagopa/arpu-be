@@ -15,7 +15,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     response.setContentType("application/json");
     response.getWriter().write("{\"error\": \"Authentication Failed\"}");
-    log.info("Authentication Failed " + exception.getMessage());
+    log.info("Authentication Failed: {}", exception.getMessage(), exception);
   }
 
 }
