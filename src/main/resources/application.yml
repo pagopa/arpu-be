@@ -35,6 +35,7 @@ spring:
             token-uri: "\${AUTH_CLIENT_TOKEN_URI:}"
             user-name-attribute: sub
             jwk-set-uri: "\${AUTH_CLIENT_JWK_URI:}"
+            user-info-uri: ""
 white-list-cf-users: "\${WHITE_LIST_USERS:}"
 
 jwt:
