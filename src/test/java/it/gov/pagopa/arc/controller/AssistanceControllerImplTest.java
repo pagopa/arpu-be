@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.controller;
 
+import io.micrometer.tracing.Tracer;
 import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
@@ -10,7 +11,6 @@ import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
 import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
 import org.springframework.boot.security.oauth2.client.autoconfigure.OAuth2ClientAutoConfiguration;
@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,9 +47,11 @@ class AssistanceControllerImplTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
+    private ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
     @MockitoBean
-    UpstreamErrorMapper upstreamErrorMapperMock;
+    private UpstreamErrorMapper upstreamErrorMapperMock;
+    @MockitoBean
+    private Tracer tracerMock;
 
     @Test
     void givenUserEmailWhenGetZendeskAssistanceTokenThenReturnZendeskAssistanceToken() throws Exception {
@@ -61,7 +65,7 @@ class AssistanceControllerImplTest {
                 .returnTo(returnTo)
                 .build();
 
-        Mockito.when(zendeskAssistanceTokenServiceMock.retrieveZendeskAssistanceTokenResponse(FAKE_USER_EMAIL)).thenReturn(expected);
+        when(zendeskAssistanceTokenServiceMock.retrieveZendeskAssistanceTokenResponse(FAKE_USER_EMAIL)).thenReturn(expected);
         //when
         MvcResult result = mockMvc.perform(
                         get("/token/assistance")
@@ -74,7 +78,7 @@ class AssistanceControllerImplTest {
         //then
         Assertions.assertNotNull(resultResponse);
         Assertions.assertEquals(expected,resultResponse);
-        Mockito.verify(zendeskAssistanceTokenServiceMock).retrieveZendeskAssistanceTokenResponse(any());
+        verify(zendeskAssistanceTokenServiceMock).retrieveZendeskAssistanceTokenResponse(any());
     }
 
     @Test

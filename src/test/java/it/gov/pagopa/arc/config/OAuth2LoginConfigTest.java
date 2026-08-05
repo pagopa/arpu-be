@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.config;
 
+import io.micrometer.tracing.Tracer;
 import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.connector.external.googlerecaptcha.GoogleRecaptchaService;
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
@@ -49,15 +50,17 @@ class OAuth2LoginConfigTest {
     @MockitoBean
     private TokenStoreService tokenStoreService;
     @MockitoBean
-    AccessTokenValidationService accessTokenValidationService;
+    private AccessTokenValidationService accessTokenValidationService;
     @MockitoBean
-    AuthorizationRequestRepository authorizationRequestRepository;
+    private AuthorizationRequestRepository<?> authorizationRequestRepository;
     @MockitoBean
-    OrganizationFacadeService organizationFacadeServiceMock;
+    private OrganizationFacadeService organizationFacadeServiceMock;
     @MockitoBean
-    UpstreamErrorMapper upstreamErrorMapperMock;
+    private UpstreamErrorMapper upstreamErrorMapperMock;
     @MockitoBean
-    GoogleRecaptchaService googleRecaptchaServiceMock;
+    private GoogleRecaptchaService googleRecaptchaServiceMock;
+    @MockitoBean
+    private Tracer tracerMock;
 
     @Autowired
     private MockMvc mockMvc;
