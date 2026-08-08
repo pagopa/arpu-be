@@ -1385,6 +1385,7 @@ components:
       type: object
       required:
         - category
+        - code
         - message
       properties:
         category:
@@ -1396,12 +1397,29 @@ components:
             - GENERIC_ERROR
             - FORBIDDEN
             - CONFLICT
-            - TOO_MANY_REQUEST
+            - TOO_MANY_REQUESTS
             - UNAUTHORIZED
+        code:
+          type: string
         message:
           type: string
           description: Description of the error
+        fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorFieldDTO"
         traceId:
           type: string
-        code:
+    ErrorFieldDTO:
+      type: object
+      required:
+        - field
+        - error
+        - message
+      properties:
+        field:
+          type: string
+        error:
+          type: string
+        message:
           type: string

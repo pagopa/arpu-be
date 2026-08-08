@@ -1,7 +1,7 @@
 package it.gov.pagopa.arc.service.debtpositiontypeorg;
 
 import it.gov.pagopa.arc.connector.citizen.DebtPositionTypeOrgService;
-import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
+import it.gov.pagopa.arc.exception.common.NotFoundException;
 import it.gov.pagopa.arc.utils.Constants;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO;
@@ -29,7 +29,7 @@ public class DebtPositionTypeOrgFacadeServiceImpl implements DebtPositionTypeOrg
     public DebtPositionTypeOrgsWithSpontaneousDetailsDTO getDebtPositionTypeOrgsWithSpontaneousDetail(Long brokerId, Long organizationId, Long debtPositionTypeOrgId) {
         DebtPositionTypeOrgsWithSpontaneousDetailsDTO debtPositionTypeOrgsWithSpontaneousDetail = debtPositionTypeOrgRetrieverService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
         if (debtPositionTypeOrgsWithSpontaneousDetail == null){
-            throw new ResourceNotFoundException("DEBT_POSITION_TYPE_ORG_NOT_FOUND", "DebtPositionTypeOrgsWithSpontaneousDetails with deptPositionTypeOrgId %d brokerId %d and organizationId %d not found".formatted(debtPositionTypeOrgId, brokerId, organizationId));
+            throw new NotFoundException("DEBT_POSITION_TYPE_ORG_NOT_FOUND", "DebtPositionTypeOrgsWithSpontaneousDetails with deptPositionTypeOrgId %d brokerId %d and organizationId %d not found".formatted(debtPositionTypeOrgId, brokerId, organizationId));
         }
 
         return debtPositionTypeOrgsWithSpontaneousDetail;
