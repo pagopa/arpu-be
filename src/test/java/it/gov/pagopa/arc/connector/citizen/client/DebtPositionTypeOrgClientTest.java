@@ -2,7 +2,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.utils.TestUtils;
-import it.gov.pagopa.pu.citizen.controller.generated.DebtPositionTypeOrgApi;
+import it.gov.pagopa.pu.citizen.client.generated.DebtPositionTypeOrgApi;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO;
 import org.junit.jupiter.api.AfterEach;

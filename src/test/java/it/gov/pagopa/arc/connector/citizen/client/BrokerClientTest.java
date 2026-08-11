@@ -1,7 +1,7 @@
 package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
-import it.gov.pagopa.pu.citizen.controller.generated.BrokerApi;
+import it.gov.pagopa.pu.citizen.client.generated.BrokerApi;
 import it.gov.pagopa.pu.citizen.dto.generated.BrokerInfoDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

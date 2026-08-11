@@ -2,7 +2,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.utils.TestUtils;
-import it.gov.pagopa.pu.citizen.controller.generated.InstallmentApi;
+import it.gov.pagopa.pu.citizen.client.generated.InstallmentApi;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.InstallmentStatus;

@@ -1,9 +1,9 @@
 package it.gov.pagopa.arc.connector.external.googlerecaptcha.config;
 
 import it.gov.pagopa.arc.config.rest.RestTemplateConfig;
-import it.gov.pagopa.google.recaptcha.controller.ApiClient;
-import it.gov.pagopa.google.recaptcha.controller.BaseApi;
-import it.gov.pagopa.google.recaptcha.controller.generated.GoogleRecaptchaApi;
+import it.gov.pagopa.google.recaptcha.generated.ApiClient;
+import it.gov.pagopa.google.recaptcha.generated.BaseApi;
+import it.gov.pagopa.google.recaptcha.client.generated.GoogleRecaptchaApi;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
