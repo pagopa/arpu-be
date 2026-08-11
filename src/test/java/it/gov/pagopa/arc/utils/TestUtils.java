@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class TestUtils {
+
     private TestUtils(){}
     /**
      * application's objectMapper
@@ -33,10 +34,15 @@ public class TestUtils {
 
     static {
         clearDefaultTimezone();
+        clearLocale();
     }
 
     public static void clearDefaultTimezone() {
         TimeZone.setDefault(Constants.DEFAULT_TIMEZONE);
+    }
+
+    public static void clearLocale() {
+        Locale.setDefault(Locale.ITALY);
     }
 
     public static void wait(long timeout, TimeUnit timeoutUnit) {

@@ -2,7 +2,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
-import it.gov.pagopa.pu.citizen.controller.generated.DebtPositionApi;
+import it.gov.pagopa.pu.citizen.client.generated.DebtPositionApi;
 import it.gov.pagopa.pu.citizen.dto.generated.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

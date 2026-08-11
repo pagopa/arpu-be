@@ -3,7 +3,6 @@ package it.gov.pagopa.arc.controller;
 import io.micrometer.tracing.Tracer;
 import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
-import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
 import it.gov.pagopa.arc.exception.custom.InvalidTokenException;
 import it.gov.pagopa.arc.fakers.auth.UserInfoDTOFaker;
 import it.gov.pagopa.arc.model.generated.ErrorDTO;
@@ -50,8 +49,6 @@ class AuthControllerImplTest {
 
   @MockitoBean
   private AuthService authService;
-  @MockitoBean
-  private UpstreamErrorMapper upstreamErrorMapperMock;
   @MockitoBean
   private Tracer tracerMock;
 

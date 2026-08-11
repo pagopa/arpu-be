@@ -3,7 +3,6 @@ package it.gov.pagopa.arc.controller;
 import io.micrometer.tracing.Tracer;
 import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
-import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
 import it.gov.pagopa.arc.model.generated.ZendeskAssistanceTokenResponse;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
 import it.gov.pagopa.arc.security.RecaptchaFilter;
@@ -48,8 +47,6 @@ class AssistanceControllerImplTest {
 
     @MockitoBean
     private ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
-    @MockitoBean
-    private UpstreamErrorMapper upstreamErrorMapperMock;
     @MockitoBean
     private Tracer tracerMock;
 
