@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.connector.citizen.config;
 
 import it.gov.pagopa.arc.config.rest.HttpClientErrorJsonBodyHandler;
+import it.gov.pagopa.arc.connector.citizen.mapper.CitizenErrorDTOMapper;
 import it.gov.pagopa.pu.citizen.generated.ApiClient;
 import it.gov.pagopa.pu.citizen.generated.BaseApi;
 import it.gov.pagopa.pu.citizen.client.generated.*;
@@ -35,7 +36,7 @@ public class CitizenApisHolder {
         apiClient.setMaxAttemptsForRetry(Math.max(1, clientConfig.getMaxAttempts()));
         apiClient.setWaitTimeMillis(clientConfig.getWaitTimeMillis());
         restTemplate.setErrorHandler(new HttpClientErrorJsonBodyHandler<>(jsonMapper, "PU-CITIZEN", clientConfig.isPrintBodyWhenError(),
-                ErrorDTO.class, ErrorDTO::getCode, ErrorDTO::getMessage)
+                ErrorDTO.class, CitizenErrorDTOMapper::map)
         );
 
         this.organizationApi = new OrganizationApi(apiClient);
