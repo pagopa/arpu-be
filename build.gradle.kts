@@ -39,8 +39,8 @@ licenseReport {
     outputDir = "$projectDir/dependency-licenses"
     filters = arrayOf(SpdxLicenseBundleNormalizer())
 }
-tasks.classes {
-    finalizedBy(tasks.generateLicenseReport)
+tasks.dependencies {
+  finalizedBy(tasks.generateLicenseReport)
 }
 
 repositories {
@@ -56,8 +56,8 @@ val mapStructVersion = "1.6.3"
 val micrometerVersion = "1.7.0"
 val commonsLang3Version = "3.20.0"
 val commonsFileUploadVersion = "1.6.0"
-val httpClientVersion = "5.6.1"
-val httpCoreVersion = "5.4.2"
+val httpClientVersion = "5.6.4"
+val httpCoreVersion = "5.4.3"
 val kafkaAppender = "0.2.0-RC2"
 val lz4JavaVersion = "1.11.1"
 val podamVersion = "8.0.2.RELEASE"
@@ -81,8 +81,9 @@ dependencies {
     implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation("org.apache.httpcomponents.client5:httpclient5:${httpClientVersion}")
-    implementation("org.apache.httpcomponents.core5:httpcore5:${httpCoreVersion}")
+    implementation("org.apache.httpcomponents.client5:httpclient5:$httpClientVersion")
+    implementation("org.apache.httpcomponents.core5:httpcore5-h2:$httpCoreVersion")
+    implementation("org.apache.httpcomponents.core5:httpcore5:$httpCoreVersion")
     implementation("com.github.danielwegener:logback-kafka-appender:$kafkaAppender") {
         exclude(group = "org.lz4", module = "lz4-java")
     }
@@ -90,14 +91,14 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion") {
         exclude(group = "org.apache.commons", module = "commons-lang3")
     }
-    implementation("org.apache.commons:commons-lang3:${commonsLang3Version}")
+    implementation("org.apache.commons:commons-lang3:$commonsLang3Version")
     implementation ("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
     implementation("commons-fileupload:commons-fileupload:$commonsFileUploadVersion")
     implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
-    implementation("org.mapstruct:mapstruct:${mapStructVersion}")
+    implementation("org.mapstruct:mapstruct:$mapStructVersion")
     // validation token jwt
-    implementation("com.auth0:java-jwt:${javaJwtVersion}")
-    implementation("com.auth0:jwks-rsa:${jwksRsaVersion}")
+    implementation("com.auth0:java-jwt:$javaJwtVersion")
+    implementation("com.auth0:jwks-rsa:$jwksRsaVersion")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -112,7 +113,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.wiremock:wiremock-standalone:$wiremockVersion")
-    testImplementation("uk.co.jemos.podam:podam:${podamVersion}")
+    testImplementation("uk.co.jemos.podam:podam:$podamVersion")
     testImplementation("org.projectlombok:lombok")
 }
 
