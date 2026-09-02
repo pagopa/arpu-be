@@ -2,7 +2,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
-import it.gov.pagopa.pu.citizen.controller.generated.DebtPositionApi;
+import it.gov.pagopa.pu.citizen.client.generated.DebtPositionApi;
 import it.gov.pagopa.pu.citizen.dto.generated.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -24,6 +24,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DebtPositionClientTest {
@@ -59,8 +60,8 @@ class DebtPositionClientTest {
                 ContentDisposition.attachment().filename(expectedFileName).build());
         ResponseEntity<Resource> responseEntity = new ResponseEntity<>(expectedResource, headers, HttpStatus.OK);
 
-        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-        Mockito.when(debtPositionApiMock.getUnpaidPaymentNoticeZipWithHttpInfo(brokerId, fiscalCode, debtPositionId)).thenReturn(responseEntity);
+        when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        when(debtPositionApiMock.getUnpaidPaymentNoticeZipWithHttpInfo(brokerId, fiscalCode, debtPositionId)).thenReturn(responseEntity);
 
         FileResourceDTO response = debtPositionClient.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode, accessToken);
 
@@ -76,8 +77,8 @@ class DebtPositionClientTest {
         Long brokerId = 1L;
         Long debtPositionId = 2L;
 
-        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-        Mockito.when(debtPositionApiMock.getUnpaidPaymentNoticeZipWithHttpInfo(brokerId, fiscalCode, debtPositionId))
+        when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        when(debtPositionApiMock.getUnpaidPaymentNoticeZipWithHttpInfo(brokerId, fiscalCode, debtPositionId))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
         FileResourceDTO response = debtPositionClient.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode, accessToken);
@@ -94,8 +95,8 @@ class DebtPositionClientTest {
         DebtPositionRequestDTO requestDTO = new DebtPositionRequestDTO();
         DebtPositionResponseDTO expectedResult = new DebtPositionResponseDTO();
 
-        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-        Mockito.when(debtPositionApiMock.createSpontaneousDebtPosition(brokerId, requestDTO)).thenReturn(expectedResult);
+        when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        when(debtPositionApiMock.createSpontaneousDebtPosition(brokerId, requestDTO)).thenReturn(expectedResult);
         //when
         DebtPositionResponseDTO result = debtPositionClient.createSpontaneousDebtPosition(brokerId, requestDTO, accessToken);
         //then
@@ -113,8 +114,8 @@ class DebtPositionClientTest {
 
         DebtPositionExtendedDTO expectedResult = new DebtPositionExtendedDTO();
 
-        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-        Mockito.when(debtPositionApiMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(expectedResult);
+        when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        when(debtPositionApiMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode)).thenReturn(expectedResult);
         //when
         DebtPositionExtendedDTO result = debtPositionClient.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, accessToken);
         //then
@@ -130,8 +131,8 @@ class DebtPositionClientTest {
         Long brokerId = 1L;
         Long debtPositionId = 2L;
 
-        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-        Mockito.when(debtPositionApiMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode))
+        when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        when(debtPositionApiMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
         //when
         DebtPositionExtendedDTO result = debtPositionClient.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, accessToken);
@@ -153,8 +154,8 @@ class DebtPositionClientTest {
           ContentDisposition.attachment().filename(expectedFileName).build());
       ResponseEntity<Resource> responseEntity = new ResponseEntity<>(expectedResource, headers, HttpStatus.OK);
 
-      Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-      Mockito.when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, nav)).thenReturn(responseEntity);
+      when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+      when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, nav)).thenReturn(responseEntity);
 
       FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, nav, accessToken);
 
@@ -171,8 +172,8 @@ class DebtPositionClientTest {
       Long organizationId = 2L;
       String nav = "nav";
 
-      Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-      Mockito.when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, nav))
+      when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+      when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, nav))
               .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
       FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, nav, accessToken);
@@ -191,8 +192,8 @@ class DebtPositionClientTest {
         PageRequest pageRequest = PageRequest.of(1, 10);
 
         PagedDebtorDebtPositionDTO expectedResult = new PagedDebtorDebtPositionDTO();
-        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-        Mockito.when(debtPositionApiMock.getPagedUnpaidDebtPositions(fiscalCode, brokerId, orgName, orgFiscalCode, 1,10, new ArrayList<>())).thenReturn(expectedResult);
+        when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        when(debtPositionApiMock.getPagedUnpaidDebtPositions(fiscalCode, brokerId, orgName, orgFiscalCode, 1,10, new ArrayList<>())).thenReturn(expectedResult);
         //when
         PagedDebtorDebtPositionDTO result = debtPositionClient.getPagedDebtorDebtPosition(fiscalCode, brokerId, orgName, orgFiscalCode, pageRequest, accessToken);
         //then
@@ -211,8 +212,8 @@ class DebtPositionClientTest {
 
         DebtorUnpaidDebtPositionOverviewDTO expectedResult = new DebtorUnpaidDebtPositionOverviewDTO();
 
-        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-        Mockito.when(debtPositionApiMock.getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, fiscalCode, organizationId))
+        when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        when(debtPositionApiMock.getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, fiscalCode, organizationId))
                 .thenReturn(expectedResult);
 
         // when
@@ -233,8 +234,8 @@ class DebtPositionClientTest {
         Long debtPositionId = 2L;
         Long organizationId = 3L;
 
-        Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
-        Mockito.when(debtPositionApiMock.getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, fiscalCode, organizationId))
+        when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+        when(debtPositionApiMock.getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, fiscalCode, organizationId))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
         // when

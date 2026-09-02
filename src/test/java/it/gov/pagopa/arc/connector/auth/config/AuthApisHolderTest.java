@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.connector.auth.config;
 
+import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.connector.BaseApiHolderTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,22 +13,29 @@ import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class AuthApisHolderTest extends BaseApiHolderTest {
 
     @Mock
     private RestTemplateBuilder restTemplateBuilderMock;
 
-    private AuthApisHolder authApisHolder;
+    private AuthApisHolder apisHolder;
+    private AuthApiClientConfig apiClientConfig;
 
     @BeforeEach
     void setUp() {
-        Mockito.when(restTemplateBuilderMock.build()).thenReturn(restTemplateMock);
-        Mockito.when(restTemplateMock.getUriTemplateHandler()).thenReturn(new DefaultUriBuilderFactory());
-        AuthApiClientConfig clientConfig = AuthApiClientConfig.builder()
+        when(restTemplateBuilderMock.build()).thenReturn(restTemplateMock);
+        when(restTemplateMock.getUriTemplateHandler()).thenReturn(new DefaultUriBuilderFactory());
+
+        apiClientConfig = AuthApiClientConfig.builder()
                 .baseUrl("http://example.com")
+                .maxAttempts(3)
                 .build();
-        authApisHolder = new AuthApisHolder(clientConfig, restTemplateBuilderMock);
+        apisHolder = new AuthApisHolder(apiClientConfig, restTemplateBuilderMock, new JsonConfig().objectMapperJackson3());
+
+        verifyHttpClientErrorJsonBodyHandlerConfiguration(apisHolder.getAuthnApi(null));
     }
 
     @AfterEach
@@ -39,12 +47,21 @@ class AuthApisHolderTest extends BaseApiHolderTest {
     }
 
     @Test
+    void testRetryConfiguration() {
+        assertRetry(apiClientConfig,
+                accessToken -> apisHolder.getAuthnApi(accessToken)
+                        .getUserInfo(),
+                new ParameterizedTypeReference<>() {}
+        );
+    }
+
+    @Test
     void whenGetAuthnApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
         assertAuthenticationShouldBeSetInThreadSafeMode(
-                accessToken -> authApisHolder.getAuthnApi(accessToken)
+                accessToken -> apisHolder.getAuthnApi(accessToken)
                         .getUserInfo(),
                 new ParameterizedTypeReference<>() {},
-                authApisHolder::unload);
+                apisHolder::unload);
     }
 
 }

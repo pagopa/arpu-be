@@ -3,7 +3,7 @@ package it.gov.pagopa.arc.service.debtpositions;
 import it.gov.pagopa.arc.connector.citizen.DebtPositionService;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
-import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
+import it.gov.pagopa.arc.exception.common.NotFoundException;
 import it.gov.pagopa.arc.service.AuthorizationService;
 import it.gov.pagopa.pu.citizen.dto.generated.*;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +32,7 @@ public class DebtPositionFacadeServiceImpl implements DebtPositionFacadeService 
     public DebtPositionExtendedDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode, IamUserInfoDTO loggedUser) {
         DebtPositionExtendedDTO debtPositionDetail = debtPositionService.getDebtPositionDetail(brokerId, debtPositionId, AuthorizationService.getDebtorFiscalCode(fiscalCode,loggedUser));
         if (debtPositionDetail == null) {
-            throw new ResourceNotFoundException("DEBT_POSITION_NOT_FOUND","DebtPosition with debtPositionId %s not found".formatted(debtPositionId));
+            throw new NotFoundException("DEBT_POSITION_NOT_FOUND","DebtPosition with debtPositionId %s not found".formatted(debtPositionId));
         }
 
         return debtPositionDetail;

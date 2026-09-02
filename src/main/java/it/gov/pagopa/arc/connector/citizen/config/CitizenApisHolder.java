@@ -1,13 +1,16 @@
 package it.gov.pagopa.arc.connector.citizen.config;
 
-import it.gov.pagopa.arc.config.rest.RestTemplateConfig;
-import it.gov.pagopa.pu.citizen.controller.ApiClient;
-import it.gov.pagopa.pu.citizen.controller.BaseApi;
-import it.gov.pagopa.pu.citizen.controller.generated.*;
+import it.gov.pagopa.arc.config.rest.HttpClientErrorJsonBodyHandler;
+import it.gov.pagopa.arc.connector.citizen.mapper.CitizenErrorDTOMapper;
+import it.gov.pagopa.pu.citizen.generated.ApiClient;
+import it.gov.pagopa.pu.citizen.generated.BaseApi;
+import it.gov.pagopa.pu.citizen.client.generated.*;
+import it.gov.pagopa.pu.citizen.dto.generated.ErrorDTO;
 import jakarta.annotation.PreDestroy;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 public class CitizenApisHolder {
@@ -21,16 +24,20 @@ public class CitizenApisHolder {
 
     private final ThreadLocal<String> bearerTokenHolder = new ThreadLocal<>();
 
-    public CitizenApisHolder(CitizenApiClientConfig clientConfig, RestTemplateBuilder restTemplateBuilder) {
+    public CitizenApisHolder(
+            CitizenApiClientConfig clientConfig,
+            RestTemplateBuilder restTemplateBuilder,
+            JsonMapper jsonMapper
+    ) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ApiClient apiClient = new ApiClient(restTemplate);
         apiClient.setBasePath(clientConfig.getBaseUrl());
         apiClient.setBearerToken(bearerTokenHolder::get);
         apiClient.setMaxAttemptsForRetry(Math.max(1, clientConfig.getMaxAttempts()));
         apiClient.setWaitTimeMillis(clientConfig.getWaitTimeMillis());
-        if (clientConfig.isPrintBodyWhenError()) {
-            restTemplate.setErrorHandler(RestTemplateConfig.bodyPrinterWhenError("CITIZEN"));
-        }
+        restTemplate.setErrorHandler(new HttpClientErrorJsonBodyHandler<>(jsonMapper, "PU-CITIZEN", clientConfig.isPrintBodyWhenError(),
+                ErrorDTO.class, CitizenErrorDTOMapper::map)
+        );
 
         this.organizationApi = new OrganizationApi(apiClient);
         this.debtPositionTypeOrgApi = new DebtPositionTypeOrgApi(apiClient);

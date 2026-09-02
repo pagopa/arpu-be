@@ -10,6 +10,14 @@ import org.slf4j.MDC;
 public class Utilities {
     private Utilities(){}
 
+    public static String getTraceId(){
+        return MDC.get("traceId");
+    }
+
+    public static String getSpanId(){
+        return MDC.get("spanId");
+    }
+
     /**
      * To extract name value from email
      */
@@ -23,9 +31,5 @@ public class Utilities {
             throw new ZendeskAssistanceInvalidUserEmailException("Invalid user email [%s]".formatted(userMail));
         }
         return  nameExtracted;
-    }
-
-    public static String getTraceId(){
-        return MDC.get("traceId");
     }
 }

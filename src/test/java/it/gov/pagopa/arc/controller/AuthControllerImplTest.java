@@ -1,8 +1,8 @@
 package it.gov.pagopa.arc.controller;
 
+import io.micrometer.tracing.Tracer;
 import it.gov.pagopa.arc.config.json.JsonConfig;
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
-import it.gov.pagopa.arc.dto.mapper.UpstreamErrorMapper;
 import it.gov.pagopa.arc.exception.custom.InvalidTokenException;
 import it.gov.pagopa.arc.fakers.auth.UserInfoDTOFaker;
 import it.gov.pagopa.arc.model.generated.ErrorDTO;
@@ -13,7 +13,6 @@ import it.gov.pagopa.arc.security.RecaptchaFilter;
 import it.gov.pagopa.arc.service.AuthService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
 import org.springframework.boot.security.oauth2.client.autoconfigure.OAuth2ClientAutoConfiguration;
@@ -27,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import tools.jackson.databind.json.JsonMapper;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,14 +50,14 @@ class AuthControllerImplTest {
   @MockitoBean
   private AuthService authService;
   @MockitoBean
-  UpstreamErrorMapper upstreamErrorMapperMock;
+  private Tracer tracerMock;
 
   @Test
   void givenAuthenticatedUserThenRetrieveUserInfo() throws Exception {
     // given
     UserInfo userInfo = UserInfoDTOFaker.mockInstance();
 
-    Mockito.when(authService.getUserLoginInfo()).thenReturn(userInfo);
+    when(authService.getUserLoginInfo()).thenReturn(userInfo);
 
     //When
     MvcResult result = mockMvc.perform(
@@ -75,7 +75,7 @@ class AuthControllerImplTest {
   @Test
   void givenInvalidAuthenticationThenThrowException() throws Exception {
 
-    Mockito.when(authService.getUserLoginInfo()).thenThrow(InvalidTokenException.class);
+    when(authService.getUserLoginInfo()).thenThrow(InvalidTokenException.class);
 
     //When
     MvcResult result = mockMvc.perform(
@@ -92,7 +92,7 @@ class AuthControllerImplTest {
   @Test
   void getSampleToken() throws Exception {
 
-    Mockito.when(authService.generateAuthUser()).thenReturn(new TokenResponse());
+    when(authService.generateAuthUser()).thenReturn(new TokenResponse());
 
     //When
     MvcResult result = mockMvc.perform(

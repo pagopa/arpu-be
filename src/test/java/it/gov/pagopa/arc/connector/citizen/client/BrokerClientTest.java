@@ -1,7 +1,7 @@
 package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
-import it.gov.pagopa.pu.citizen.controller.generated.BrokerApi;
+import it.gov.pagopa.pu.citizen.client.generated.BrokerApi;
 import it.gov.pagopa.pu.citizen.dto.generated.BrokerInfoDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BrokerClientTest {
@@ -42,8 +44,8 @@ class BrokerClientTest {
         String externalId = "externalId";
         BrokerInfoDTO expectedResource = new BrokerInfoDTO();
 
-        Mockito.when(citizenApisHolderMock.getBrokerApi(accessToken)).thenReturn(brokerApiMock);
-        Mockito.when(brokerApiMock.getBrokerInfo(brokerId, externalId)).thenReturn(expectedResource);
+        when(citizenApisHolderMock.getBrokerApi(accessToken)).thenReturn(brokerApiMock);
+        when(brokerApiMock.getBrokerInfo(brokerId, externalId)).thenReturn(expectedResource);
 
         BrokerInfoDTO response = brokerClient.getBrokerInfo(brokerId, externalId, accessToken);
 
@@ -56,8 +58,8 @@ class BrokerClientTest {
         String accessToken = "accessToken";
         Long brokerId = 1L;
 
-        Mockito.when(citizenApisHolderMock.getBrokerApi(accessToken)).thenReturn(brokerApiMock);
-        Mockito.when(brokerApiMock.getBrokerInfo(brokerId, null))
+        when(citizenApisHolderMock.getBrokerApi(accessToken)).thenReturn(brokerApiMock);
+        when(brokerApiMock.getBrokerInfo(brokerId, null))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
         BrokerInfoDTO response = brokerClient.getBrokerInfo(brokerId, null, accessToken);

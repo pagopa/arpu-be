@@ -1,7 +1,7 @@
 package it.gov.pagopa.arc.service.debtpositiontypeorg;
 
 import it.gov.pagopa.arc.connector.citizen.DebtPositionTypeOrgService;
-import it.gov.pagopa.arc.exception.custom.ResourceNotFoundException;
+import it.gov.pagopa.arc.exception.common.NotFoundException;
 import it.gov.pagopa.arc.utils.Constants;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
@@ -22,6 +22,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DebtPositionTypeOrgFacadeServiceImplTest {
@@ -35,13 +36,13 @@ class DebtPositionTypeOrgFacadeServiceImplTest {
 
     @BeforeEach
     void setUp() {
-       debtPositionTypeOrgFacadeService = new DebtPositionTypeOrgFacadeServiceImpl(debtPositionTypeOrgServiceMock);
+        debtPositionTypeOrgFacadeService = new DebtPositionTypeOrgFacadeServiceImpl(debtPositionTypeOrgServiceMock);
     }
 
     @AfterEach
     void verifyNoMoreInteractions() {
         Mockito.verifyNoMoreInteractions(
-               debtPositionTypeOrgServiceMock
+                debtPositionTypeOrgServiceMock
         );
     }
 
@@ -51,7 +52,7 @@ class DebtPositionTypeOrgFacadeServiceImplTest {
         Long brokerId = 1L;
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
 
-        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId)).thenReturn(expectedResult);
+        when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId)).thenReturn(expectedResult);
         //when
         List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId);
         //then
@@ -68,7 +69,7 @@ class DebtPositionTypeOrgFacadeServiceImplTest {
 
         DebtPositionTypeOrgsWithSpontaneousDetailsDTO expectedResult = podamFactory.manufacturePojo(DebtPositionTypeOrgsWithSpontaneousDetailsDTO.class);
 
-        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(expectedResult);
+        when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(expectedResult);
         //when
         DebtPositionTypeOrgsWithSpontaneousDetailsDTO result = debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
         //then
@@ -82,9 +83,9 @@ class DebtPositionTypeOrgFacadeServiceImplTest {
         Long debtPositionTypeOrgId = 1L;
         Long brokerId = 1L;
 
-        Mockito.when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(null);
+        when(debtPositionTypeOrgServiceMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(null);
 
-        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId));
+        NotFoundException ex = assertThrows(NotFoundException.class, () -> debtPositionTypeOrgFacadeService.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId));
         Assertions.assertEquals("DebtPositionTypeOrgsWithSpontaneousDetails with deptPositionTypeOrgId 1 brokerId 1 and organizationId 1 not found", ex.getMessage());
     }
 
@@ -107,15 +108,14 @@ class DebtPositionTypeOrgFacadeServiceImplTest {
             mocked.when(() -> OffsetDateTime.now(Constants.ZONEID))
                     .thenReturn(fixedNow);
 
-            Mockito.when(
-                    debtPositionTypeOrgServiceMock
-                            .getMostUsedSpontaneousDebtPositionTypeOrgs(
-                                    brokerId,
-                                    organizationId,
-                                    fixedNow.minusYears(1),
-                                    fixedNow,
-                                    pageable
-                            )
+            when(debtPositionTypeOrgServiceMock
+                    .getMostUsedSpontaneousDebtPositionTypeOrgs(
+                            brokerId,
+                            organizationId,
+                            fixedNow.minusYears(1),
+                            fixedNow,
+                            pageable
+                    )
             ).thenReturn(expected);
 
             // when

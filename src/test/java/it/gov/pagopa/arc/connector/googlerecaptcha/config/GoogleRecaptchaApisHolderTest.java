@@ -14,6 +14,8 @@ import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class GoogleRecaptchaApisHolderTest extends BaseApiHolderTest {
 
@@ -24,10 +26,11 @@ class GoogleRecaptchaApisHolderTest extends BaseApiHolderTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.when(restTemplateBuilderMock.build()).thenReturn(restTemplateMock);
-        Mockito.when(restTemplateMock.getUriTemplateHandler()).thenReturn(new DefaultUriBuilderFactory());
+        when(restTemplateBuilderMock.build()).thenReturn(restTemplateMock);
+        when(restTemplateMock.getUriTemplateHandler()).thenReturn(new DefaultUriBuilderFactory());
         GoogleRecaptchaApiClientConfig clientConfig = GoogleRecaptchaApiClientConfig.builder()
                 .baseUrl("http://example.com")
+                .maxAttempts(3)
                 .build();
         googleRecaptchaApisHolder = new GoogleRecaptchaApisHolder(clientConfig, restTemplateBuilderMock);
     }
