@@ -3438,8 +3438,7 @@
             },
             "nullable" : true
           }
-        },
-        "nullable" : true
+        }
       },
       "SpontaneousFormField" : {
         "required" : [ "association", "detailLink", "htmlRender", "indexable", "insertable", "insertableOrder", "listable", "listableOrder", "maxOccurences", "minOccurences", "name", "renderable", "renderableOrder", "searchable", "searchableOrder" ],
@@ -4135,8 +4134,7 @@
             "type" : "string",
             "nullable" : true
           }
-        },
-        "nullable" : true
+        }
       },
       "PaymentOptionExtendedDTO" : {
         "type" : "object",
