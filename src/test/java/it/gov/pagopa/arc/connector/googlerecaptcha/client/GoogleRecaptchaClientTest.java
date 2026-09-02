@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class GoogleRecaptchaClientTest {
     @Mock
@@ -41,8 +43,8 @@ class GoogleRecaptchaClientTest {
         String remoteIp = "remoteIp";
         SiteVerifyResponseDTO expectedResponse = new SiteVerifyResponseDTO();
 
-        Mockito.when(googleRecaptchaApisHolderMock.getGoogleRecaptchaApi()).thenReturn(googleRecaptchaApiMock);
-        Mockito.when(googleRecaptchaApiMock.siteVerify(secret,recaptchaToken,remoteIp)).thenReturn(expectedResponse);
+        when(googleRecaptchaApisHolderMock.getGoogleRecaptchaApi()).thenReturn(googleRecaptchaApiMock);
+        when(googleRecaptchaApiMock.siteVerify(secret,recaptchaToken,remoteIp)).thenReturn(expectedResponse);
 
         SiteVerifyResponseDTO response = googleRecaptchaClient.siteVerify(secret, recaptchaToken, remoteIp);
 

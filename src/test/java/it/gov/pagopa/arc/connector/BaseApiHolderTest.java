@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @Slf4j
@@ -156,7 +157,7 @@ public abstract class BaseApiHolderTest {
 
     apiUnloader.run();
 
-    verify(restTemplateMock, Mockito.times(useCases.size()))
+    verify(restTemplateMock, times(useCases.size()))
       .exchange(Mockito.any(), Mockito.<ParameterizedTypeReference<?>>any());
   }
 

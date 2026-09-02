@@ -19,6 +19,7 @@ import uk.co.jemos.podam.api.PodamFactory;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrganizationClientTest {
@@ -51,8 +52,8 @@ class OrganizationClientTest {
         Long brokerId = 1L;
         List<OrganizationsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, OrganizationsWithSpontaneousDTO.class);
 
-        Mockito.when(citizenApisHolderMock.getOrganizationApi(accessToken)).thenReturn(organizationApiMock);
-        Mockito.when(organizationApiMock.getOrganizationsWithSpontaneous(brokerId)).thenReturn(expectedResult);
+        when(citizenApisHolderMock.getOrganizationApi(accessToken)).thenReturn(organizationApiMock);
+        when(organizationApiMock.getOrganizationsWithSpontaneous(brokerId)).thenReturn(expectedResult);
         //when
         List<OrganizationsWithSpontaneousDTO> result = organizationClient.getOrganizationsWithSpontaneousDTO(accessToken, brokerId);
         //then
@@ -69,8 +70,8 @@ class OrganizationClientTest {
 
         OrganizationLogoDTO expectedResult = new OrganizationLogoDTO();
 
-        Mockito.when(citizenApisHolderMock.getOrganizationApi(accessToken)).thenReturn(organizationApiMock);
-        Mockito.when(organizationApiMock.getOrganizationLogo(brokerId, orgFiscalCode)).thenReturn(expectedResult);
+        when(citizenApisHolderMock.getOrganizationApi(accessToken)).thenReturn(organizationApiMock);
+        when(organizationApiMock.getOrganizationLogo(brokerId, orgFiscalCode)).thenReturn(expectedResult);
         //when
         OrganizationLogoDTO result = organizationClient.getOrganizationLogo(brokerId, orgFiscalCode, accessToken);
         //then
@@ -85,8 +86,8 @@ class OrganizationClientTest {
         Long brokerId = 1L;
         String orgFiscalCode = "orgFiscalCode";
 
-        Mockito.when(citizenApisHolderMock.getOrganizationApi(accessToken)).thenReturn(organizationApiMock);
-        Mockito.when(organizationApiMock.getOrganizationLogo(brokerId, orgFiscalCode))
+        when(citizenApisHolderMock.getOrganizationApi(accessToken)).thenReturn(organizationApiMock);
+        when(organizationApiMock.getOrganizationLogo(brokerId, orgFiscalCode))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
         //when
         OrganizationLogoDTO result = organizationClient.getOrganizationLogo(brokerId, orgFiscalCode, accessToken);

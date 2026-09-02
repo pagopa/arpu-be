@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DebtPositionTypeOrgClientTest {
@@ -55,9 +56,9 @@ class DebtPositionTypeOrgClientTest {
         Long organizationId = 1L;
         Long brokerId = 1L;
 
-        List expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
-        Mockito.when(citizenApisHolderMock.getDebtPositionTypeOrgApi(accessToken)).thenReturn(debtPositionTypeOrgApiMock);
-        Mockito.when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneous(brokerId,organizationId)).thenReturn(expectedResult);
+        List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
+        when(citizenApisHolderMock.getDebtPositionTypeOrgApi(accessToken)).thenReturn(debtPositionTypeOrgApiMock);
+        when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneous(brokerId,organizationId)).thenReturn(expectedResult);
         //when
         List<DebtPositionTypeOrgsWithSpontaneousDTO> result = debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId, accessToken);
         //then
@@ -75,8 +76,8 @@ class DebtPositionTypeOrgClientTest {
 
         DebtPositionTypeOrgsWithSpontaneousDetailsDTO expectedResult = podamFactory.manufacturePojo(DebtPositionTypeOrgsWithSpontaneousDetailsDTO.class);
 
-        Mockito.when(citizenApisHolderMock.getDebtPositionTypeOrgApi(accessToken)).thenReturn(debtPositionTypeOrgApiMock);
-        Mockito.when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(expectedResult);
+        when(citizenApisHolderMock.getDebtPositionTypeOrgApi(accessToken)).thenReturn(debtPositionTypeOrgApiMock);
+        when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId)).thenReturn(expectedResult);
         //when
         DebtPositionTypeOrgsWithSpontaneousDetailsDTO result = debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId, accessToken);
         //then
@@ -91,9 +92,9 @@ class DebtPositionTypeOrgClientTest {
         Long debtPositionTypeOrgId = 1L;
         Long brokerId = 1L;
 
-        Mockito.when(citizenApisHolderMock.getDebtPositionTypeOrgApi(accessToken)).thenReturn(debtPositionTypeOrgApiMock);
+        when(citizenApisHolderMock.getDebtPositionTypeOrgApi(accessToken)).thenReturn(debtPositionTypeOrgApiMock);
 
-        Mockito.when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId))
+        when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
         DebtPositionTypeOrgsWithSpontaneousDetailsDTO result = debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId, accessToken);
@@ -113,12 +114,12 @@ class DebtPositionTypeOrgClientTest {
 
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
 
-        Mockito.when(
+        when(
                 citizenApisHolderMock
                         .getDebtPositionTypeOrgApi(accessToken)
         ).thenReturn(debtPositionTypeOrgApiMock);
 
-        Mockito.when(
+        when(
                 debtPositionTypeOrgApiMock
                         .getMostUsedSpontaneousDebtPositionTypeOrgs(
                                 brokerId,

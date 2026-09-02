@@ -20,6 +20,8 @@ import uk.co.jemos.podam.api.PodamFactory;
 
 import java.util.List;
 
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class InstallmentClientTest {
     private final PodamFactory podamFactory = TestUtils.getPodamFactory();
@@ -52,8 +54,8 @@ class InstallmentClientTest {
         List<InstallmentDebtorExtendedDTO> expectedResult = podamFactory.manufacturePojo(List.class,InstallmentDebtorExtendedDTO.class);
         List<InstallmentStatus> statuses = List.of(InstallmentStatus.PAID);
 
-        Mockito.when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
-        Mockito.when(installmentApiMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses)).thenReturn(expectedResult);
+        when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
+        when(installmentApiMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses)).thenReturn(expectedResult);
 
         List<InstallmentDebtorExtendedDTO> response = installmentClient.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses, accessToken);
 
@@ -70,8 +72,8 @@ class InstallmentClientTest {
         String orgFiscalCode = "orgFiscalCode";
         List<InstallmentStatus> statuses = List.of(InstallmentStatus.PAID);
 
-        Mockito.when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
-        Mockito.when(installmentApiMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses))
+        when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
+        when(installmentApiMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
         List<InstallmentDebtorExtendedDTO> response = installmentClient.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses, accessToken);
@@ -92,8 +94,8 @@ class InstallmentClientTest {
         List<DebtorUnpaidDebtPositionInstallmentsDTO> expectedResult =
                 podamFactory.manufacturePojo(List.class, DebtorUnpaidDebtPositionInstallmentsDTO.class);
 
-        Mockito.when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
-        Mockito.when(installmentApiMock.getDebtorUnpaidDebtPositionInstallments(
+        when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
+        when(installmentApiMock.getDebtorUnpaidDebtPositionInstallments(
                 brokerId, debtPositionId, paymentOptionId, xFiscalCode, organizationId
         )).thenReturn(expectedResult);
 

@@ -75,8 +75,8 @@ class ReceiptClientTest {
         PageRequest pageRequest = PageRequest.of(1, 10);
         PagedDebtorReceiptsDTO expectedResult = podamFactory.manufacturePojo(PagedDebtorReceiptsDTO.class);
 
-        Mockito.when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
-        Mockito.when(receiptApiMock.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, noticeNumberOrIuv, paymentDateTimeFrom, paymentDateTimeTo, pageRequest.getPageNumber(), pageRequest.getPageSize(), PageUtils.getSortList(pageRequest))).thenReturn(expectedResult);
+        when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
+        when(receiptApiMock.getPagedDebtorReceipts(brokerId, fiscalCode, orgName, noticeNumberOrIuv, paymentDateTimeFrom, paymentDateTimeTo, pageRequest.getPageNumber(), pageRequest.getPageSize(), PageUtils.getSortList(pageRequest))).thenReturn(expectedResult);
         //when
         PagedDebtorReceiptsDTO result = receiptClient.getPagedDebtorReceipts(brokerId, fiscalCode, debtorReceiptsFiltersDTO, pageRequest, accessToken);
         //then
@@ -136,8 +136,8 @@ class ReceiptClientTest {
                 ContentDisposition.attachment().filename(expectedFileName).build());
         ResponseEntity<Resource> responseEntity = new ResponseEntity<>(expectedResource, headers, HttpStatus.OK);
 
-        Mockito.when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
-        Mockito.when(receiptApiMock.getReceiptPdfWithHttpInfo(fiscalCode, brokerId, organizationId, receiptId)).thenReturn(responseEntity);
+        when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
+        when(receiptApiMock.getReceiptPdfWithHttpInfo(fiscalCode, brokerId, organizationId, receiptId)).thenReturn(responseEntity);
 
         FileResourceDTO response = receiptClient.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,accessToken);
 
@@ -154,8 +154,8 @@ class ReceiptClientTest {
         Long organizationId = 2L;
         Long receiptId = 3L;
 
-        Mockito.when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
-        Mockito.when(receiptApiMock.getReceiptPdfWithHttpInfo(fiscalCode, brokerId, organizationId, receiptId))
+        when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
+        when(receiptApiMock.getReceiptPdfWithHttpInfo(fiscalCode, brokerId, organizationId, receiptId))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
         FileResourceDTO response = receiptClient.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,accessToken);
@@ -173,8 +173,8 @@ class ReceiptClientTest {
         Long paymentOptionId = 4L;
         List<DebtorReceiptDTO> expectedResult = podamFactory.manufacturePojo(List.class,DebtorReceiptDTO.class);
 
-        Mockito.when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
-        Mockito.when(receiptApiMock.getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode))
+        when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
+        when(receiptApiMock.getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode))
                 .thenReturn(expectedResult);
 
         List<DebtorReceiptDTO> result = receiptClient.getDebtorReceipts(debtorFiscalCode,brokerId,organizationId,debtPositionId,paymentOptionId,accessToken);
@@ -191,8 +191,8 @@ class ReceiptClientTest {
         Long debtPositionId = 3L;
         Long paymentOptionId = 4L;
 
-        Mockito.when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
-        Mockito.when(receiptApiMock.getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode))
+        when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
+        when(receiptApiMock.getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode))
                 .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
 
         List<DebtorReceiptDTO> result = receiptClient.getDebtorReceipts(debtorFiscalCode,brokerId,organizationId,debtPositionId,paymentOptionId,accessToken);
