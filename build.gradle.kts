@@ -65,6 +65,9 @@ val podamVersion = "8.0.2.RELEASE"
 
 val springCloudDepsVersion = "2025.1.3"
 
+// CVE Security dependencies
+val tomcatEmbedCoreVersion = "11.0.25"
+
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudDepsVersion")
@@ -99,6 +102,9 @@ dependencies {
     // validation token jwt
     implementation("com.auth0:java-jwt:$javaJwtVersion")
     implementation("com.auth0:jwks-rsa:$jwksRsaVersion")
+
+    // CVE Security dependencies
+    implementation("org.apache.tomcat.embed:tomcat-embed-core:$tomcatEmbedCoreVersion")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
