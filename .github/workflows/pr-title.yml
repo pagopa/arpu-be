@@ -8,8 +8,8 @@ on:
       - synchronize
 
 permissions:
-  contents: write
-  packages: write
+  contents: read
+  packages: read
   statuses: write
 
 jobs:
