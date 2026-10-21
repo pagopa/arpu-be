@@ -66,8 +66,9 @@ val springCloudDepsVersion = "2025.1.3"
 
 // CVE Security dependencies
 val tomcatEmbedCoreVersion = "11.0.26"
-val jackson2DatabindVersion = "2.22.3"
-val jackson3DatabindVersion = "3.1.7"
+val jackson2BomVersion = "2.22.3"
+val jackson2AnnotationsVersion = "2.22"
+val jackson3BomVersion = "3.2.3"
 
 dependencyManagement {
     imports {
@@ -94,6 +95,7 @@ dependencies {
     implementation("at.yawk.lz4:lz4-java:$lz4JavaVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion") {
         exclude(group = "org.apache.commons", module = "commons-lang3")
+        exclude(group = "tools.jackson.core", module = "jackson-core")
     }
     implementation("org.apache.commons:commons-lang3:$commonsLang3Version")
     implementation ("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
@@ -106,8 +108,13 @@ dependencies {
 
     // CVE Security dependencies
     implementation("org.apache.tomcat.embed:tomcat-embed-core:$tomcatEmbedCoreVersion")
-    implementation("com.fasterxml.jackson.core:jackson-databind:$jackson2DatabindVersion")
-    implementation("tools.jackson.core:jackson-databind:$jackson3DatabindVersion")
+    implementation(platform("com.fasterxml.jackson:jackson-bom:$jackson2BomVersion"))
+    implementation("com.fasterxml.jackson.core:jackson-core:$jackson2BomVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jackson2BomVersion")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:$jackson2AnnotationsVersion")
+    implementation(platform("tools.jackson:jackson-bom:$jackson3BomVersion"))
+    implementation("tools.jackson.core:jackson-core:$jackson3BomVersion")
+    implementation("tools.jackson.core:jackson-databind:$jackson3BomVersion")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
