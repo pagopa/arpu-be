@@ -201,6 +201,11 @@
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
 </tr>
 <tr>
+<td><a href='https://github.com/micrometer-metrics/micrometer-commercial'>io.micrometer:micrometer-registry-prometheus</a></td>
+<td>1.17.1</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
 <td><a href='https://github.com/micrometer-metrics/tracing-commercial'>io.micrometer:micrometer-tracing</a></td>
 <td>1.7.1</td>
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
@@ -338,6 +343,36 @@
 <tr>
 <td><a href='https://github.com/reactor/reactor-core'>io.projectreactor:reactor-core</a></td>
 <td>3.8.7</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td>io.prometheus:prometheus-metrics-config</td>
+<td>1.7.0</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td>io.prometheus:prometheus-metrics-core</td>
+<td>1.7.0</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td>io.prometheus:prometheus-metrics-exposition-formats</td>
+<td>1.7.0</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td>io.prometheus:prometheus-metrics-exposition-textformats</td>
+<td>1.7.0</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td>io.prometheus:prometheus-metrics-model</td>
+<td>1.7.0</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td>io.prometheus:prometheus-metrics-tracer-common</td>
+<td>1.7.0</td>
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
 </tr>
 <tr>

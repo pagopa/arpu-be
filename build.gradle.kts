@@ -52,7 +52,8 @@ val javaJwtVersion = "4.6.1"
 val jwksRsaVersion = "0.24.1"
 val wiremockVersion = "3.13.2"
 val bouncycastleVersion = "1.86"
-val micrometerVersion = "1.7.1"
+val micrometerOtelBridgeVersion = "1.7.1"
+val micrometerPrometheusVersion = "1.17.1"
 val mapStructVersion = "1.6.3"
 val commonsLang3Version = "3.20.0"
 val commonsFileUploadVersion = "1.6.0"
@@ -82,7 +83,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerOtelBridgeVersion")
+    implementation("io.micrometer:micrometer-registry-prometheus:$micrometerPrometheusVersion")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.apache.httpcomponents.client5:httpclient5:$httpClientVersion")
