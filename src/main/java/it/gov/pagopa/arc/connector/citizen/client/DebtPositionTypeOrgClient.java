@@ -1,13 +1,13 @@
 package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
+import it.gov.pagopa.arc.exception.common.RestInvokeNotFoundException;
 import it.gov.pagopa.arc.utils.PageUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDetailsDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -30,7 +30,7 @@ public class DebtPositionTypeOrgClient {
     public DebtPositionTypeOrgsWithSpontaneousDetailsDTO getDebtPositionTypeOrgsWithSpontaneousDetail(Long brokerId, Long organizationId, Long debtPositionTypeOrgId, String accessToken){
         try {
             return citizenApisHolder.getDebtPositionTypeOrgApi(accessToken).getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId);
-        }catch (HttpClientErrorException.NotFound e) {
+        }catch (RestInvokeNotFoundException e) {
             log.warn("DebtPositionTypeOrgsWithSpontaneousDetails with debtPositionTypeOrgId {} not found", debtPositionTypeOrgId);
             return null;
         }

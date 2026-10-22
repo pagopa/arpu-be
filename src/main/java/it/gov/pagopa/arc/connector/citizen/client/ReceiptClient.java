@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
+import it.gov.pagopa.arc.exception.common.RestInvokeNotFoundException;
 import it.gov.pagopa.arc.utils.PageUtils;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorReceiptDTO;
 import it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorReceiptsDTO;
@@ -12,7 +13,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +46,7 @@ public class ReceiptClient {
         try {
             return citizenApisHolder.getReceiptApi(accessToken)
                     .getReceiptDetail(debtorFiscalCode,brokerId, organizationId,receiptId);
-        } catch (HttpClientErrorException.NotFound e) {
+        } catch (RestInvokeNotFoundException e) {
             log.warn("ReceiptDetail with receiptId {} brokerId {} and organizationId {} not found", receiptId, brokerId, organizationId);
             return null;
         }
@@ -60,7 +60,7 @@ public class ReceiptClient {
                     .resource(resourceResponseEntity.getBody())
                     .fileName(resourceResponseEntity.getHeaders().getContentDisposition().getFilename())
                     .build();
-        } catch (HttpClientErrorException.NotFound e) {
+        } catch (RestInvokeNotFoundException e) {
             log.warn("receipt with receiptId {} brokerId {} and organizationId {} not found", receiptId, brokerId, organizationId);
             return null;
         }
@@ -70,7 +70,7 @@ public class ReceiptClient {
         try {
             return citizenApisHolder.getReceiptApi(accessToken)
                     .getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode);
-        } catch (HttpClientErrorException.NotFound e) {
+        } catch (RestInvokeNotFoundException e) {
             log.warn("DebtorReceipts with brokerId {} organizationId {} debtPositionId {} and paymentOptionId {} not found", brokerId, organizationId, debtPositionId, paymentOptionId);
             return Collections.emptyList();
         }

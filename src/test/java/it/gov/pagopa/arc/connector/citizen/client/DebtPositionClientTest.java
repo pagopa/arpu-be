@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
+import it.gov.pagopa.arc.exception.common.RestInvokeNotFoundException;
 import it.gov.pagopa.pu.citizen.client.generated.DebtPositionApi;
 import it.gov.pagopa.pu.citizen.dto.generated.*;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +20,6 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 
@@ -79,7 +79,7 @@ class DebtPositionClientTest {
 
         when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
         when(debtPositionApiMock.getUnpaidPaymentNoticeZipWithHttpInfo(brokerId, fiscalCode, debtPositionId))
-                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+                .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
         FileResourceDTO response = debtPositionClient.getUnpaidPaymentNoticeZip(brokerId, debtPositionId, fiscalCode, accessToken);
 
@@ -133,7 +133,7 @@ class DebtPositionClientTest {
 
         when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
         when(debtPositionApiMock.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode))
-                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+                .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
         //when
         DebtPositionExtendedDTO result = debtPositionClient.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode, accessToken);
         //then
@@ -174,7 +174,7 @@ class DebtPositionClientTest {
 
       when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
       when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, nav))
-              .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+              .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
       FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, nav, accessToken);
 
@@ -236,7 +236,7 @@ class DebtPositionClientTest {
 
         when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
         when(debtPositionApiMock.getDebtorUnpaidDebtPositionOverview(brokerId, debtPositionId, fiscalCode, organizationId))
-                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+                .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
         // when
         DebtorUnpaidDebtPositionOverviewDTO result = debtPositionClient.getDebtorUnpaidDebtPositionOverview(
