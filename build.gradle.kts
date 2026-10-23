@@ -128,6 +128,12 @@ dependencies {
     testImplementation("org.projectlombok:lombok")
 }
 
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
 val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
     mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
@@ -146,11 +152,6 @@ tasks {
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport)
-}
-
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
@@ -162,6 +163,25 @@ val projectInfo = mapOf(
     "artifactId" to project.name,
     "version" to project.version
 )
+
+configure<SourceSetContainer> {
+    named("main") {
+        java.srcDir("$projectDir/build/generated/src/main/java")
+    }
+}
+
+springBoot {
+    buildInfo()
+    mainClass.value("it.gov.pagopa.arc.PagopaArcBeApplication")
+}
+
+tasks.named<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask>("dependencyUpdates") {
+    revision = "release"
+    outputFormatter = "json"
+    checkForGradleUpdate = false
+    checkEmbeddedKotlin = false
+    rejectPreReleases = true
+}
 
 tasks {
     val processResources by getting(ProcessResources::class) {
@@ -186,17 +206,6 @@ tasks.register("dependenciesBuild") {
         "openApiGenerateP4PACITIZEN",
         "openApiGenerateGOOGLERECAPTCHA"
     )
-}
-
-configure<SourceSetContainer> {
-    named("main") {
-        java.srcDir("$projectDir/build/generated/src/main/java")
-    }
-}
-
-springBoot {
-    buildInfo()
-    mainClass.value("it.gov.pagopa.arc.PagopaArcBeApplication")
 }
 
 openApiGenerate {
