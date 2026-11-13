@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
+import it.gov.pagopa.arc.exception.common.RestInvokeNotFoundException;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.client.generated.InstallmentApi;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO;
@@ -15,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
 import uk.co.jemos.podam.api.PodamFactory;
 
 import java.util.List;
@@ -74,7 +74,7 @@ class InstallmentClientTest {
 
         when(citizenApisHolderMock.getInstallmentApi(accessToken)).thenReturn(installmentApiMock);
         when(installmentApiMock.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses))
-                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+                .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
         List<InstallmentDebtorExtendedDTO> response = installmentClient.getInstallmentsByIuvOrNav(brokerId,iuvOrNav,debtorFiscalCode,orgFiscalCode, statuses, accessToken);
 

@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.connector.citizen.client;
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
 import it.gov.pagopa.arc.dto.DebtorReceiptsFiltersDTO;
 import it.gov.pagopa.arc.dto.FileResourceDTO;
+import it.gov.pagopa.arc.exception.common.RestInvokeNotFoundException;
 import it.gov.pagopa.arc.utils.PageUtils;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.client.generated.ReceiptApi;
@@ -24,7 +25,6 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
 import uk.co.jemos.podam.api.PodamFactory;
 
 import java.time.OffsetDateTime;
@@ -115,7 +115,7 @@ class ReceiptClientTest {
         when(citizenApisHolderMock.getReceiptApi(accessToken))
                 .thenReturn(receiptApiMock);
         when(receiptApiMock.getReceiptDetail(fiscalCode,brokerId,organizationId,receiptId))
-                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+                .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
         ReceiptDetailExtendedDTO result = receiptClient.getReceiptDetail(brokerId,organizationId,receiptId,fiscalCode,accessToken);
 
@@ -156,7 +156,7 @@ class ReceiptClientTest {
 
         when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
         when(receiptApiMock.getReceiptPdfWithHttpInfo(fiscalCode, brokerId, organizationId, receiptId))
-                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+                .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
         FileResourceDTO response = receiptClient.getReceiptPdf(brokerId,organizationId,receiptId,fiscalCode,accessToken);
 
@@ -193,7 +193,7 @@ class ReceiptClientTest {
 
         when(citizenApisHolderMock.getReceiptApi(accessToken)).thenReturn(receiptApiMock);
         when(receiptApiMock.getDebtorReceipts(brokerId,organizationId,debtPositionId,paymentOptionId,debtorFiscalCode))
-                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+                .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
         List<DebtorReceiptDTO> result = receiptClient.getDebtorReceipts(debtorFiscalCode,brokerId,organizationId,debtPositionId,paymentOptionId,accessToken);
 

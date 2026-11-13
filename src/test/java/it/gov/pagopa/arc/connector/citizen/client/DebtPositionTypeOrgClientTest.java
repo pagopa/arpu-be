@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.connector.citizen.client;
 
 import it.gov.pagopa.arc.connector.citizen.config.CitizenApisHolder;
+import it.gov.pagopa.arc.exception.common.RestInvokeNotFoundException;
 import it.gov.pagopa.arc.utils.TestUtils;
 import it.gov.pagopa.pu.citizen.client.generated.DebtPositionTypeOrgApi;
 import it.gov.pagopa.pu.citizen.dto.generated.DebtPositionTypeOrgsWithSpontaneousDTO;
@@ -14,7 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
 import uk.co.jemos.podam.api.PodamFactory;
 
 import java.time.OffsetDateTime;
@@ -95,7 +95,7 @@ class DebtPositionTypeOrgClientTest {
         when(citizenApisHolderMock.getDebtPositionTypeOrgApi(accessToken)).thenReturn(debtPositionTypeOrgApiMock);
 
         when(debtPositionTypeOrgApiMock.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId))
-                .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "NotFound", null, null, null));
+                .thenThrow(new RestInvokeNotFoundException("APPNAME", HttpStatus.NOT_FOUND, "ERROR", "ERRORCODE", "ERRORMESSAGE", "BODY"));
 
         DebtPositionTypeOrgsWithSpontaneousDetailsDTO result = debtPositionTypeOrgClient.getDebtPositionTypeOrgsWithSpontaneousDetail(brokerId, organizationId, debtPositionTypeOrgId, accessToken);
 
